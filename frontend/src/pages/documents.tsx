@@ -2,7 +2,9 @@ import React from 'react'
 
 const Documents = () => {
   return (
-    <div>Documents</div>
+    <div>
+      Mixa's first PropTypes.func.isRequired,
+    </div>
   )
 }
 
