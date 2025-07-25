@@ -22,7 +22,7 @@ const SideBar = () => {
             location.pathname === "/dashboard" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
-          onClick={() => console.log("Dashboard clicked")}
+          // onClick={() => console.log("Dashboard clicked")}
         >
           <FiHome /> Dashboard
         </Link>

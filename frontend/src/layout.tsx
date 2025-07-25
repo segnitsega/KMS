@@ -8,7 +8,7 @@ const Layout = () => {
         <NavBar />
         <div className="flex gap-4">
             <SideBar />
-            <main>
+            <main className="m-4 w-full">
               <Outlet />  
             </main>
         </div>
