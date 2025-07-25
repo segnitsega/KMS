@@ -16,7 +16,7 @@ const StatusCard = ({title, value, icon: Icon, color, bgColor}: statusCardProps)
             <h1 className="text-gray-500 text-lg">{title}</h1>
             <span className="font-bold text-xl">{value}</span>
         </div>
-        <Icon className={`p-2 text-5xl rounded-lg ${color} ${bgColor} `}/>
+        <Icon className={`p-3 text-5xl rounded-lg ${color} ${bgColor} `}/>
     </div>
   )
 }
