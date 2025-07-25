@@ -14,7 +14,7 @@ const SideBar = () => {
   const location = useLocation();
   return (
     <div className="border w-[20%]">
-      <div className="flex flex-col p-8 gap-4 border-b w-[100%] mb-10 ">
+      <div className="flex flex-col p-8 gap-4 border-b w-[110%] mb-10 ">
         <Link
           to="/dashboard"
           className={cn(

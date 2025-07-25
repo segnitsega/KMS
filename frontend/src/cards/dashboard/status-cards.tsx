@@ -11,12 +11,12 @@ interface statusCardProps {
 
 const StatusCard = ({title, value, icon: Icon, color, bgColor}: statusCardProps) => {
   return (
-    <div className="flex items-center justify-between p-4 border rounded-md w-full">
-        <div>
-            <h1>{title}</h1>
-            <span>{value}</span>
+    <div className="flex items-center justify-between px-4 py-6 border rounded-md w-full">
+        <div className="mb-2">
+            <h1 className="text-gray-500 text-lg">{title}</h1>
+            <span className="font-bold text-xl">{value}</span>
         </div>
-        <Icon className={`p-1 text-4xl rounded-lg ${color} ${bgColor} `}/>
+        <Icon className={`p-2 text-5xl rounded-lg ${color} ${bgColor} `}/>
     </div>
   )
 }
