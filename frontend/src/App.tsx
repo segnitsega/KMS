@@ -8,7 +8,6 @@ import ExpertDirectory from './pages/expert-directory'
 import Training from './pages/training'
 import Notifications from './pages/notifications'
 import Analytics from './pages/analytics'
-
 const App = () => {
   return (
     <BrowserRouter>
@@ -27,5 +26,6 @@ const App = () => {
     </BrowserRouter>
   )
 }
+
 
 export default App

@@ -1,11 +1,9 @@
-import React from 'react'
+import { DocumentsSection } from "cards/document-section";
 
-const Documents = () => {
+export default function Home() {
   return (
-    <div>
-      Mixa's first PropTypes.func.isRequired,
+    <div className="min-h-screen bg-gray-50 p-6">
+      <DocumentsSection />
     </div>
   )
 }
-
-export default Documents
