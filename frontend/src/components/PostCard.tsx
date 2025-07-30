@@ -1,6 +1,6 @@
 import React from 'react';
 import { PiBookOpen } from "react-icons/pi";
-import { FiUsers, FiMessageCircle, FiClock, FiEye, FiMoreHorizontal } from "react-icons/fi";
+import { FiUsers, FiClock, FiEye, FiTag } from "react-icons/fi";
 import { FaEdit } from 'react-icons/fa';
 
 interface PostCardProps {
@@ -33,9 +33,9 @@ const PostCard: React.FC<PostCardProps> = ({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="bg-gray-200 text-gray-700 text-xs rounded-full px-2 py-0.5"
+                className="bg-gray-100 border text-xs text-gray-700 px-2 py-0.5 rounded-full flex items-center gap-1"
               >
-                {tag}
+              < FiTag className="h-3 w-3" /> {tag}
               </span>
             ))}
           </div>
@@ -55,7 +55,7 @@ const PostCard: React.FC<PostCardProps> = ({
           </div>
         </div>
       </div>
-      <div className="right-icons flex flex-row justify-top items-top gap-1 text-gray-600">
+      <div className="right-icons flex flex-row justify-top items-top gap-2 text-gray-600">
         <FiEye className="h-4 w-4 cursor-pointer hover:text-gray-800" />
         <FaEdit className="h-4 w-4 cursor-pointer hover:text-gray-800" />
       </div>
