@@ -23,7 +23,7 @@ const DocumentCard = ({
   articleViews,
 }: documentCardProp) => {
   return (
-    <div className="border rounded-md w-full">
+    <div className="border rounded-md w-full bg-white">
       <div className="flex justify-between p-6">
         <h1>{heading}</h1>
         <Link to="/documents" className="text-blue-500">

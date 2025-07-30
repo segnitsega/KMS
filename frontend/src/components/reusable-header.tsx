@@ -53,7 +53,7 @@ const Header = ({
       <div className="flex items-center gap-2 mt-4">
         <div
           ref={inputRef}
-          className={`flex items-center border  rounded-md p-2 w-[100%] ${
+          className={`flex items-center bg-white border  rounded-md p-2 w-[100%] ${
             clicked ? "border-blue-500" : "border-gray-300"
           }`}
         >

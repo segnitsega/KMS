@@ -13,7 +13,7 @@ import { useLocation, Link } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   return (
-    <div className="border w-[20%]">
+    <div className="border w-[20%] bg-white">
       <div className="flex flex-col p-8 gap-4 border-b w-[110%] mb-10 ">
         <Link
           to="/dashboard"

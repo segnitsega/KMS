@@ -7,9 +7,9 @@ const Layout = () => {
   return (
     <div>
         <NavBar />
-        <div className="flex gap-4">
+        <div className="flex gap-4 bg-gray-50">
             <SideBar />
-            <main className="w-full">
+            <main className="w-full ">
               <Outlet /> 
               <Chatbot /> 
             </main>
