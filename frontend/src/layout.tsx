@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "./components/navBar"
 import SideBar from "./components/sideBar";
+import {Chatbot} from "./components/chatbot";
 
 const Layout = () => {
   return (
@@ -9,7 +10,8 @@ const Layout = () => {
         <div className="flex gap-4">
             <SideBar />
             <main className="w-full">
-              <Outlet />  
+              <Outlet /> 
+              <Chatbot /> 
             </main>
         </div>
     </div>
