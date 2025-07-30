@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import {BarChart3,TrendingUp,Users,FileText,BookOpen,Download,Eye,MessageCircle,} from 'lucide-react';
+import {BarChart3,TrendingUp,Users,FileText,BookOpen,Download,Eye,} from 'lucide-react';
 import {ResponsiveContainer,BarChart,Bar,XAxis,YAxis,Tooltip,CartesianGrid,Legend,} from 'recharts';
 import { useAnalytics } from '../hooks/useAnalytics';
 
@@ -166,13 +166,6 @@ const Analytics: React.FC = () => {
           Schedule Report
         </button>
       </div>
-      <button
-        aria-label="Chat"
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-        title="Chat with support"
-      >
-        <MessageCircle className="w-6 h-6" />
-      </button>
     </div>
   );
 };
