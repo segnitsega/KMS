@@ -39,7 +39,7 @@ const Header = ({
     };
   }, []);
   return (
-    <div className="p-6">
+    <div className="">
       <div className="flex justify-between">
         <div>
           <h1 className="font-bold text-2xl">{title}</h1>
