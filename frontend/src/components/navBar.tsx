@@ -4,7 +4,7 @@ import { BsPerson } from "react-icons/bs";
 import { useState, useRef, useEffect } from "react";
 
 const NavBar = () => {
-  const role = "Admin"; // This can be dynamic based on user role
+  const role = "admin"; // This can be dynamic based on user role
   const department = "IT"; // This can also be dynamic based on user department
   const [clicked, setClicked] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,12 +25,12 @@ const NavBar = () => {
     };
   }, []);
   return (
-    <div className="border py-2 px-10 w-full flex items-center gap-20 shadow">
+    <div className="border py-2 px-10 w-full flex items-center gap-20 shadow text-sm">
       <h1 className="flex items-center gap-2 w-[50%]">
-        <span className="bg-blue-600 text-white text-xl py-1 px-3 rounded-md">
-          k
+        <span className="bg-blue-600 text-white font-bold py-2 px-3 rounded-md ">
+          K
         </span>
-        <span className="font-bold text-xl">Knowledge Hub</span>
+        <span className="font-bold text-lg">Knowledge Hub</span>
       </h1>
       <div
         ref={inputRef}
@@ -53,7 +53,7 @@ const NavBar = () => {
         <IoIosNotificationsOutline className="text-gray-500 text-xl" />
         <div>
           <h1>Tadesse Gemechu</h1>
-          <span className="bg-red-300 text-red-500 mr-1 p-1 rounded-lg">
+          <span className="bg-pink-100 text-red-500 mr-1 py-1 px-2 rounded-lg">
             {role}
           </span>
           <span className="text-gray-500">{department}</span>
