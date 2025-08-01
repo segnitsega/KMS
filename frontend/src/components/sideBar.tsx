@@ -13,16 +13,15 @@ import { useLocation, Link } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   return (
-    <div className="border w-[20%] bg-white">
-      <div className="flex flex-col p-8 gap-4 border-b w-[110%] mb-10 ">
+    <div className="border mb-8 bg-white h-[100vh] ">
+      <div className="flex p-6 flex-col gap-4 ">
         <Link
           to="/dashboard"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/dashboard" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            ["/dashboard", "/"].includes(location.pathname) &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
-          // onClick={() => console.log("Dashboard clicked")}
         >
           <FiHome /> Dashboard
         </Link>
@@ -30,7 +29,7 @@ const SideBar = () => {
         <Link
           to="/documents"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/documents" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -41,7 +40,7 @@ const SideBar = () => {
         <Link
           to="/knowledge-base"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer border-r-2 border-white",
             location.pathname === "/knowledge-base" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -52,7 +51,7 @@ const SideBar = () => {
         <Link
           to="discussions"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/discussions" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -63,7 +62,7 @@ const SideBar = () => {
         <Link
           to="expert-directory"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/expert-directory" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -74,7 +73,7 @@ const SideBar = () => {
         <Link
           to="training"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/training" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -85,7 +84,7 @@ const SideBar = () => {
         <Link
           to="notifications"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/notifications" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -96,7 +95,7 @@ const SideBar = () => {
         <Link
           to="analytics"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/analytics" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
@@ -105,7 +104,10 @@ const SideBar = () => {
           Analytics
         </Link>
       </div>
-      <span className="flex gap-1 items-center text-lg p-2 cursor-pointer">
+
+      <div className="border-t mt-4"></div>
+
+      <span className="flex gap-2 items-center text-lg p-2 cursor-pointer">
         <IoIosHelpCircleOutline />
         Help & Support
       </span>
