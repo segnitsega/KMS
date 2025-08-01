@@ -5,17 +5,18 @@ import {Chatbot} from "./components/chatbot";
 
 const Layout = () => {
   return (
-    <div>
+    <div className="w-[100%]">
         <NavBar />
-        <div className="flex gap-4 bg-gray-50">
+        <div className="flex bg-gray-50">
             <SideBar />
-            <main className="w-full ">
+            <main className="p-6 flex-1">
               <Outlet /> 
-              <Chatbot /> 
+             <Chatbot /> 
             </main>
         </div>
     </div>
   )
 }
 
-export default Layout
+export default Layout 
+

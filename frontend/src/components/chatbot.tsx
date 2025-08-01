@@ -9,7 +9,7 @@ export const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-6 right-8 z-50 shadow bg-white rounded-t-lg">
+    <div className="fixed bottom-6 right-8 z-50 rounded-t-lg">
       {isOpen ? (
         <div className="border rounded-t-lg shadow h-[380px] w-[300px]">
           {/* chatbot header */}

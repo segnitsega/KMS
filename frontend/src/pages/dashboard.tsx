@@ -43,14 +43,14 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="flex flex-col gap-6 m-6">
+    <div className="flex flex-col gap-6">
       <div className="px-4 py-6 flex flex-col gap-4 bg-blue-500 rounded-md text-white">
         <h1 className="font-bold text-xl">Good morning, {userName}!</h1>
         <span className="text-lg">
           Ready to share knowledge and collaborate with your team?
         </span>
       </div>
-      <div className="flex gap-8">
+      <div className="flex gap-6">
         <StatusCard
           title="Total Documents"
           value={values[0]}
@@ -80,7 +80,7 @@ const Dashboard = () => {
           bgColor="bg-red-200"
         />
       </div>
-      <div className="flex gap-10">
+      <div className="flex gap-6">
         <DocumentCard
           heading="Recent Documents"
           titles={titles}
@@ -97,7 +97,7 @@ const Dashboard = () => {
           dates={dates}
         />
       </div>
-      <div className="flex justify-around">
+      <div className="flex justify-between ">
         <CreateDocumentCard
           title="Upload Document"
           text="Share knowledge with your team"
