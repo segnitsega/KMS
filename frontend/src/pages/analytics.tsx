@@ -26,7 +26,7 @@ const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Analytics & Reports</h1>
@@ -36,7 +36,7 @@ const Analytics: React.FC = () => {
           <select
             value={overviewFilter}
             onChange={(e) => setOverviewFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-gray-700"
+            className="border border-gray-300 rounded-md px-3 py-2 bg-gray-200"
           >
             <option>Overview</option>
             <option>Content Performance</option>
@@ -46,7 +46,7 @@ const Analytics: React.FC = () => {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-gray-700"
+            className="border border-gray-300 rounded-md px-3 py-2 bg-gray-200"
           >
             <option>Last 7 days</option>
             <option>Last 30 days</option>

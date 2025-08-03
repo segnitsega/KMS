@@ -1,7 +1,7 @@
-import React from 'react'
 import Header from '@/components/reusable-header'
 import FeaturedArticles from '@/components/featured-articles'
 import PostCard from '@/components/PostCard'
+
 
 const KnowledgeBase = () => {
   const articles = [
@@ -38,10 +38,11 @@ const KnowledgeBase = () => {
   ];
 
   return (
-    <div>
+    <div className='flex flex-col gap-6'>
       <Header title='Knowledge Base' subtitle='Collaborative wiki and knowledge articles' buttonText='New Article' dropDownText='Recently Updated ' dropDownOptions={["Recently Updated", "Most Popular", "Alphabetical"]} searchPlaceholder='Search document...'/>
-      <FeaturedArticles heading="Featured Articles" articles={articles} />
-      <div className="post-cards-container mt-6 flex flex-col gap-4">
+
+      <FeaturedArticles articles={articles} />
+      <div className="flex flex-col gap-4">
         {posts.map((post) => (
           <PostCard
             key={post.title}
