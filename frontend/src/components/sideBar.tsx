@@ -13,7 +13,7 @@ import { useLocation, Link } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   return (
-    <div className="border mb-8 bg-white h-[100vh] ">
+    <div className="border border-t-0 mb-8 bg-white h-[100vh] ">
       <div className="flex p-6 flex-col gap-4 ">
         <Link
           to="/dashboard"
@@ -23,7 +23,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FiHome /> Dashboard
+          <FiHome size={20}/> Dashboard
         </Link>
 
         <Link
@@ -34,7 +34,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <IoDocumentTextOutline />
+          <IoDocumentTextOutline size={20}/>
           Documents
         </Link>
         <Link
@@ -45,7 +45,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <PiBookOpen />
+          <PiBookOpen size={20}/>
           Knowledge Base
         </Link>
         <Link
@@ -56,7 +56,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FiMessageCircle />
+          <FiMessageCircle size={20}/>
           Discussions
         </Link>
         <Link
@@ -67,7 +67,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FiUsers />
+          <FiUsers size={20}/>
           Expert Directory
         </Link>
         <Link
@@ -78,7 +78,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <SlGraduation />
+          <SlGraduation size={20}/>
           Training
         </Link>
         <Link
@@ -89,7 +89,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <IoIosNotificationsOutline />
+          <IoIosNotificationsOutline size={20}/>
           Notifications
         </Link>
         <Link
@@ -100,15 +100,15 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FaRegChartBar />
+          <FaRegChartBar size={17}/>
           Analytics
         </Link>
       </div>
 
       <div className="border-t mt-4"></div>
 
-      <span className="flex gap-2 items-center text-lg p-2 cursor-pointer">
-        <IoIosHelpCircleOutline />
+      <span className="flex gap-2 items-center text-lg p-2 cursor-pointer my-8">
+        <IoIosHelpCircleOutline size={30}/>
         Help & Support
       </span>
     </div>

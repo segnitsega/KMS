@@ -3,7 +3,7 @@ import ExpertDirectoryCard from '@/cards/expert-directory/expert-directory-card'
 
 const ExpertDirectory = () => {
   return (
-    <div className="flex flex-col gap-6 m-6 ">
+    <div className="flex flex-col gap-6">
       <Header
         title="Expert Directory"
         subtitle="Find colleagues with specific skills and expertise"

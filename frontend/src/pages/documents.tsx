@@ -26,7 +26,7 @@ const Documents = () => {
     },
   ];
   return (
-    <div className="flex flex-col gap-6 m-6">
+    <div className="flex flex-col gap-6">
       <Header
         title="Documents"
         subtitle="Manage and share organizational documents"
