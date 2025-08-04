@@ -164,7 +164,7 @@ const LandingPage = () => {
               <div className="text-3xl font-bold text-cyan-400">Cloud-Based Access & Full Encryption</div>
               <p className="text-gray-300">Secure access from anywhere with enterprise-grade security</p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4">cd
               <div className="text-3xl font-bold text-cyan-400">24/7 Global Access & Support</div>
               <p className="text-gray-300">Round-the-clock availability and expert support</p>
             </div>
@@ -203,4 +203,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default LandingPage

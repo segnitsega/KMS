@@ -6,7 +6,7 @@ import { CiFilter } from "react-icons/ci";
 interface HeaderProps {
   title: string;
   subtitle: string;
-  buttonText: string;
+  buttonText?: string;
   dropDownText: string;
   dropDownOptions: string[];
   searchPlaceholder: string;
@@ -39,15 +39,18 @@ const Header = ({
     };
   }, []);
   return (
-    <div className="p-6">
+    <div className="">
       <div className="flex justify-between">
         <div>
           <h1 className="font-bold text-2xl">{title}</h1>
           <span className="text-gray-500">{subtitle}</span>
         </div>
-        <Button className="bg-blue-500 hover:bg-blue-500 cursor-pointer text-lg">
+        {
+         buttonText && (<Button className="bg-blue-500 hover:bg-blue-500 cursor-pointer text-lg">
           + {buttonText}
-        </Button>
+        </Button>)
+        }
+        
       </div>
 
       <div className="flex items-center gap-2 mt-4">

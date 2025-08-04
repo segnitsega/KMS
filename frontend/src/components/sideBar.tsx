@@ -13,100 +13,102 @@ import { useLocation, Link } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   return (
-    <div className="border w-[20%] bg-white">
-      <div className="flex flex-col p-8 gap-4 border-b w-[110%] mb-10 ">
+    <div className="border border-t-0 mb-8 bg-white h-[100vh] ">
+      <div className="flex p-6 flex-col gap-4 ">
         <Link
-          to="/dashboard"
+          to="dashboard"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/dashboard" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            ["/kms/dashboard", "/kms"].includes(location.pathname) &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
-          // onClick={() => console.log("Dashboard clicked")}
         >
-          <FiHome /> Dashboard
+          <FiHome size={20}/> Dashboard
         </Link>
 
         <Link
-          to="/documents"
+          to="documents"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/documents" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/documents" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <IoDocumentTextOutline />
+          <IoDocumentTextOutline size={20}/>
           Documents
         </Link>
         <Link
-          to="/knowledge-base"
+          to="knowledge-base"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/knowledge-base" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer border-r-2 border-white",
+            location.pathname === "/kms/knowledge-base" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <PiBookOpen />
+          <PiBookOpen size={20}/>
           Knowledge Base
         </Link>
         <Link
           to="discussions"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/discussions" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/discussions" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FiMessageCircle />
+          <FiMessageCircle size={20}/>
           Discussions
         </Link>
         <Link
           to="expert-directory"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/expert-directory" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/expert-directory" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FiUsers />
+          <FiUsers size={20}/>
           Expert Directory
         </Link>
         <Link
           to="training"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/training" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/training" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <SlGraduation />
+          <SlGraduation size={20}/>
           Training
         </Link>
         <Link
           to="notifications"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/notifications" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/notifications" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <IoIosNotificationsOutline />
+          <IoIosNotificationsOutline size={20}/>
           Notifications
         </Link>
         <Link
           to="analytics"
           className={cn(
-            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/analytics" &&
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/analytics" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FaRegChartBar />
+          <FaRegChartBar size={17}/>
           Analytics
         </Link>
       </div>
-      <span className="flex gap-1 items-center text-lg p-2 cursor-pointer">
-        <IoIosHelpCircleOutline />
+
+      <div className="border-t mt-4"></div>
+
+      <span className="flex gap-2 items-center text-lg p-2 cursor-pointer my-8">
+        <IoIosHelpCircleOutline size={30}/>
         Help & Support
       </span>
     </div>
