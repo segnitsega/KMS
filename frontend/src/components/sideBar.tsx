@@ -16,10 +16,10 @@ const SideBar = () => {
     <div className="border border-t-0 mb-8 bg-white h-[100vh] ">
       <div className="flex p-6 flex-col gap-4 ">
         <Link
-          to="/dashboard"
+          to="dashboard"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            ["/dashboard", "/"].includes(location.pathname) &&
+            ["/kms/dashboard", "/kms"].includes(location.pathname) &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -27,10 +27,10 @@ const SideBar = () => {
         </Link>
 
         <Link
-          to="/documents"
+          to="documents"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/documents" &&
+            location.pathname === "/kms/documents" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -38,10 +38,10 @@ const SideBar = () => {
           Documents
         </Link>
         <Link
-          to="/knowledge-base"
+          to="knowledge-base"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer border-r-2 border-white",
-            location.pathname === "/knowledge-base" &&
+            location.pathname === "/kms/knowledge-base" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -52,7 +52,7 @@ const SideBar = () => {
           to="discussions"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/discussions" &&
+            location.pathname === "/kms/discussions" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -63,7 +63,7 @@ const SideBar = () => {
           to="expert-directory"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/expert-directory" &&
+            location.pathname === "/kms/expert-directory" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -74,7 +74,7 @@ const SideBar = () => {
           to="training"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/training" &&
+            location.pathname === "/kms/training" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -85,7 +85,7 @@ const SideBar = () => {
           to="notifications"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/notifications" &&
+            location.pathname === "/kms/notifications" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
@@ -96,7 +96,7 @@ const SideBar = () => {
           to="analytics"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/analytics" &&
+            location.pathname === "/kms/analytics" &&
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
