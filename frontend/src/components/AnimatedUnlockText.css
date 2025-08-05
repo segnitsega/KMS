@@ -78,8 +78,6 @@
     opacity: 1;
   }
 }
-
-/* Responsive design */
 @media (max-width: 768px) {
   .animated-text {
     font-size: 3rem;
@@ -92,7 +90,6 @@
   }
 }
 
-/* New animation for buttons up-to-down movement */
 @keyframes upDownMove {
   0% {
     opacity: 0;
