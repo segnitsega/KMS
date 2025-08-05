@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Brain, Search,Settings,Users,FileText,BookOpen,TrendingUp,UserCheck,Play,ArrowRight} from 'lucide-react';
 import AnimatedUnlockText from '../components/AnimatedUnlockText';
+import AnimatedButtons from '../components/AnimatedButtons';
 
 const LandingPage = () => {
   return (
@@ -35,17 +36,7 @@ const LandingPage = () => {
                 through intelligent, secure, and searchable content.
               </p>
             </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              {<Link to="/kms" className="bg-cyan-400 text-blue-900 px-8 py-4 rounded-lg font-semibold hover:bg-cyan-300 transition-all duration-300 flex items-center justify-center group">
-                Get started
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link> }
-              <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300 flex items-center justify-center">
-                <Play className="mr-2 w-5 h-5" />
-                Watch Demo
-              </button>
-            </div>
+            <AnimatedButtons />
           </div>
           
           <div className="relative">

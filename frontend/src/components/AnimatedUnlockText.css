@@ -1,7 +1,8 @@
 .animated-text-container {
   position: relative;
-  overflow: hidden;
-}
+  width: 100%;
+  height: 100%; }
+
 
 .animated-text {
   font-size: 4rem;
@@ -44,26 +45,18 @@
 }
 
 .highlight {
-  color: #22d3ee;
+  color: #2563EB;
   position: relative;
   font-weight: 700;
   font-size: 4rem;
 }
 
 .highlight-text .letter {
-  animation: letterDrop 0.6s ease-out forwards, glow 2s ease-in-out infinite alternate;
+  animation: letterDrop 0.6s ease-out forwards, ease-in-out infinite alternate;
+  color: #56e0fc;
+  text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
 }
 
-@keyframes glow {
-  from {
-    text-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee, 0 0 30px #22d3ee;
-  }
-  to {
-    text-shadow: 0 0 20px #22d3ee, 0 0 30px #22d3ee, 0 0 40px #22d3ee, 0 0 50px #22d3ee;
-  }
-}
-
-/* Additional floating animation for the entire text */
 .animated-text-container::before {
   content: '';
   position: absolute;
@@ -71,7 +64,7 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgb(37, 99, 235) 0%, transparent 70%);
   animation: float 6s ease-in-out infinite;
   pointer-events: none;
 }
@@ -97,4 +90,20 @@
   .animated-text {
     font-size: 2.5rem;
   }
+}
+
+/* New animation for buttons up-to-down movement */
+@keyframes upDownMove {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.buttons-animate {
+  animation: upDownMove 2s ease forwards;
 }

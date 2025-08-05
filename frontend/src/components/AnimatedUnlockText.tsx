@@ -45,13 +45,14 @@ const AnimatedUnlockText = () => {
   };
 
   return (
-    <div ref={textRef} className="animated-text-container">
+    <div className="animated-unlock-text" ref={textRef}>
       <h1 className="animated-text">
-        {renderTextWithDelay('Unlock', 'line-1', 0.2)}
+        {renderTextWithDelay('Unlock', 'line-1', 0.4)}
         <br />
-        {renderTextWithDelay('Knowledge.', 'line-2', 0.4)}
+        {renderTextWithDelay('Knowledge', 'line-2', 0.6)}
         <br />
-        {renderTextWithDelay('Empower Teams.', 'highlight-text', 0.6)}
+        {renderTextWithDelay('Empower Teams.', 'highlight-text', 0.8)}
+        <br />
       </h1>
     </div>
   );
