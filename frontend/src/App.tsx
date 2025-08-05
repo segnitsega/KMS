@@ -10,15 +10,14 @@ import Notifications from "./pages/notifications";
 import Analytics from "./pages/analytics";
 import ProtectedRoute from "./utility/protected-route";
 import LandingPage from "./pages/landing-page";
-import SiginPage from "./pages/signin-page";
+import LoginPage from './pages/LoginPage';
 
-// implement 404 page !!
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/signin" element={<SiginPage />} />
+        <Route path="/LoginPage" element={<LoginPage />} />
         <Route
           path="/kms"
           element={

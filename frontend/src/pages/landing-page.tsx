@@ -1,12 +1,14 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Brain, Search,Settings,Users,FileText,BookOpen,TrendingUp,UserCheck,Play,ArrowRight} from 'lucide-react';
+import AnimatedUnlockText from '../components/AnimatedUnlockText';
+import AnimatedButtons from '../components/AnimatedButtons';
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-cyan-600">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-800 to-cyan-600" id="home">
       {/* Navigation */}
-      <nav className="flex items-center justify-between px-8 py-6">
+      <nav className="flex items-center justify-between px-8 py-3 ">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center">
             <span className="text-blue-900 font-bold text-sm">KMS</span>
@@ -14,11 +16,11 @@ const LandingPage = () => {
         </div>
         
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="text-white hover:text-cyan-300 transition-colors font-medium">Home</Link>
-          <Link to="/" className="text-white hover:text-cyan-300 transition-colors font-medium">Features</Link>
-          <Link to="/" className="text-white hover:text-cyan-300 transition-colors font-medium">About</Link>
-          <Link to="/" className="text-white hover:text-cyan-300 transition-colors font-medium">Contact</Link>
-          {<Link to="/" className="bg-cyan-400 text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition-colors">
+          <a href="#home" className="text-white hover:text-cyan-300 transition-colors font-medium">Home</a>
+          <a href="#features" className="text-white hover:text-cyan-300 transition-colors font-medium">Features</a>
+          <a href="#About" className="text-white hover:text-cyan-300 transition-colors font-medium">About</a>
+          <a href="#Contact" className="text-white hover:text-cyan-300 transition-colors font-medium">Contact</a>
+          {<Link to="../LoginPage" className="bg-cyan-400 text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition-colors">
             Join us</Link>}
         </div>
       </nav>
@@ -27,30 +29,14 @@ const LandingPage = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold text-white leading-tight">
-                Unlock
-                <br />
-                Knowledge.
-                <br />
-                <span className="text-cyan-300">Empower Teams.</span>
-              </h1>
+              <AnimatedUnlockText />
               <p className="text-xl text-blue-100 leading-relaxed max-w-lg">
                 Centralize your organizational knowledge. 
                 Streamline onboarding, and foster collaboration 
                 through intelligent, secure, and searchable content.
               </p>
             </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              {<Link to="/kms" className="bg-cyan-400 text-blue-900 px-8 py-4 rounded-lg font-semibold hover:bg-cyan-300 transition-all duration-300 flex items-center justify-center group">
-                Get started
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link> }
-              <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-all duration-300 flex items-center justify-center">
-                <Play className="mr-2 w-5 h-5" />
-                Watch Demo
-              </button>
-            </div>
+            <AnimatedButtons />
           </div>
           
           <div className="relative">
@@ -76,7 +62,7 @@ const LandingPage = () => {
       </div>
 
       {/* Key Features Section */}
-      <div className="bg-white py-20">
+      <div className="bg-white py-20" id="features">
         <div className="max-w-7xl mx-auto px-8">
           <h2 className="text-4xl font-bold text-center text-gray-900 mb-16">Key Features</h2>
           
@@ -151,7 +137,7 @@ const LandingPage = () => {
       </div>
 
       {/* Why Teams Rely Section */}
-      <div className="bg-gray-900 py-20">
+      <div className="bg-gray-900 py-20" id="About">
         <div className="max-w-7xl mx-auto px-8">
           <h2 className="text-4xl font-bold text-center text-white mb-16">Why Teams Rely on Our KMS</h2>
           
@@ -174,7 +160,7 @@ const LandingPage = () => {
             </div>
           </div>
           
-          <div className="mt-16 text-center">
+          <div className="mt-16 text-center" id="Contact">
             <p className="text-gray-300 text-lg leading-relaxed max-w-4xl mx-auto">
               "The platform cut our onboarding time in half. It's been our team's go-to help for all internal knowledge 
               management."
