@@ -1,12 +1,12 @@
 import { catchAsync } from "../utils/catchAsync";
 import { Request, Response } from "express";
 
-export const handleSignup = catchAsync(
+export const getDocuments = catchAsync(
   async (req: Request, res: Response): Promise<any> => {
     
   }
 );
 
-export const handleLogin = catchAsync(async(req: Request, res: Response): Promise<any> => {
+export const getDocumentById = catchAsync(async(req: Request, res: Response): Promise<any> => {
 
 })

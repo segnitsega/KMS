@@ -2,6 +2,8 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import { errorHandler } from "./middlewares/errorHandler.middleware";
+import { userRouter } from "./routes/users.routes";
+import { documentRouter } from "./routes/documents.routes";
 
 dotenv.config();
 const port = process.env.port;
@@ -11,10 +13,8 @@ server.use(cors({
     origin: "*"
 }))
 
-server.get("/", (req, res)=>{
-    res.send("Welcome to KMS backend server")
-})
-
+server.use('/api/user', userRouter)
+server.use('/api/docs', documentRouter)
 
 server.use(errorHandler)
 
