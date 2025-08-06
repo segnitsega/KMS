@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '@/components/reusable-header'
 import DiscussionPost from '@/components/DiscussionPost'
+import NewDiscussionModal from '@/components/NewDiscussionModal'
 
 const Discussions = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const samplePost = {
     title: 'Best practices for team collaboration',
     description: 'What are your favorite tools and techniques for team collaboration?',
@@ -23,6 +26,14 @@ const Discussions = () => {
     ],
   }
 
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div>
       <Header
@@ -39,10 +50,12 @@ const Discussions = () => {
           'Announcements',
         ]}
         searchPlaceholder="Search document..."
+        onButtonClick={openModal}
       />
       <div className="mt-6">
         <DiscussionPost {...samplePost} />
       </div>
+      {isModalOpen && <NewDiscussionModal onClose={closeModal} />}
     </div>
   )
 }

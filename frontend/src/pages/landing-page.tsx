@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Brain, Search,Settings,Users,FileText,BookOpen,TrendingUp,UserCheck,Play,ArrowRight} from 'lucide-react';
+import '../pages/LoginPage'
 import AnimatedUnlockText from '../components/AnimatedUnlockText';
 import AnimatedButtons from '../components/AnimatedButtons';
 
@@ -20,7 +21,7 @@ const LandingPage = () => {
           <a href="#features" className="text-white hover:text-cyan-300 transition-colors font-medium">Features</a>
           <a href="#About" className="text-white hover:text-cyan-300 transition-colors font-medium">About</a>
           <a href="#Contact" className="text-white hover:text-cyan-300 transition-colors font-medium">Contact</a>
-          {<Link to="../LoginPage" className="bg-cyan-400 text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition-colors">
+          {<Link to="/login" className="bg-cyan-400 text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-cyan-300 transition-colors">
             Join us</Link>}
         </div>
       </nav>

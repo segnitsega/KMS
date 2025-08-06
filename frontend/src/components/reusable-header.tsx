@@ -18,7 +18,8 @@ const Header = ({
   dropDownText,
   dropDownOptions,
   searchPlaceholder,
-}: HeaderProps) => {
+  onButtonClick,
+}: HeaderProps & { onButtonClick?: () => void }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [clicked, setClicked] = useState(false);
   const [selected, setSelected] = useState(dropDownText);
@@ -46,7 +47,7 @@ const Header = ({
           <span className="text-gray-500">{subtitle}</span>
         </div>
         {
-         buttonText && (<Button className="bg-blue-500 hover:bg-blue-500 cursor-pointer text-lg">
+         buttonText && (<Button onClick={onButtonClick} className="bg-blue-500 hover:bg-blue-500 cursor-pointer text-lg">
           + {buttonText}
         </Button>)
         }
