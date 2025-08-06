@@ -50,8 +50,8 @@ model Document {
   category    String[]
   documentUrl String
   version     DocumentVersion[]
-  downloads   Int
-  views       Int
+  downloads   Int               @default(0)
+  views       Int               @default(0)
 }
 
 model DocumentVersion {
