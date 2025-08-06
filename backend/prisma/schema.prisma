@@ -11,7 +11,6 @@ datasource db {
 enum UserRole {
   ADMIN
   USER
-  EMPLOYEE
 }
 
 model User {
@@ -21,10 +20,10 @@ model User {
   lastName       String
   department     String       @default("knowledge")
   role           UserRole     @default(USER)
-  profilePicture String
+  profilePicture String?
   joinedAt       DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  skills         String[]
+  skills         String[]  @default([])
   userDetail     UserDetail?
   replies        Replies[]
   discussions    Discussion[]
@@ -46,7 +45,7 @@ model Document {
   pages       Int?
   author      String
   uploadedAt  DateTime          @default(now())
-  category    String
+  category    String[]
   documentUrl String
   version     DocumentVersion[]
   downloads   Int
@@ -54,7 +53,7 @@ model Document {
 }
 
 model DocumentVersion {
-  id          String   @id
+  id          String   @id @default(uuid())
   version     Int
   document    Document @relation(fields: [documentId], references: [id])
   documentId  String
@@ -69,7 +68,7 @@ model Article {
   title       String
   description String
   author      String
-  category    String
+  category    String[]
   views       Int
   likes       Int
   uploadedAt  DateTime @default(now())
@@ -77,10 +76,11 @@ model Article {
 }
 
 model Discussion {
-  id       String    @id
+  id       String    @id @default(uuid())
   title    String
+  description String
   authorName   String
-  category String
+  category String[]
   likes    Int
   replies  Replies[]
   authorId String
