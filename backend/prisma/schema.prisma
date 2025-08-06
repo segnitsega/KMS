@@ -27,6 +27,8 @@ model User {
   userDetail     UserDetail?
   replies        Replies[]
   discussions    Discussion[]
+  password       String?
+  refreshToken   String?
 }
 
 model UserDetail {
