@@ -13,6 +13,8 @@ server.use(cors({
     origin: "*"
 }))
 
+server.use(express.json());
+
 server.use('/api/user', userRouter)
 server.use('/api/docs', documentRouter)
 
