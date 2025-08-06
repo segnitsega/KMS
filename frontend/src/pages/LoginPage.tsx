@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import LandingPage from "./landing-page";
+import "./landing-page";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
