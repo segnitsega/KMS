@@ -16,7 +16,7 @@ const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-700/35 backdrop-blur-md flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-gray-700/85 backdrop-blur-700 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-lg shadow-md">
         <h2 className="text-xl font-bold mb-4">Start New Discussion</h2>
         <div className="mb-4">
