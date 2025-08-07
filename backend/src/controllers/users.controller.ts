@@ -34,12 +34,20 @@ export const handleSignup = catchAsync(
     if (!newUser) throw new ApiError(400, "Error registering new user.");
 
     const accessToken = jwt.sign(
-      { id: newUser.id, role: newUser.role },
+      {
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        role: newUser.role,
+      },
       secretKey,
       { expiresIn: "2h" }
     );
     const refreshToken = jwt.sign(
-      { id: newUser.id, role: newUser.role },
+      {
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        role: newUser.role,
+      },
       refreshKey,
       { expiresIn: "7d" }
     );
@@ -60,38 +68,49 @@ export const handleSignup = catchAsync(
 );
 
 export const handleLogin = catchAsync(
-    async (req: Request, res: Response): Promise<any> => {
-      const { email, password } = req.body;
+  async (req: Request, res: Response): Promise<any> => {
+    const { email, password } = req.body;
 
-      const userFound = await prisma.user.findUnique({
-        where: { email },
-      });
-      if (!userFound)
-        throw new ApiError(400, `User with email ${email} is not found`);
+    const userFound = await prisma.user.findUnique({
+      where: { email },
+    });
+    if (!userFound)
+      throw new ApiError(400, `User with email ${email} is not found`);
 
-      const passwordMatch = await bcrypt.compare(password, userFound.password as string);
-      if (!passwordMatch) throw new ApiError(400, "Invalid password");
-      const accessToken = jwt.sign(
-        { id: userFound.id, role: userFound.role },
-        secretKey,
-        { expiresIn: "2h" }
-      );
-      const refreshToken = jwt.sign(
-        { id: userFound.id, role: userFound.role },
-        refreshKey,
-        { expiresIn: "7d" }
-      );
-      await prisma.user.update({
-        where: { email },
-        data: {
-          refreshToken,
-        },
-      });
+    const passwordMatch = await bcrypt.compare(
+      password,
+      userFound.password as string
+    );
+    if (!passwordMatch) throw new ApiError(400, "Invalid password");
+    const accessToken = jwt.sign(
+      {
+        firstName: userFound.firstName,
+        lastName: userFound.lastName,
+        role: userFound.role,
+      },
+      secretKey,
+      { expiresIn: "2h" }
+    );
+    const refreshToken = jwt.sign(
+      {
+        firstName: userFound.firstName,
+        lastName: userFound.lastName,
+        role: userFound.role,
+      },
+      refreshKey,
+      { expiresIn: "7d" }
+    );
+    await prisma.user.update({
+      where: { email },
+      data: {
+        refreshToken,
+      },
+    });
 
-      res.status(200).json({
-        message: "login successful",
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      });
-    }
+    res.status(200).json({
+      message: "login successful",
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+  }
 );
