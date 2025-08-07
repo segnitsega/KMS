@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 
 const secretKey = process.env.secret_key as string; 
 
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
