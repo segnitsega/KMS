@@ -49,10 +49,18 @@ export const handleValidationErrors = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(req.body);
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const firstError = errors.array()[0].msg;
-    return next(new ApiError(400, firstError));
+    const allErrors = errors.array().map((err) => ({
+      message: err.msg,
+    }));
+    return res.status(400).json({
+      success: false,
+      errors: allErrors,
+    });
   }
+
   next();
 };
