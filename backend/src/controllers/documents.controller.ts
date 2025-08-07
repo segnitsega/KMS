@@ -3,8 +3,10 @@ import { Request, Response } from "express";
 import prisma from "../lib/prisma";
 import { ApiError } from "../utils/api-error-class";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware";
-
+import * as fs from "fs";
 import { isDevelopment } from "../utils/env";
+import cloudinary from "../middlewares/cloudinary";
+import path from "path";
 
 export const getDocuments = catchAsync(
   async (req: Request, res: Response): Promise<any> => {
@@ -43,36 +45,66 @@ export const getDocumentById = catchAsync(
 
 export const handleDocumentUpload = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {
-    const {firstName, lastName} = req.user
-    const { title, description, pages, category, documentVersion } =
-      req.body;
+    const { firstName, lastName } = req.user;
+    const { title, description, pages, category, documentVersion } = req.body;
     const file = req.file;
 
     if (!file) throw new ApiError(400, "No file uploaded");
 
-    const documentUrl = isDevelopment
-      ? (file as any).path 
-      : `/uploads/${file.filename}`; 
+    // const documentUrl = isDevelopment
+    //   ? (file as any).path
+    //   : `/uploads/${file.filename}`;
+
+    if (isDevelopment) {
+      const streamUpload = () => {
+        return new Promise<{ secure_url: string }>((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder: "kms-documents",
+              public_id: path.parse(file.originalname).name,
+              resource_type: "auto",
+            },
+            (error, result) => {
+              if (error) return reject(error);
+              resolve(result as any);
+            }
+          );
+
+          stream.end(file.buffer);
+        });
+      };
+
+      const uploadResult = await streamUpload();
+      var documentUrl = uploadResult.secure_url;
+    } else {
+      const filePath = path.join(
+        __dirname,
+        "../../uploads",
+        `${Date.now()}-${file.originalname}`
+      );
+      await fs.promises.writeFile(filePath, file.buffer);
+      var documentUrl = `/uploads/${path.basename(filePath)}`;
+    }
 
     const documentData = {
       title,
       description,
-      pages,
+      pages: parseInt(pages),
       author: `${firstName} ${lastName}`,
       category,
-      documentUrl
+      documentUrl,
     };
     const newDocument = await prisma.document.create({
-      data: documentData
+      data: documentData,
     });
 
     const storeDocumentVersion = await prisma.documentVersion.create({
       data: {
-        version: documentVersion,
+        version: parseFloat(documentVersion),
         documentId: newDocument.id,
         documentUrl,
-      }
-    })
+      },
+    });
 
     res.status(201).json({
       success: true,

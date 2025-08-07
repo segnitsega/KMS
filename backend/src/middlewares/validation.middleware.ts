@@ -1,5 +1,4 @@
 import { body, validationResult } from 'express-validator';
-import { ApiError } from '../utils/api-error-class';
 import { Request, Response, NextFunction } from 'express';
 
 export const validateDocumentData = [
@@ -49,7 +48,6 @@ export const handleValidationErrors = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body);
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
