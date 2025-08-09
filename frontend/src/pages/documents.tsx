@@ -1,5 +1,5 @@
 import Header from "@/components/reusable-header";
-import DocumentPageCard from "@/cards/dashboard/documents/document-page-card";
+import DocumentPageCard from "@/cards/documents/document-page-card";
 
 const Documents = () => {
   const documents = [
