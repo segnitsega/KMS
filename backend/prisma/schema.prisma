@@ -71,8 +71,8 @@ model Article {
   description String
   author      String
   category    String[]
-  views       Int @default(0)
-  likes       Int @default(0)
+  views       Int      @default(0)
+  likes       Int      @default(0)
   uploadedAt  DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -83,10 +83,11 @@ model Discussion {
   description String
   authorName  String
   category    String[]
-  likes       Int
+  likes       Int       @default(0)
   replies     Replies[]
   authorId    String
   author      User      @relation(fields: [authorId], references: [id])
+  uploadedAt  DateTime  @default(now())
 }
 
 model Replies {
