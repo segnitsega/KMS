@@ -112,3 +112,34 @@ export const handleDocumentUpload = catchAsync(
     });
   }
 );
+
+export const handleDocumentSearch = catchAsync(
+  async (req: Request, res: Response): Promise<any> => {
+    const query = (req.query.q as string) || "";
+    if (!query.trim()) {
+      throw new ApiError(400, "Search query is required");
+    }
+
+    const results = await prisma.document.findMany({
+      where: {
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { description: { contains: query, mode: "insensitive" } },
+          { category: { has: query } },
+        ],
+      },
+      orderBy: {
+        uploadedAt: "desc",
+      },
+    });
+
+    if (results.length === 0) {
+      throw new ApiError(404, "No matching documents found");
+    }
+
+    res.status(200).json({
+      totalResults: results.length,
+      documents: results,
+    });
+  }
+);
