@@ -5,6 +5,7 @@ import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { userRouter } from "./routes/users.routes";
 import { documentRouter } from "./routes/documents.routes";
 import { articleRouter } from "./routes/articles.routes";
+import { discussionRouter } from "./routes/discussions.routes";
 
 dotenv.config();
 const port = process.env.port;
@@ -19,6 +20,7 @@ server.use(express.json());
 server.use('/api/user', userRouter)
 server.use('/api/docs', documentRouter)
 server.use('/api/articles', articleRouter)
+server.use('/api/discussions', discussionRouter)
 
 server.use(errorHandler)
 
