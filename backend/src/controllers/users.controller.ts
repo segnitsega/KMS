@@ -114,3 +114,68 @@ export const handleLogin = catchAsync(
     });
   }
 );
+
+export const getUsers = catchAsync(
+  async (req: Request, res: Response): Promise<any> => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+    const [users, totalUsers] = await Promise.all([
+      prisma.user.findMany({
+        skip,
+        take: limit,
+      }),
+      prisma.discussion.count(),
+    ]);
+    if (users.length === 0) throw new ApiError(400, "No users found");
+    res.status(200).json({
+      totalUsers: totalUsers,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
+      users: users,
+    });
+  }
+);
+
+export const getUserById = catchAsync(
+  async (req: Request, res: Response): Promise<any> => {
+    const id = req.params.id;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!user) throw new ApiError(400, "Error finding user");
+    res.status(200).json({ user: user });
+  }
+);
+
+export const handleUserSearch = catchAsync(
+  async (req: Request, res: Response): Promise<any> => {
+    const query = (req.query.q as string) || "";
+    if (!query.trim()) {
+      throw new ApiError(400, "Search query is required");
+    }
+
+    const results = await prisma.user.findMany({
+      where: {
+        OR: [
+          { firstName: { contains: query, mode: "insensitive" } },
+          { lastName: { contains: query, mode: "insensitive" } },
+          { email: { contains: query, mode: "insensitive" } },
+          { skills: { has: query } },
+          { department: { contains: query, mode: "insensitive" } },
+        ],
+      }
+    });
+
+    if (results.length === 0) {
+      throw new ApiError(404, "No matching users found");
+    }
+
+    res.status(200).json({
+      totalResults: results.length,
+      users: results,
+    });
+  }
+);
