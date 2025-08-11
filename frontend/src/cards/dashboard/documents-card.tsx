@@ -11,6 +11,7 @@ interface documentCardProp {
   dates: string[];
   icon?: IconType;
   articleViews?: number[];
+  onViewAll?: () => void;
 }
 
 const DocumentCard = ({
@@ -21,14 +22,24 @@ const DocumentCard = ({
   dates,
   icon: Icon,
   articleViews,
+  onViewAll,
 }: documentCardProp) => {
   return (
     <div className="border rounded-md w-full bg-white">
       <div className="flex justify-between p-6">
         <h1>{heading}</h1>
-        <Link to="/documents" className="text-blue-500">
-          View all
-        </Link>
+        {onViewAll ? (
+          <button
+            className="text-blue-500 hover:underline"
+            onClick={onViewAll}
+          >
+            View all
+          </button>
+        ) : (
+          <Link to="/documents" className="text-blue-500">
+            View all
+          </Link>
+        )}
       </div>
 
       <div className="border-b my-2"></div>

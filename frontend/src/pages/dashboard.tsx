@@ -2,12 +2,16 @@ import { IoDocumentTextOutline } from "react-icons/io5";
 import { PiBookOpen } from "react-icons/pi";
 import { FiUsers } from "react-icons/fi";
 import { FiMessageCircle } from "react-icons/fi";
+
 import StatusCard from "@/cards/dashboard/status-cards";
 import DocumentCard from "@/cards/dashboard/documents-card";
 import CreateDocumentCard from "@/cards/dashboard/document-discusion-card";
+import RecentDocumentsModal from "@/components/RecentDocumentsModal";
+import { useState } from "react";
 
 const Dashboard = () => {
   const userName = "Tadesse Gemechu";
+  const [showRecentModal, setShowRecentModal] = useState(false);
   const values = [156, 86, 78, 24];
 
   const documentsFromBackend = [
@@ -44,6 +48,12 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-6">
+      {showRecentModal && (
+        <RecentDocumentsModal
+          documents={documentsFromBackend}
+          onClose={() => setShowRecentModal(false)}
+        />
+      )}
       <div className="px-4 py-6 flex flex-col gap-4 bg-blue-500 rounded-md text-white">
         <h1 className="font-bold text-xl">Hello, {userName}!</h1>
         <span className="text-lg">
@@ -81,14 +91,17 @@ const Dashboard = () => {
         />
       </div>
       <div className="flex gap-6">
-        <DocumentCard
-          heading="Recent Documents"
-          titles={titles}
-          owners={owners}
-          downloads={downloads}
-          dates={dates}
-          icon={IoDocumentTextOutline}
-        />
+        <div className="w-full">
+          <DocumentCard
+            heading="Recent Documents"
+            titles={titles}
+            owners={owners}
+            downloads={downloads}
+            dates={dates}
+            icon={IoDocumentTextOutline}
+            onViewAll={() => setShowRecentModal(true)}
+          />
+        </div>
         <DocumentCard
           heading="Popular Articles"
           titles={titles}
