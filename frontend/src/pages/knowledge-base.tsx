@@ -1,7 +1,17 @@
-import Header from '@/components/reusable-header'
-import FeaturedArticles from '@/components/featured-articles'
-import PostCard from '@/components/PostCard'
+import { useState } from 'react';
+import KnowledgebaseModal from '@/components/KnowledgebaseModal';
+import Header from '@/components/reusable-header';
+import FeaturedArticles from '@/components/featured-articles';
+import PostCard from '@/components/PostCard';
 
+type Post = {
+  title: string;
+  description: string;
+  tags: string[];
+  author: string;
+  updatedDate: string;
+  views: number;
+};
 
 const KnowledgeBase = () => {
   const articles = [
@@ -10,7 +20,7 @@ const KnowledgeBase = () => {
     { title: 'State Management with Redux', author: 'Alice Johnson', views: 80 },
   ];
 
-  const posts = [
+  const posts: Post[] = [
     {
       title: 'Remote Work Best Practices',
       description: 'Guidelines and tips for effective remote work...',
@@ -37,6 +47,16 @@ const KnowledgeBase = () => {
     },
   ];
 
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+
+  const handleView = (post: Post) => {
+    setSelectedPost(post);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+  };
+
   return (
     <div className='flex flex-col gap-6'>
       <Header title='Knowledge Base' subtitle='Collaborative wiki and knowledge articles' buttonText='New Article' dropDownText='Recently Updated ' dropDownOptions={["Recently Updated", "Most Popular", "Alphabetical"]} searchPlaceholder='Search document...'/>
@@ -52,11 +72,17 @@ const KnowledgeBase = () => {
             author={post.author}
             updatedDate={post.updatedDate}
             views={post.views}
+            onView={() => handleView(post)}
           />
         ))}
       </div>
-    </div>
-  )
-}
 
-export default KnowledgeBase
+      {/* Modal for knowledgebase view */}
+      {selectedPost && (
+        <KnowledgebaseModal post={selectedPost} onClose={handleCloseModal} />
+      )}
+    </div>
+  );
+};
+
+export default KnowledgeBase;
