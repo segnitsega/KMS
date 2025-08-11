@@ -5,10 +5,10 @@ import DocumentPageCard from "@/cards/documents/document-page-card";
 const RecentDocumentsModal = ({ documents, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md p-4 animate-fadeIn">
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-[1200px] max-h-[105vh] relative border border-gray-200 transform scale-95 animate-scaleIn flex flex-col">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-[1200px] max-h-[102vh] relative border border-gray-200 transform scale-95 animate-scaleIn flex flex-col">
         
         <button
-          className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 transition-colors text-2xl font-bold z-10"
+          className="absolute top-5 right-5 text-gray-400 hover:text-gray-700 transition-colors text-2xl font-bold z-20"
           onClick={onClose}
           aria-label="Close Modal"
         >
