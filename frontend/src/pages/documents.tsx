@@ -1,10 +1,12 @@
 import Header from "@/components/reusable-header";
 import DocumentPageCard from "@/cards/documents/document-page-card";
 import UploadDocumentModal from "@/components/UploadDocumentModal";
+import DocumentPreviewModal from "@/components/document-preview-modal";
 import { useState } from "react";
 
 const Documents = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [previewDoc, setPreviewDoc] = useState<null | any>(null);
   const documents = [
     {
       title: "Employee Onboarding Guide",
@@ -47,16 +49,36 @@ const Documents = () => {
       />
 
       <div className="flex gap-6">
-        {documents.map((doc, index) => (
-          <DocumentPageCard
-            key={index}
-            title={doc.title}
-            author={doc.author}
-            date={doc.date}
-            numberOfDownloads={parseFloat(doc.numberOfDownloads)}
-            categories={doc.categories}
+        {documents.map((doc, index) => {
+          const cardProps = {
+            title: doc.title,
+            author: doc.author,
+            date: doc.date,
+            numberOfDownloads: parseFloat(doc.numberOfDownloads),
+            categories: doc.categories,
+            description: (doc as any).description || '',
+            tags: (doc as any).tags || [],
+            downloadUrl: (doc as any).downloadUrl,
+          };
+          return (
+            <DocumentPageCard
+              key={index}
+              {...cardProps}
+              onView={() => setPreviewDoc({
+                ...cardProps,
+                category: doc.categories[0] || "General",
+                downloads: doc.numberOfDownloads ? parseFloat(doc.numberOfDownloads) : 0,
+              })}
+            />
+          );
+        })}
+        {previewDoc && (
+          <DocumentPreviewModal
+            open={!!previewDoc}
+            onClose={() => setPreviewDoc(null)}
+            document={previewDoc}
           />
-        ))}
+        )}
       </div>
     </div>
   );
