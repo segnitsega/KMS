@@ -9,12 +9,14 @@ import CreateDocumentCard from "@/cards/dashboard/document-discusion-card";
 import RecentDocumentsModal from "@/components/RecentDocumentsModal";
 import PopularArticlesModal from "@/components/PopularArticlesModal";
 import { useState } from "react";
+import UploadDocumentModal from "@/components/UploadDocumentModal";
 
 const Dashboard = () => {
   const userName = "Tadesse Gemechu";
   const [showRecentModal, setShowRecentModal] = useState(false);
   const [showPopularModal, setShowPopularModal] = useState(false);
   const values = [156, 86, 78, 24];
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const documentsFromBackend = [
     {
@@ -70,6 +72,15 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col gap-6">
+      {showUploadModal && (
+        <UploadDocumentModal
+          onClose={() => setShowUploadModal(false)}
+          onUpload={(file, description) => {
+            // TODO: handle upload logic here
+            setShowUploadModal(false);
+          }}
+        />
+      )}
       {showRecentModal && (
         <RecentDocumentsModal
           documents={documentsFromBackend}
@@ -140,20 +151,22 @@ const Dashboard = () => {
         />
       </div>
       <div className="flex justify-between ">
+        <div onClick={() => setShowUploadModal(true)} style={{ cursor: 'pointer' }}>
+          <CreateDocumentCard
+            title="Upload Document"
+            text="Share knowledge with your team"
+            icon={IoDocumentTextOutline}
+            iconStyle="text-blue-700 bg-blue-200"
+          />
+        </div>
         <CreateDocumentCard
-          title="Upload Document"
-          text="Share knowledge with your team"
-          icon={IoDocumentTextOutline}
-          iconStyle="text-blue-700 bg-blue-200"
-        />
-        <CreateDocumentCard
-          title="Upload Document"
+          title="Create Knowledge Article"
           text="Write a knowledge base article"
           icon={PiBookOpen}
           iconStyle="text-green-700 bg-green-200"
         />
         <CreateDocumentCard
-          title="Upload Document"
+          title="Start New Discussion"
           text="Ask questions and collaborate"
           icon={FiMessageCircle}
           iconStyle="text-purple-700 bg-purple-200"
