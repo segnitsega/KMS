@@ -7,12 +7,16 @@ import StatusCard from "@/cards/dashboard/status-cards";
 import DocumentCard from "@/cards/dashboard/documents-card";
 import CreateDocumentCard from "@/cards/dashboard/document-discusion-card";
 import RecentDocumentsModal from "@/components/RecentDocumentsModal";
+import PopularArticlesModal from "@/components/PopularArticlesModal";
 import { useState } from "react";
+import UploadDocumentModal from "@/components/UploadDocumentModal";
 
 const Dashboard = () => {
   const userName = "Tadesse Gemechu";
   const [showRecentModal, setShowRecentModal] = useState(false);
+  const [showPopularModal, setShowPopularModal] = useState(false);
   const values = [156, 86, 78, 24];
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const documentsFromBackend = [
     {
@@ -46,12 +50,47 @@ const Dashboard = () => {
     (document) => document.articleViews
   );
 
+  // Example data for popular articles (replace with real data as needed)
+  const popularArticles = [
+    {
+      title: "Remote Work Best Practices",
+      description: "Guidelines and tips for effective remote work...",
+      author: "Sarah Johnson",
+      date: "2024-01-14",
+      views: 156,
+      tags: ["remote work", "productivity", "collaboration"],
+    },
+    {
+      title: "Code Review Process",
+      description: "Step-by-step guide to our code review workflow...",
+      author: "Michael Chen",
+      date: "2024-01-13",
+      views: 89,
+      tags: ["code review", "development", "quality"],
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-6">
+      {showUploadModal && (
+        <UploadDocumentModal
+          onClose={() => setShowUploadModal(false)}
+          onUpload={(file, description) => {
+            // TODO: handle upload logic here
+            setShowUploadModal(false);
+          }}
+        />
+      )}
       {showRecentModal && (
         <RecentDocumentsModal
           documents={documentsFromBackend}
           onClose={() => setShowRecentModal(false)}
+        />
+      )}
+      {showPopularModal && (
+        <PopularArticlesModal
+          articles={popularArticles}
+          onClose={() => setShowPopularModal(false)}
         />
       )}
       <div className="px-4 py-6 flex flex-col gap-4 bg-blue-500 rounded-md text-white">
@@ -108,23 +147,26 @@ const Dashboard = () => {
           owners={owners}
           articleViews={articleViews}
           dates={dates}
+          onViewAll={() => setShowPopularModal(true)}
         />
       </div>
       <div className="flex justify-between ">
+        <div onClick={() => setShowUploadModal(true)} style={{ cursor: 'pointer' }}>
+          <CreateDocumentCard
+            title="Upload Document"
+            text="Share knowledge with your team"
+            icon={IoDocumentTextOutline}
+            iconStyle="text-blue-700 bg-blue-200"
+          />
+        </div>
         <CreateDocumentCard
-          title="Upload Document"
-          text="Share knowledge with your team"
-          icon={IoDocumentTextOutline}
-          iconStyle="text-blue-700 bg-blue-200"
-        />
-        <CreateDocumentCard
-          title="Upload Document"
+          title="Create Knowledge Article"
           text="Write a knowledge base article"
           icon={PiBookOpen}
           iconStyle="text-green-700 bg-green-200"
         />
         <CreateDocumentCard
-          title="Upload Document"
+          title="Start New Discussion"
           text="Ask questions and collaborate"
           icon={FiMessageCircle}
           iconStyle="text-purple-700 bg-purple-200"
