@@ -10,6 +10,10 @@ interface createDocumentCardProp {
   date: string;
   numberOfDownloads: number;
   categories: string[];
+  description?: string;
+  tags?: string[];
+  onView?: () => void;
+  downloadUrl?: string;
 }
 
 const DocumentPageCard = ({
@@ -18,6 +22,10 @@ const DocumentPageCard = ({
   date,
   numberOfDownloads,
   categories,
+  description,
+  tags,
+  onView,
+  downloadUrl,
 }: createDocumentCardProp) => {
   return (
     <div className="bg-white border rounded-md shadow w-full">
@@ -40,21 +48,34 @@ const DocumentPageCard = ({
       </div>
 
       <div className="flex gap-4 mt-4 text-gray-500 text-sm px-4 ">
-        {categories.map((category, index) => (
-          <span key={index} className="bg-gray-100 p-1 rounded-md">
-            {category}
-          </span>
-        ))}
+        {Array.isArray(tags) && tags.length > 0
+          ? tags.map((tag, idx) => (
+              <span key={idx} className="bg-gray-100 p-1 rounded-md">
+                {tag}
+              </span>
+            ))
+          : categories.map((category, index) => (
+              <span key={index} className="bg-gray-100 p-1 rounded-md">
+                {category}
+              </span>
+            ))}
       </div>
 
       <div className="flex gap-4 border-t-1 mt-6 px-6 py-4">
-        <span className="flex gap-1 items-center text-gray-500 ">
+        <button
+          className="flex gap-1 items-center text-blue-600 hover:underline focus:outline-none"
+          onClick={onView}
+          type="button"
+        >
           <IoEyeOutline /> View
-        </span>
-
-        <span className="flex gap-1 items-center text-gray-500 ">
+        </button>
+        <a
+          href={downloadUrl || '#'}
+          className="flex gap-1 items-center text-gray-500 hover:underline"
+          download
+        >
           <FiDownload /> Download
-        </span>
+        </a>
       </div>
     </div>
   );

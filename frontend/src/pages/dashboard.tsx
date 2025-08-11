@@ -10,6 +10,8 @@ import RecentDocumentsModal from "@/components/RecentDocumentsModal";
 import PopularArticlesModal from "@/components/PopularArticlesModal";
 import { useState } from "react";
 import UploadDocumentModal from "@/components/UploadDocumentModal";
+import CreateArticleModal from "@/components/create-article-modal";
+import NewDiscussionModal from "@/components/NewDiscussionModal";
 
 const Dashboard = () => {
   const userName = "Tadesse Gemechu";
@@ -17,6 +19,8 @@ const Dashboard = () => {
   const [showPopularModal, setShowPopularModal] = useState(false);
   const values = [156, 86, 78, 24];
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showCreateArticleModal, setShowCreateArticleModal] = useState(false);
+  const [showDiscussionModal, setShowDiscussionModal] = useState(false);
 
   const documentsFromBackend = [
     {
@@ -79,6 +83,17 @@ const Dashboard = () => {
             // TODO: handle upload logic here
             setShowUploadModal(false);
           }}
+        />
+      )}
+      {showCreateArticleModal && (
+        <CreateArticleModal
+          onClose={() => setShowCreateArticleModal(false)}
+          onCreate={() => setShowCreateArticleModal(false)}
+        />
+      )}
+      {showDiscussionModal && (
+        <NewDiscussionModal
+          onClose={() => setShowDiscussionModal(false)}
         />
       )}
       {showRecentModal && (
@@ -159,18 +174,22 @@ const Dashboard = () => {
             iconStyle="text-blue-700 bg-blue-200"
           />
         </div>
-        <CreateDocumentCard
-          title="Create Knowledge Article"
-          text="Write a knowledge base article"
-          icon={PiBookOpen}
-          iconStyle="text-green-700 bg-green-200"
-        />
-        <CreateDocumentCard
-          title="Start New Discussion"
-          text="Ask questions and collaborate"
-          icon={FiMessageCircle}
-          iconStyle="text-purple-700 bg-purple-200"
-        />
+        <div onClick={() => setShowCreateArticleModal(true)} style={{ cursor: 'pointer' }}>
+          <CreateDocumentCard
+            title="Create Knowledge Article"
+            text="Write a knowledge base article"
+            icon={PiBookOpen}
+            iconStyle="text-green-700 bg-green-200"
+          />
+        </div>
+        <div onClick={() => setShowDiscussionModal(true)} style={{ cursor: 'pointer' }}>
+          <CreateDocumentCard
+            title="Start New Discussion"
+            text="Ask questions and collaborate"
+            icon={FiMessageCircle}
+            iconStyle="text-purple-700 bg-purple-200"
+          />
+        </div>
       </div>
     </div>
   );
