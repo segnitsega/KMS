@@ -53,6 +53,32 @@ export const handleDocumentUpload = catchAsync(
     var documentUrl = "";
     const isDevelopment = process.env.STORAGE === "development";
 
+    let finalCategory: string[] = [];
+
+    if (Array.isArray(category)) {
+      finalCategory = category;
+    } else if (typeof category === "string") {
+      const trimmed = category.trim();
+      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+        try {
+          finalCategory = JSON.parse(trimmed);
+        } catch {
+          throw new ApiError(400, "Invalid category JSON format");
+        }
+      } else {
+        finalCategory = trimmed.split(",").map((item) => item.trim());
+      }
+    }
+
+    if (
+      !finalCategory.length ||
+      !finalCategory.every(
+        (item) => typeof item === "string" && item.trim().length > 0
+      )
+    ) {
+      throw new ApiError(400, "Category must be a non-empty array of strings");
+    }
+
     if (isDevelopment) {
       const publicId = `document_${Date.now()}_${Math.round(
         Math.random() * 1e6
@@ -60,33 +86,6 @@ export const handleDocumentUpload = catchAsync(
 
       const uploadResult = await uploadToCloudinary(file.buffer, publicId);
       documentUrl = uploadResult.secure_url;
-
-      // try {
-      //   const uploadResult = await new Promise<{ secure_url: string }>(
-      //     (resolve, reject) => {
-      //       const stream = cloudinary.uploader.upload_stream(
-      //         {
-      //           folder: "kms-documents",
-      //           public_id: `${Date.now()}-${
-      //             path.parse(file.originalname).name
-      //           }`,
-      //           resource_type: "auto",
-      //         },
-      //         (error, result) => {
-      //           if (error) {
-      //             console.error("Cloudinary upload error:", error);
-      //             reject(new ApiError(500, "File upload failed"));
-      //           }
-      //           resolve(result!);
-      //         }
-      //       );
-      //       stream.end(file.buffer);
-      //     }
-      //   );
-      //   documentUrl = uploadResult.secure_url;
-      // } catch (error) {
-      //   throw new ApiError(500, "Failed to upload file to Cloudinary");
-      // }
     } else {
       const uploadDir = path.join(__dirname, "../../uploads");
       if (!fs.existsSync(uploadDir)) {
@@ -100,15 +99,14 @@ export const handleDocumentUpload = catchAsync(
       documentUrl = `/uploads/${path.basename(filePath)}`;
     }
 
-    if(documentUrl === "") throw new ApiError(500, "Error uploading document")
+    if (documentUrl === "") throw new ApiError(500, "Error uploading document");
 
-      
     const documentData = {
       title,
       description,
       pages: parseInt(pages),
       author: `${firstName} ${lastName}`,
-      category,
+      category: finalCategory,
       documentUrl,
     };
 
