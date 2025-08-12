@@ -11,12 +11,14 @@ export const validateDocumentData = [
     .isInt({ gt: 0 })
     .withMessage("Pages must be a positive integer"),
 
-  body("category").custom((value) => {
+  body("category").custom((value, {req}) => {
+    let parsedValue = value;
+
     if (typeof value === "string") {
       try {
-        value = JSON.parse(value);
+        parsedValue = JSON.parse(value);
       } catch (e) {
-        value = value.split(",");
+        parsedValue = value.split(",").map((item) => item.trim());
       }
     }
 
@@ -25,13 +27,14 @@ export const validateDocumentData = [
     }
 
     if (
-      value.length === 0 ||
-      !value.every((item) => typeof item === "string" && item.trim().length > 0)
+      parsedValue.length === 0 ||
+      !parsedValue.every((item: String) => typeof item === "string" && item.trim().length > 0)
     ) {
       throw new Error(
         "Category must be a non-empty array of non-empty strings"
       );
     }
+    req.body.category = parsedValue;
     return true;
   }),
 

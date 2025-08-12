@@ -102,6 +102,7 @@ export const handleDocumentUpload = catchAsync(
 
     if(documentUrl === "") throw new ApiError(500, "Error uploading document")
 
+      
     const documentData = {
       title,
       description,
