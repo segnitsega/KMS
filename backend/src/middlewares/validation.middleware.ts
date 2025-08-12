@@ -10,33 +10,33 @@ export const validateDocumentData = [
     .optional()
     .isInt({ gt: 0 })
     .withMessage("Pages must be a positive integer"),
+  body("category").optional(),
+  // body("category").custom((value, {req}) => {
+  //   let parsedValue = value;
 
-  body("category").custom((value, {req}) => {
-    let parsedValue = value;
+  //   if (typeof value === "string") {
+  //     try {
+  //       parsedValue = JSON.parse(value);
+  //     } catch (e) {
+  //       parsedValue = value.split(",").map((item) => item.trim());
+  //     }
+  //   }
 
-    if (typeof value === "string") {
-      try {
-        parsedValue = JSON.parse(value);
-      } catch (e) {
-        parsedValue = value.split(",").map((item) => item.trim());
-      }
-    }
+  //   if (!Array.isArray(parsedValue)) {
+  //     throw new Error("Category must be an array");
+  //   }
 
-    if (!Array.isArray(parsedValue)) {
-      throw new Error("Category must be an array");
-    }
-
-    if (
-      parsedValue.length === 0 ||
-      !parsedValue.every((item: String) => typeof item === "string" && item.trim().length > 0)
-    ) {
-      throw new Error(
-        "Category must be a non-empty array of non-empty strings"
-      );
-    }
-    req.body.category = parsedValue;
-    return true;
-  }),
+  //   if (
+  //     parsedValue.length === 0 ||
+  //     !parsedValue.every((item: String) => typeof item === "string" && item.trim().length > 0)
+  //   ) {
+  //     throw new Error(
+  //       "Category must be a non-empty array of non-empty strings"
+  //     );
+  //   }
+  //   req.body.category = parsedValue;
+  //   return true;
+  // }),
 
   body("documentVersion")
     .trim()
@@ -74,6 +74,7 @@ export const validateArticleData = [
         "Category must be a non-empty array of non-empty strings"
       );
     }
+
     return true;
   }),
 ];
