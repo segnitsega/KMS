@@ -11,6 +11,7 @@ interface PostCardProps {
   author: string;
   updatedDate: string;
   views: number;
+  onView?: () => void;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -20,6 +21,7 @@ const PostCard: React.FC<PostCardProps> = ({
   author,
   updatedDate,
   views,
+  onView,
 }) => {
   return (
     <div className=" border rounded-lg p-6 shadow-sm hover:shadow-md bg-white flex justify-between gap-4">
@@ -57,8 +59,8 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
       </div>
       <div className="flex flex-row gap-4 text-gray-500">
-        <FiEye className="h-4 w-4 cursor-pointer  hover:text-blue-500 "/>
-        <FaRegEdit className="h-4 w-4 cursor-pointer  hover:text-blue-500 "/>
+        <FiEye className="h-4 w-4 cursor-pointer hover:text-blue-500" onClick={onView} />
+        <FaRegEdit className="h-4 w-4 cursor-pointer hover:text-blue-500" />
       </div>
     </div>
   );
