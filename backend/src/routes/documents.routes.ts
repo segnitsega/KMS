@@ -16,7 +16,6 @@ export const documentRouter = express.Router();
 
 documentRouter.use(verifyToken);
 documentRouter.get("/", getDocuments);
-documentRouter.get("/:id", getDocumentById);
 documentRouter.post(
   "/upload",
   memoryUpload.single("file"),
@@ -25,3 +24,5 @@ documentRouter.post(
   handleDocumentUpload
 );
 documentRouter.get("/search", handleDocumentSearch);
+documentRouter.get("/:id", getDocumentById);
+

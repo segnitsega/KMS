@@ -69,6 +69,9 @@ export const handleDocumentUpload = catchAsync(
         finalCategory = trimmed.split(",").map((item) => item.trim());
       }
     }
+    finalCategory = finalCategory.map((item) =>
+      item.replace(/^"(.*)"$/, "$1").trim()
+    );
 
     if (
       !finalCategory.length ||
@@ -132,6 +135,7 @@ export const handleDocumentUpload = catchAsync(
 export const handleDocumentSearch = catchAsync(
   async (req: Request, res: Response): Promise<any> => {
     const query = (req.query.q as string) || "";
+    console.log(query)
     if (!query.trim()) {
       throw new ApiError(400, "Search query is required");
     }
