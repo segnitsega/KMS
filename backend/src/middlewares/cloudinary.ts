@@ -1,4 +1,5 @@
-import { v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import { PassThrough } from 'stream';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME!,
@@ -6,4 +7,27 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET!,
 });
 
-export default cloudinary;
+export const uploadToCloudinary = (
+  buffer: Buffer,
+  publicId: string
+): Promise<UploadApiResponse> => {
+  return new Promise((resolve, reject) => {
+    const passthrough = new PassThrough();
+    passthrough.end(buffer);
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'kms_documents',
+        public_id: publicId,
+        resource_type: 'auto',
+      },
+      (err: unknown, result: UploadApiResponse | undefined) => {
+        if (err) return reject(err);
+        resolve(result!);
+      }
+    );
+
+    passthrough.pipe(uploadStream);
+  });
+};
+
