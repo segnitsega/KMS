@@ -7,10 +7,11 @@ interface AuthState{
     setIsAuthenticated: (value: boolean) => void
     setLoading: (value: boolean) => void
 }
+
 export const useAuthStore = create<AuthState>()(
     persist(
         (set) => ({
-            isAuthenticated: true, // for now 
+            isAuthenticated: false, // for now 
             loading: true,
             setIsAuthenticated: (value) => set({isAuthenticated: value}),
             setLoading: (value) => set({loading: value})

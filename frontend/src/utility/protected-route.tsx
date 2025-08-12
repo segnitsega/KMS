@@ -5,9 +5,9 @@ import type { PropsWithChildren } from "react";
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
-/**   if (!isAuthenticated) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
-  }**/
+  }
 
   return children;
 };
