@@ -5,7 +5,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src --ext ts,json --exec ts-node src/server.ts"
+    "dev": "nodemon --watch src --ext ts,json --exec ts-node src/server.ts",
+    "build": "tsc && prisma generate",
+    "start": "node dist/server.js",
+    "prisma:migrate": "prisma migrate deploy",
+    "serve": "npm run build && npm run prisma:migrate && npm start"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts",

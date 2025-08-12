@@ -22,7 +22,7 @@ export const validateDocumentData = [
       }
     }
 
-    if (!Array.isArray(value)) {
+    if (!Array.isArray(parsedValue)) {
       throw new Error("Category must be an array");
     }
 
