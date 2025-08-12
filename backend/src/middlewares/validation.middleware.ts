@@ -11,32 +11,43 @@ export const validateDocumentData = [
     .isInt({ gt: 0 })
     .withMessage("Pages must be a positive integer"),
   body("category").optional(),
-  // body("category").custom((value, {req}) => {
-  //   let parsedValue = value;
+  body("category").custom((value, { req }) => {
+    let parsedValue = value;
 
-  //   if (typeof value === "string") {
-  //     try {
-  //       parsedValue = JSON.parse(value);
-  //     } catch (e) {
-  //       parsedValue = value.split(",").map((item) => item.trim());
-  //     }
-  //   }
+    if (typeof value === "string") {
+      const trimmed = value.trim();
 
-  //   if (!Array.isArray(parsedValue)) {
-  //     throw new Error("Category must be an array");
-  //   }
+      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+        try {
+          parsedValue = JSON.parse(trimmed);
+        } catch (e) {
+          throw new Error(
+            "Category must be a valid JSON array or comma-separated string"
+          );
+        }
+      } else {
+        parsedValue = trimmed.split(",").map((item) => item.trim());
+      }
+    }
 
-  //   if (
-  //     parsedValue.length === 0 ||
-  //     !parsedValue.every((item: String) => typeof item === "string" && item.trim().length > 0)
-  //   ) {
-  //     throw new Error(
-  //       "Category must be a non-empty array of non-empty strings"
-  //     );
-  //   }
-  //   req.body.category = parsedValue;
-  //   return true;
-  // }),
+    if (!Array.isArray(parsedValue)) {
+      throw new Error("Category must be an array");
+    }
+
+    if (
+      parsedValue.length === 0 ||
+      !parsedValue.every(
+        (item) => typeof item === "string" && item.trim().length > 0
+      )
+    ) {
+      throw new Error(
+        "Category must be a non-empty array of non-empty strings"
+      );
+    }
+
+    req.body.category = parsedValue;
+    return true;
+  }),
 
   body("documentVersion")
     .trim()
