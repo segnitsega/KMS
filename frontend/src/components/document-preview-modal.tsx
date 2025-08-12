@@ -23,8 +23,6 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open, onClo
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden">
-        
-        {/* Header */}
         <div className="bg-blue-50 rounded-t-2xl px-8 py-6 flex items-center justify-between flex-shrink-0">
           <h2 className="text-2xl font-bold tracking-wide text-gray-900">{document.title}</h2>
           <button
@@ -34,13 +32,8 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open, onClo
             <IoClose />
           </button>
         </div>
-
-        {/* Content */}
         <div className="flex flex-1 overflow-y-auto p-6 gap-6">
-          
-          {/* Left Column */}
           <div className="flex-1 flex flex-col gap-6">
-            {/* Preview Box */}
             <div className="bg-gray-50 rounded-2xl p-8 border border-dashed border-gray-200 flex flex-col items-center">
               <h3 className="text-xl font-bold mb-4">Document Preview</h3>
               <IoDocumentTextOutline className="text-blue-500 text-6xl mb-3" />
@@ -53,8 +46,6 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open, onClo
                 Download to View Full Document
               </a>
             </div>
-
-            {/* Description Box */}
             <div className="bg-gray-180 rounded-2xl p-6 border border-gray-100">
               <h3 className="font-bold text-xl mb-2">Description</h3>
               <div className="bg-gray-50 rounded-2xl p-4 text-gray-700 min-h-[70px] whitespace-pre-wrap">
@@ -62,8 +53,6 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open, onClo
               </div>
             </div>
           </div>
-
-          {/* Right Column */}
           <div className="w-full md:w-96 flex-shrink-0 flex flex-col gap-6">
             <div className="bg-white rounded-2xl p-6 border border-gray-100 flex flex-col gap-4">
               <h3 className="text-xl font-bold mb-4">Document Information</h3>
@@ -101,8 +90,6 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({ open, onClo
                   : <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">No tags</span>}
               </div>
             </div>
-
-            {/* Actions */}
             <div className="flex flex-col gap-4">
               <a
                 href={document.downloadUrl || "#"}
