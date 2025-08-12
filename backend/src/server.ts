@@ -17,10 +17,10 @@ server.use(cors({
 
 server.use(express.json());
 
-server.use('/api/user', userRouter)
-server.use('/api/docs', documentRouter)
-server.use('/api/articles', articleRouter)
-server.use('/api/discussions', discussionRouter)
+server.use('/user', userRouter)
+server.use('/docs', documentRouter)
+server.use('/articles', articleRouter)
+server.use('/discussions', discussionRouter)
 
 server.use(errorHandler)
 
