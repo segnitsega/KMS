@@ -27,9 +27,12 @@ const LoginPage = () => {
   const { mutateAsync, isLoading, isError, error, data } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       loginUser(email, password),
-    onSuccess: (data) => {
+    onSuccess: (data: loginResponse) => {
+      // if(rememberMe){
+      //   localStorage.setItem('rememberMe', encrypt(user.id))
+      // }
       localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
+      // localStorage.setItem("refreshToken", data.refreshToken);  make refresh tokens http only cookie on the backend
       setIsAuthenticated(true);
       alert("Login successful!");
     },
