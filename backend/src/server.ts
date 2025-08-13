@@ -6,6 +6,7 @@ import { userRouter } from "./routes/users.routes";
 import { documentRouter } from "./routes/documents.routes";
 import { articleRouter } from "./routes/articles.routes";
 import { discussionRouter } from "./routes/discussions.routes";
+import { authRoute } from "./routes/auth-route";
 
 dotenv.config();
 const port = process.env.port;
@@ -21,6 +22,7 @@ server.use('/user', userRouter)
 server.use('/docs', documentRouter)
 server.use('/articles', articleRouter)
 server.use('/discussions', discussionRouter)
+server.use('/auth', authRoute)
 
 server.use(errorHandler)
 
