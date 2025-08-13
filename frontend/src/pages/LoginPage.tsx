@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import "./landing-page";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/stores/auth-store";
+import { useNavigate } from "react-router-dom";
+import api from "@/utility/api";
+import { toast } from "sonner";
 
 interface loginResponse {
   message: string;
@@ -12,32 +14,42 @@ interface loginResponse {
   refreshToken: string;
 }
 
+interface errorResponse extends Error {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  response: any;
+}
+
+const loginUser = async (email: string, password: string) => {
+  const response = await api.post(`/user/login`, {
+    email: email,
+    password: password,
+  });
+  return response.data;
+};
+
 const LoginPage = () => {
-  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
-  const url = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
 
-  async function loginUser(email: string, password: string) {
-    const response = await axios.post(`${url}/user/login`, {
-      email: email,
-      password: password,
-    });
-    return response.data;
-  }
-
-  const { mutateAsync, isLoading, isError, error, data } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       loginUser(email, password),
     onSuccess: (data: loginResponse) => {
-      // if(rememberMe){
-      //   localStorage.setItem('rememberMe', encrypt(user.id))
-      // }
+      if (rememberMe) localStorage.setItem("rememberMe", "true");
+
       localStorage.setItem("accessToken", data.accessToken);
-      // localStorage.setItem("refreshToken", data.refreshToken);  make refresh tokens http only cookie on the backend
-      setIsAuthenticated(true);
-      alert("Login successful!");
+      useAuthStore.getState().setIsAuthenticated(true);
+
+      toast("✅ Login successful!");
+      navigate("/kms");
     },
-    onError: (data) => {
-      console.log("Error login response: ", data);
+    onError: (error: errorResponse) => {
+      let errorMessage: string = ""
+      if (error.response.status === 400) {
+         errorMessage = "Unregistered email";
+      }else{
+         errorMessage = error.response.data.message;
+      }
+      toast(errorMessage);
     },
   });
 
@@ -135,9 +147,14 @@ const LoginPage = () => {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 transform hover:scale-105"
+                className={
+                  `w-full cursor-pointer text-white py-3 px-4 rounded-lg font-semibold` +
+                  (isPending
+                    ? "cursor-none bg-blue-500"
+                    : " hover:from-cyan-400 hover:to-blue-400 transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-cyan-500 to-blue-500")
+                }
               >
-                Login
+                {isPending ? "Logging in.." : "Login"}
               </button>
             </form>
           </div>
