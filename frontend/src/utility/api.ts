@@ -18,12 +18,9 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    // console.log(`response interceptor run}`)
     return response
   },
   async (error) => {
-    // console.error(`Error code:  ${error.response.status}`)
-    // console.log(`${api.defaults.baseURL}/auth/refresh-token`)
     const originalRequest = error.config;
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -36,10 +33,8 @@ api.interceptors.response.use(
         localStorage.setItem("accessToken", newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        // console.log("Going to try new request")
         return api(originalRequest); 
       } catch (refreshError) {
-        // console.log(`refreshing error: ${refreshError}`)
         localStorage.removeItem("accessToken");
         useAuthStore.getState().setIsAuthenticated(false);
         window.location.href = '/login';

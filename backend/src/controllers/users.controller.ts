@@ -99,7 +99,7 @@ export const handleLogin = catchAsync(
         role: userFound.role,
       },
       secretKey,
-      { expiresIn: "5s" }
+      { expiresIn: "2h" }
     );
     const refreshToken = jwt.sign(
       {

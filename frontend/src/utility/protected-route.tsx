@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const validateToken = async (accessToken: string | null) => {
-  // console.log(`token validation run:  ${accessToken}`)
   if (!accessToken) throw new Error("No Token");
   const response = await api.get(`/auth/validate-token`);
   return response.data.valid;
@@ -18,11 +17,10 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
 
   const accessToken = localStorage.getItem("accessToken");
-  // console.log(accessToken)
   
   const {
     data: isValid,
-    isLoading,
+    isLoading,  
     isError,
   } = useQuery({
     queryKey: ["validateToken", accessToken],
