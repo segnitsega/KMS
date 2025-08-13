@@ -1,17 +1,14 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import type { PropsWithChildren } from "react";
 import loadingSpinner from "../assets/loading-spinner.svg"
+import api from "./api";
 
-const url = import.meta.env.VITE_BACKEND_URL;
 
 const validateToken = async (accessToken: string | null) => {
   if (!accessToken) throw new Error("No Token");
-  const response = await axios.get(`${url}/auth/validate-token`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const response = await api.get(`/auth/validate-token`);
   return response.data.valid;
 };
 
