@@ -62,8 +62,8 @@ export const handleSignup = catchAsync(
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 *1000 
-    })
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.status(200).json({
       message: "login successful",
@@ -120,8 +120,8 @@ export const handleLogin = catchAsync(
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 *1000 
-    })
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.status(200).json({
       message: "login successful",
@@ -181,7 +181,7 @@ export const handleUserSearch = catchAsync(
           { skills: { has: query } },
           { department: { contains: query, mode: "insensitive" } },
         ],
-      }
+      },
     });
 
     if (results.length === 0) {
@@ -191,6 +191,36 @@ export const handleUserSearch = catchAsync(
     res.status(200).json({
       totalResults: results.length,
       users: results,
+    });
+  }
+);
+
+export const handleRefreshToken = catchAsync(
+  async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) throw new ApiError(401, "No refresh token provided");
+
+    const user = await prisma.user.findFirst({
+      where: { refreshToken },
+    });
+    if (!user) throw new ApiError(403, "Invalid refresh token");
+
+    jwt.verify(refreshToken, refreshKey, (err: any) => {
+      if (err) {
+        throw new ApiError(403, "Refresh token expired or invalid");
+      }
+
+      const accessToken = jwt.sign(
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+        },
+        secretKey,
+        { expiresIn: "2h" }
+      );
+
+      res.json({ accessToken });
     });
   }
 );
