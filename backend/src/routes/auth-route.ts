@@ -4,4 +4,4 @@ import { handleRefreshToken, handleTokenVerifaction } from '../controllers/auth.
 export const authRoute = express.Router()
 
 authRoute.get('/refresh-token', handleRefreshToken)
-authRoute.get('/validate-token', handleTokenVerifaction)
+authRoute.post('/validate-token', handleTokenVerifaction)
