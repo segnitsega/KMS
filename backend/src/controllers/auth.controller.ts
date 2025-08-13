@@ -1,7 +1,7 @@
 import prisma from "../lib/prisma";
 import { ApiError } from "../utils/api-error-class";
 import { catchAsync } from "../utils/catchAsync";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 const secretKey = process.env.secret_key as string;
@@ -33,6 +33,29 @@ export const handleRefreshToken = catchAsync(
       );
 
       res.json({ accessToken });
+    });
+  }
+);
+
+export const handleTokenVerifaction = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw new ApiError(401, "No token provided");
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        throw new ApiError(403, "Invalid or expired token");
+      }
+
+      res.status(200).json({
+        message: "Token is valid",
+        user: decoded,
+      });
     });
   }
 );
