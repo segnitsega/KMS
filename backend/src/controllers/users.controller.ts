@@ -58,11 +58,21 @@ export const handleSignup = catchAsync(
         refreshToken,
       },
     });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 *1000 
+    })
+
+    res.status(200).json({
+      message: "login successful",
+      accessToken: accessToken,
+    });
     return res.status(200).json({
       message: " New user registered successfully",
       userId: newUser.id,
       accessToken: accessToken,
-      refreshToken: refreshToken,
     });
   }
 );
@@ -107,10 +117,15 @@ export const handleLogin = catchAsync(
       },
     });
 
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 *1000 
+    })
+
     res.status(200).json({
       message: "login successful",
       accessToken: accessToken,
-      refreshToken: refreshToken,
     });
   }
 );
