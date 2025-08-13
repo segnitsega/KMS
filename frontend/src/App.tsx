@@ -11,6 +11,7 @@ import Analytics from "./pages/analytics";
 import ProtectedRoute from "./utility/protected-route";
 import LandingPage from "./pages/landing-page";
 import LoginPage from './pages/LoginPage';
+import { Toaster } from "sonner";
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           <Route path="analytics" element={<Analytics />} />
         </Route>
       </Routes>
+      <Toaster position="top-center"/>
     </BrowserRouter>
   );
 };
