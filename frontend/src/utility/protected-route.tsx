@@ -1,12 +1,37 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 import type { PropsWithChildren } from "react";
 
-const ProtectedRoute = ({ children }: PropsWithChildren) => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const accessToken = localStorage.getItem("accessToken")
+const url = import.meta.env.VITE_BACKEND_URL;
 
-  if (!isAuthenticated || !accessToken) {
+const validateToken = async (accessToken: string | null) => {
+  if (!accessToken) throw new Error("No Token");
+  const response = await axios.get(`${url}/auth/validate-token`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return response.data.valid;
+};
+
+const ProtectedRoute = ({ children }: PropsWithChildren) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
+
+  const {
+    data: isValid,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["validateToken", accessToken],
+    queryFn: () => validateToken(accessToken),
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+  if (isLoading) return <div>Loading...</div>;
+  if (isError || !isValid) {
+    localStorage.removeItem("accessToken");
+    setIsAuthenticated(false);
     return <Navigate to="/login" replace />;
   }
 
