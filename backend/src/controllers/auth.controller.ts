@@ -15,7 +15,8 @@ export const handleRefreshToken = catchAsync(
     const user = await prisma.user.findFirst({
       where: { refreshToken },
     });
-    if (!user) throw new ApiError(403, "Invalid refresh token");
+    
+    if (!user) throw new ApiError(401, "Invalid refresh token");
 
     jwt.verify(refreshToken, refreshKey, (err: any) => {
       if (err) {
@@ -53,6 +54,7 @@ export const handleTokenVerifaction = catchAsync(
           message: "Token is invalid",
           valid: false
         })
+        return
       }
 
       res.status(200).json({

@@ -1,32 +1,35 @@
-import express from "express"
-import dotenv from "dotenv"
-import cors from "cors"
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { userRouter } from "./routes/users.routes";
 import { documentRouter } from "./routes/documents.routes";
 import { articleRouter } from "./routes/articles.routes";
 import { discussionRouter } from "./routes/discussions.routes";
 import { authRoute } from "./routes/auth-route";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const port = process.env.port;
 const server = express();
 
-server.use(cors({
-    origin: "*"
-}))
+server.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 server.use(express.json());
 server.use(cookieParser());
-server.use('/user', userRouter)
-server.use('/docs', documentRouter)
-server.use('/articles', articleRouter)
-server.use('/discussions', discussionRouter)
-server.use('/auth', authRoute)
+server.use("/user", userRouter);
+server.use("/docs", documentRouter);
+server.use("/articles", articleRouter);
+server.use("/discussions", discussionRouter);
+server.use("/auth", authRoute);
 
-server.use(errorHandler)
+server.use(errorHandler);
 
 server.listen(port, () => {
-    console.log(`Server running on port: ${port}`)
-})
+  console.log(`Server running on port: ${port}`);
+});

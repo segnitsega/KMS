@@ -34,8 +34,7 @@ const LoginPage = () => {
     mutationFn: ({ email, password }: { email: string; password: string }) =>
       loginUser(email, password),
     onSuccess: (data: loginResponse) => {
-      if (rememberMe) localStorage.setItem("rememberMe", "true");
-
+      // if (rememberMe) localStorage.setItem("rememberMe", "true");
       localStorage.setItem("accessToken", data.accessToken);
       useAuthStore.getState().setIsAuthenticated(true);
 
