@@ -13,9 +13,14 @@ dotenv.config();
 const port = process.env.port;
 const server = express();
 
+const allowedOrigins = ["http://localhost:5173"];
 server.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin as string)) {
+        callback(null, true);
+      }
+    },
     credentials: true,
   })
 );
