@@ -7,6 +7,7 @@ import { documentRouter } from "./routes/documents.routes";
 import { articleRouter } from "./routes/articles.routes";
 import { discussionRouter } from "./routes/discussions.routes";
 import { authRoute } from "./routes/auth-route";
+import cookieParser from "cookie-parser"
 
 dotenv.config();
 const port = process.env.port;
@@ -17,7 +18,7 @@ server.use(cors({
 }))
 
 server.use(express.json());
-
+server.use(cookieParser());
 server.use('/user', userRouter)
 server.use('/docs', documentRouter)
 server.use('/articles', articleRouter)
