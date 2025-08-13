@@ -49,12 +49,15 @@ export const handleTokenVerifaction = catchAsync(
 
     jwt.verify(token, secretKey, (err, decoded) => {
       if (err) {
-        throw new ApiError(403, "Invalid or expired token");
+        res.status(403).json({
+          message: "Token is invalid",
+          valid: false
+        })
       }
 
       res.status(200).json({
         message: "Token is valid",
-        user: decoded,
+        valid: true,
       });
     });
   }
