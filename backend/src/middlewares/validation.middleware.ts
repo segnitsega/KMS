@@ -11,43 +11,67 @@ export const validateDocumentData = [
     .isInt({ gt: 0 })
     .withMessage("Pages must be a positive integer"),
   body("category").optional(),
-  body("category").custom((value, { req }) => {
-    let parsedValue = value;
+  body("category")
+    .custom((value, { req }) => {
+      // let value = value;
+      // console.log(typeof(value), value)
+      if (typeof value === "string") {
+        console.log("value is string");
+        const trimmed = value.trim();
+        console.log("trimmed value: ", trimmed);
 
-    if (typeof value === "string") {
-      const trimmed = value.trim();
-
-      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-        try {
-          parsedValue = JSON.parse(trimmed);
-        } catch (e) {
-          throw new Error(
-            "Category must be a valid JSON array or comma-separated string"
-          );
+        if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+          try {
+            value = JSON.parse(trimmed);
+            console.log("parsed on: ", value);
+            console.log(
+              "is the parsed value an array? ",
+              Array.isArray(value)
+            );
+          } catch (e) {
+            throw new Error(
+              "Category must be a valid JSON array or comma-separated string"
+            );
+          }
+        } else {
+          value = trimmed.split(",").map((item) => item.trim());
         }
-      } else {
-        parsedValue = trimmed.split(",").map((item) => item.trim());
       }
-    }
 
-    if (!Array.isArray(parsedValue)) {
-      throw new Error("Category must be an array");
-    }
+      if (!Array.isArray(value)) {
+        throw new Error("Category must be an array");
+      }
 
-    if (
-      parsedValue.length === 0 ||
-      !parsedValue.every(
-        (item) => typeof item === "string" && item.trim().length > 0
-      )
-    ) {
-      throw new Error(
-        "Category must be a non-empty array of non-empty strings"
+      if (
+        value.length === 0 ||
+        !value.every(
+          (item) => typeof item === "string" && item.trim().length > 0
+        )
+      ) {
+        throw new Error(
+          "Category must be a non-empty array of non-empty strings"
+        );
+      }
+      // console.log(typeof(value), value)
+
+      console.log(
+        `Final result, category: ${value} is array:  ${Array.isArray(
+          value
+        )}`
       );
-    }
-
-    req.body.category = parsedValue;
-    return true;
-  }),
+      req.body.category = value;
+      return true;
+    })
+    .customSanitizer((value) => {
+      if (typeof value === "string") {
+        const trimmed = value.trim();
+        if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+          return JSON.parse(trimmed);
+        }
+        return trimmed.split(",").map((item) => item.trim());
+      }
+      return value;
+    }),
 
   body("documentVersion")
     .trim()

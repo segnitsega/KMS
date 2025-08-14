@@ -48,39 +48,40 @@ export const handleDocumentUpload = catchAsync(
     const { title, description, pages, category, documentVersion } = req.body;
 
     const file = req.file;
+    // console.log(`Category: ${category}  is an Array:  ${Array.isArray(category)}`)
     if (!file) throw new ApiError(400, "No file uploaded");
 
     var documentUrl = "";
     const isDevelopment = process.env.STORAGE === "development";
 
-    let finalCategory: string[] = [];
+    // let finalCategory: string[] = [];
 
-    if (Array.isArray(category)) {
-      finalCategory = category;
-    } else if (typeof category === "string") {
-      const trimmed = category.trim();
-      if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-        try {
-          finalCategory = JSON.parse(trimmed);
-        } catch {
-          throw new ApiError(400, "Invalid category JSON format");
-        }
-      } else {
-        finalCategory = trimmed.split(",").map((item) => item.trim());
-      }
-    }
-    finalCategory = finalCategory.map((item) =>
-      item.replace(/^"(.*)"$/, "$1").trim()
-    );
+    // if (Array.isArray(category)) {
+    //   finalCategory = category;
+    // } else if (typeof category === "string") {
+    //   const trimmed = category.trim();
+    //   if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
+    //     try {
+    //       finalCategory = JSON.parse(trimmed);
+    //     } catch {
+    //       throw new ApiError(400, "Invalid category JSON format");
+    //     }
+    //   } else {
+    //     finalCategory = trimmed.split(",").map((item) => item.trim());
+    //   }
+    // }
+    // finalCategory = finalCategory.map((item) =>
+    //   item.replace(/^"(.*)"$/, "$1").trim()
+    // );
 
-    if (
-      !finalCategory.length ||
-      !finalCategory.every(
-        (item) => typeof item === "string" && item.trim().length > 0
-      )
-    ) {
-      throw new ApiError(400, "Category must be a non-empty array of strings");
-    }
+    // if (
+    //   !finalCategory.length ||
+    //   !finalCategory.every(
+    //     (item) => typeof item === "string" && item.trim().length > 0
+    //   )
+    // ) {
+    //   throw new ApiError(400, "Category must be a non-empty array of strings");
+    // }
 
     if (isDevelopment) {
       const publicId = `document_${Date.now()}_${Math.round(
@@ -109,7 +110,8 @@ export const handleDocumentUpload = catchAsync(
       description,
       pages: parseInt(pages),
       author: `${firstName} ${lastName}`,
-      category: finalCategory,
+      // category: finalCategory,
+      category,
       documentUrl,
     };
 
