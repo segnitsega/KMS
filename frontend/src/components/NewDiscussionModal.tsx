@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface NewDiscussionModalProps {
   onClose: () => void;
 }
-
+const categories = [
+  "Financial & Accounting",
+  "Technical & Project Docs",
+  "Reports & Analytics ",
+  "Policies & Procedures",
+  "HR",
+];
 const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [tags, setTags] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState(categories[0]);
 
   const handleCreate = () => {
     // Here you would handle form submission, e.g., API call to create discussion
-    console.log('Creating discussion:', { title, content, tags });
+    console.log("Creating discussion:", { title, content });
     onClose();
   };
 
   return (
     <div className="fixed inset-0 bg-gray-700/85 backdrop-blur-700 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg shadow-md">
+      <div className="bg-white rounded-t-md px-6 py-8 w-full max-w-2xl shadow-md">
         <h2 className="text-xl font-bold mb-4">Start New Discussion</h2>
+        <div className="flex  gap-6">
         <div className="mb-4">
           <label className="block font-semibold mb-1" htmlFor="title">
             Title
@@ -31,6 +38,23 @@ const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full border border-gray-300 rounded-md p-2"
           />
+        </div>
+        <div className="flex-1">
+          <label className="block font-semibold mb-2">
+            Category
+          </label>
+          <select
+            className="w-full border border-gray-300 rounded-md p-2  outline-none focus:ring-1 focus:ring-blue-500"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
         </div>
         <div className="mb-4">
           <label className="block font-semibold mb-1" htmlFor="content">
@@ -45,7 +69,7 @@ const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
             rows={4}
           />
         </div>
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block font-semibold mb-1" htmlFor="tags">
             Tags
           </label>
@@ -57,7 +81,7 @@ const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
             onChange={(e) => setTags(e.target.value)}
             className="w-full border border-gray-300 rounded-md p-2"
           />
-        </div>
+        </div> */}
         <div className="flex justify-end gap-4">
           <button
             onClick={onClose}

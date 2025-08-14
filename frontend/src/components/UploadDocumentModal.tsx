@@ -7,7 +7,7 @@ interface UploadDocumentModalProps {
   onUpload?: (file: File, description: string, title: string, category: string, tags: string[]) => void;
 }
 
-const categories = ["General", "Engineering", "HR", "Marketing", "Finance", "Legal"];
+const categories = ["Financial & Accounting", "Technical & Project Docs", "Reports & Analytics ", "Policies & Procedures", "HR"];
 
 const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUpload }) => {
   const [dragActive, setDragActive] = useState(false);
@@ -57,25 +57,25 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUp
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-md p-4 animate-fadeIn">
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-8x1 max-h-[95vh] relative border border-blue-200 transform scale-95 animate-scaleIn flex flex-col">
+    <div className="fixed rounded-t-md px-40 border inset-0 z-50 flex items-center justify-center bg-black/15 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-white rounded-t-md w-full max-w-8x1 max-h-[95vh] relative transform scale-95 animate-scaleIn flex flex-col">
         <button
-          className="absolute top-5 right-5 text-black-400 hover:text-black-700 transition-colors text-2xl font-bold z-20"
+          className="absolute top-5 right-5 text-white  text-4xl z-20 cursor-pointer"
           onClick={onClose}
           aria-label="Close Modal"
         >
           &times;
         </button>
-        <div className="flex items-center gap-3 px-8 py-8 bg-blue-600 text-white rounded-t-3xl shadow-md z-10">
-          <IoDocumentTextOutline className="text-3xl text-white" />
-          <h2 className="text-3xl font-bold tracking-wide">Upload New Document</h2>
+        <div className="flex items-center gap-1 pl-8 py-6 bg-blue-500 rounded-t-md text-white">
+          <IoDocumentTextOutline className="text-2xl text-white" />
+          <h2 className="text-2xl tracking-wide">Upload New Document</h2>
         </div>
         <div className="p-8 flex-1 flex flex-col gap-8 overflow-y-auto">
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex-1">
               <label className="block text-gray-700 font-semibold mb-2">Document Title</label>
               <input
-                className="w-full border border-gray-300 rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-gray-300 rounded-md p-2    outline-none focus:ring-1 focus:ring-blue-500"
                 placeholder="Enter a descriptive title..."
                 value={title}
                 onChange={e => setTitle(e.target.value)}
@@ -84,7 +84,7 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUp
             <div className="flex-1">
               <label className="block text-gray-700 font-semibold mb-2">Category</label>
               <select
-                className="w-full border border-gray-300 rounded-lg p-4 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full border border-gray-300 rounded-md p-2  outline-none focus:ring-1 focus:ring-blue-500"
                 value={category}
                 onChange={e => setCategory(e.target.value)}
               >
@@ -123,13 +123,13 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUp
           <div>
             <label className="block text-gray-700 font-semibold mb-2">Description</label>
             <textarea
-              className="w-full border border-gray-300 rounded-lg p-4 min-h-[100px] text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-gray-300 rounded-lg p-2 min-h-[100px] text-base outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Write a short description about the document..."
               value={description}
               onChange={e => setDescription(e.target.value)}
             />
           </div>
-          <div>
+          {/* <div>
             <label className="block text-gray-700 font-semibold mb-2">Tags</label>
             <input
               className="w-full border border-gray-200 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -137,17 +137,17 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUp
               value={tags}
               onChange={e => setTags(e.target.value)}
             />
-          </div>
+          </div> */}
           <div className="flex justify-end gap-4 mt-2">
             <button
-              className="px-6 py-3 rounded-lg text-gray-600 bg-gray-100 font-semibold hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 rounded-md text-gray-600 bg-gray-100 font-semibold hover:bg-gray-200 transition-colors cursor-pointer"
               onClick={onClose}
               type="button"
             >
               Cancel
             </button>
             <button
-              style={{ backgroundColor: '#0f5bf1ff', color: '#fff', fontWeight: 'bold', padding: '0.75rem 2rem', borderRadius: '0.75rem', fontSize: '1.125rem', border: 'none', outline: 'none', boxShadow: 'none' }}
+            className="bg-blue-500 text-white p-3 rounded-md text-lg cursor-pointer hover:bg-blue-600 font-bold"
               onClick={handleUpload}
               disabled={!file || !description || !title}
               type="button"
