@@ -37,6 +37,7 @@ export const handleSignup = catchAsync(
       {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        id: newUser.id,
         role: newUser.role,
       },
       secretKey,
@@ -46,6 +47,7 @@ export const handleSignup = catchAsync(
       {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        id: newUser.id,
         role: newUser.role,
       },
       refreshKey,
@@ -96,6 +98,7 @@ export const handleLogin = catchAsync(
       {
         firstName: userFound.firstName,
         lastName: userFound.lastName,
+        id: userFound.id,
         role: userFound.role,
       },
       secretKey,
@@ -105,6 +108,7 @@ export const handleLogin = catchAsync(
       {
         firstName: userFound.firstName,
         lastName: userFound.lastName,
+        id: userFound.id,
         role: userFound.role,
       },
       refreshKey,
