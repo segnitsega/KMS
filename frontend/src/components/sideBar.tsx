@@ -5,6 +5,7 @@ import { FiMessageCircle } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { SlGraduation } from "react-icons/sl";
 import { FaRegChartBar } from "react-icons/fa";
+import { FaUserTie } from "react-icons/fa";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { cn } from "@/lib/utils";
@@ -102,6 +103,17 @@ const SideBar = () => {
         >
           <FaRegChartBar size={17}/>
           Analytics
+        </Link>
+        <Link
+          to="administration"
+          className={cn(
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/administration" &&
+              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+          )}
+        >
+          <FaUserTie size={17}/>
+          Administration
         </Link>
       </div>
 
