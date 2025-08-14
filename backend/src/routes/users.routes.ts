@@ -5,7 +5,7 @@ import { getUserById, getUsers, handleLogin, handleSignup, handleUserSearch } fr
 export const userRouter = express.Router()
 
 userRouter.get('/', getUsers)
-userRouter.get('/:id', getUserById)
 userRouter.get('/search', handleUserSearch)
 userRouter.post('/signup', handleSignup)
 userRouter.post('/login', handleLogin)
+userRouter.get('/:id', getUserById)
