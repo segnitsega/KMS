@@ -4,8 +4,8 @@ import { PiBookOpen } from "react-icons/pi";
 import { FiMessageCircle } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { SlGraduation } from "react-icons/sl";
-import { FaRegChartBar } from "react-icons/fa";
-import { FaUserTie } from "react-icons/fa";
+import { FaRegChartBar, FaTasks } from "react-icons/fa";
+import { LuUser } from 'react-icons/lu';
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { cn } from "@/lib/utils";
@@ -14,7 +14,7 @@ import { useLocation, Link } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   return (
-    <div className="border border-t-0 mb-8 bg-white h-[100vh] ">
+    <div className="border border-t-0 mb-8 bg-white h-[110vh] ">
       <div className="flex p-6 flex-col gap-4 ">
         <Link
           to="dashboard"
@@ -83,6 +83,17 @@ const SideBar = () => {
           Training
         </Link>
         <Link
+          to="my-tasks"
+          className={cn(
+            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            location.pathname === "/kms/my-tasks" &&
+              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+          )}
+        >
+          <FaTasks size={17}/>
+          My Tasks
+        </Link>
+        <Link
           to="notifications"
           className={cn(
             "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
@@ -90,7 +101,7 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <IoIosNotificationsOutline size={20}/>
+          <IoIosNotificationsOutline size={19}/>
           Notifications
         </Link>
         <Link
@@ -112,17 +123,20 @@ const SideBar = () => {
               "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
           )}
         >
-          <FaUserTie size={17}/>
+          <LuUser size={18}/>
           Administration
         </Link>
       </div>
 
       <div className="border-t mt-4"></div>
 
-      <span className="flex gap-2 items-center text-lg p-2 cursor-pointer my-8">
+      <Link
+        to="help-support"
+        className="flex gap-2 items-center text-lg p-2 cursor-pointer my-8"
+      >
         <IoIosHelpCircleOutline size={30}/>
         Help & Support
-      </span>
+      </Link>
     </div>
   );
 };

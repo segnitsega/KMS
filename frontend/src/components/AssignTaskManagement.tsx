@@ -77,7 +77,7 @@ const AssignTaskManagement: React.FC = () => {
 
           <div className="flex gap-4 mb-4">
             <div className="flex-1 flex flex-col">
-              <label className="font text-xl mb-2">Assign To</label>
+              <label className="font-semibold text-xl mb-1">Assign To</label>
               <select className="p-3 border rounded-lg" defaultValue="">
                 <option value="" disabled>Select user</option>
                 <option value="Addis Alemayo">Addis Alemayo</option>
@@ -86,7 +86,7 @@ const AssignTaskManagement: React.FC = () => {
               </select>
             </div>
             <div className="flex-1 flex flex-col">
-              <label className=" text-xl mb-2">Priority Level</label>
+              <label className=" font-semibold text-xl mb-1">Priority Level</label>
               <select className="p-3 border rounded-lg appearance-none" defaultValue="">
                 <option value="" disabled>Select priority</option>
                 <option value="Urgent">🔴 Urgent</option>
@@ -96,7 +96,7 @@ const AssignTaskManagement: React.FC = () => {
               </select>
             </div>
           </div>
-          <label className="text-xl mb-2">Due Date</label>
+          <label className="font-semibold text-xl mb-1">Due Date</label>
           <input className="w-full mb-4 p-3 border rounded-lg" placeholder="mm/dd/yyyy --:-- --" />
           <div className="flex justify-left mt-6">
             <Button variant="outline" className="bg-gradient-to-r from-[#1976ed] to-[#1976ed] text-white px-6 py-2 font-medium rounded-lg">Assign Task</Button>

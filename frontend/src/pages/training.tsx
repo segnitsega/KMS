@@ -61,7 +61,6 @@ const Training = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [search, setSearch] = useState("");
 
-  // Filtering by tab and search
   const filteredContent = TRAINING_CONTENT.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
     const matchesTab = activeTab === "all" || item.category === activeTab;
@@ -69,7 +68,7 @@ const Training = () => {
   });
 
   return (
-    <div className="p-6">
+    <div className="flex flex-col gap-6">
       <Header
         title="Learning Library"
         subtitle="Browse and download training resources."
