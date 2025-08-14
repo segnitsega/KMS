@@ -60,7 +60,7 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUp
     <div className="fixed rounded-t-md px-40 border inset-0 z-50 flex items-center justify-center bg-black/15 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-t-md w-full max-w-8x1 max-h-[95vh] relative transform scale-95 animate-scaleIn flex flex-col">
         <button
-          className="absolute top-5 right-5 text-white  text-4xl z-20"
+          className="absolute top-5 right-5 text-white  text-4xl z-20 cursor-pointer"
           onClick={onClose}
           aria-label="Close Modal"
         >
@@ -147,7 +147,7 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ onClose, onUp
               Cancel
             </button>
             <button
-            className="bg-blue-500 text-white p-3 rounded-md text-lg cursor-pointer hover:bg-blue-600"
+            className="bg-blue-500 text-white p-3 rounded-md text-lg cursor-pointer hover:bg-blue-600 font-bold"
               onClick={handleUpload}
               disabled={!file || !description || !title}
               type="button"
