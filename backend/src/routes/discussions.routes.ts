@@ -7,6 +7,6 @@ export const discussionRouter = express.Router()
 
 discussionRouter.use(verifyToken)
 discussionRouter.get('/', getDiscussions)
-discussionRouter.get('/:id', getDiscussionById)
 discussionRouter.post('/post', validateArticleData, handleValidationErrors  , handleDiscussionPost)
 discussionRouter.get('/search', handleDiscussionSearch)
+discussionRouter.get('/:id', getDiscussionById)
