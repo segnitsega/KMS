@@ -8,6 +8,7 @@ import ExpertDirectory from "./pages/expert-directory";
 import Training from "./pages/training";
 import Notifications from "./pages/notifications";
 import Analytics from "./pages/analytics";
+import Administration from "./pages/administration";
 import ProtectedRoute from "./utility/protected-route";
 import LandingPage from "./pages/landing-page";
 import LoginPage from './pages/LoginPage';
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="training" element={<Training />} />
           <Route path="notifications" element={<Notifications />} />
           <Route path="analytics" element={<Analytics />} />
+          <Route path="administration" element={<Administration />} />
         </Route>
       </Routes>
       <Toaster position="top-center"/>
