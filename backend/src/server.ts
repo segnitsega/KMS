@@ -8,6 +8,7 @@ import { articleRouter } from "./routes/articles.routes";
 import { discussionRouter } from "./routes/discussions.routes";
 import { authRoute } from "./routes/auth-route";
 import cookieParser from "cookie-parser";
+import { statusRoute } from "./routes/dashboard.route";
 
 dotenv.config();
 const port = process.env.port;
@@ -29,6 +30,7 @@ server.use("/docs", documentRouter);
 server.use("/articles", articleRouter);
 server.use("/discussions", discussionRouter);
 server.use("/auth", authRoute);
+server.use("/status-count", statusRoute)
 
 server.use(errorHandler);
 
