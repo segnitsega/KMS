@@ -28,7 +28,7 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
-  if (isLoading) return <div className="flex h-screen justify-center items-center"><img src={loadingSpinner} width={120} alt="loading"/></div>;
+  if (isLoading) return <div className="flex h-screen justify-center items-center"><img src={loadingSpinner} width={80} alt="loading"/></div>;
   if (isError || !isValid) {
     localStorage.removeItem("accessToken");
     setIsAuthenticated(false);
