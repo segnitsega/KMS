@@ -7,6 +7,6 @@ export const articleRouter = express.Router()
 
 articleRouter.use(verifyToken)
 articleRouter.get('/', getArticles)
-articleRouter.get('/:id', getArticleById)
 articleRouter.post('/post', validateArticleData, handleValidationErrors  , handleArticlePost)
 articleRouter.get('/search', handleArticlesearch)
+articleRouter.get('/:id', getArticleById)
