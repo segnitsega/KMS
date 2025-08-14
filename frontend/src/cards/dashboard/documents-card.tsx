@@ -29,10 +29,7 @@ const DocumentCard = ({
       <div className="flex justify-between p-6">
         <h1>{heading}</h1>
         {onViewAll ? (
-          <button
-            className="text-blue-500 hover:underline"
-            onClick={onViewAll}
-          >
+          <button className="text-blue-500 hover:underline" onClick={onViewAll}>
             View all
           </button>
         ) : (
@@ -65,8 +62,8 @@ const DocumentCard = ({
             </span>
           ) : (
             <span className="flex gap-1 items-center text-gray-500">
-              <IoEyeOutline />
               {articleViews![0]}
+              <IoEyeOutline />
             </span>
           )}
         </div>
@@ -87,13 +84,12 @@ const DocumentCard = ({
           </div>
           {downloads ? (
             <span className="flex gap-1 items-center text-gray-500">
-              {" "}
               {downloads[1]} downloads
             </span>
           ) : (
             <span className="flex gap-1 items-center text-gray-500">
-              <IoEyeOutline />
               {articleViews![1]}
+              <IoEyeOutline />
             </span>
           )}
         </div>
@@ -118,8 +114,8 @@ const DocumentCard = ({
             </span>
           ) : (
             <span className="flex gap-1 items-center text-gray-500">
-              <IoEyeOutline />
               {articleViews![2]}
+              <IoEyeOutline />
             </span>
           )}
         </div>
