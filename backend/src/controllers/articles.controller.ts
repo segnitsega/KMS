@@ -34,7 +34,7 @@ export const getArticleById = catchAsync(
         id: id,
       },
     });
-    if (!article) throw new ApiError(400, "Error finding document");
+    if (!article) throw new ApiError(400, "Error finding article");
     res.status(200).json({ article: article });
   }
 );
@@ -43,7 +43,7 @@ export const handleArticlePost = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { firstName, lastName } = req.user;
     const { title, description, category } = req.body;
-
+console.log(category)
     const newArticle = await prisma.article.create({
         data: {
             title,

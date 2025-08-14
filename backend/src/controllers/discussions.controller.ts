@@ -41,16 +41,16 @@ export const getDiscussionById = catchAsync(
 
 export const handleDiscussionPost = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {
-    const { firstName, lastName } = req.user;
-    const { title, description, category, authorId } = req.body;
+    const { firstName, lastName, id } = req.user;
+    const { title, description, category } = req.body;
 
-    const newDiscussion = prisma.discussion.create({
+    const newDiscussion = await prisma.discussion.create({
         data: {
             title,
             description,
             authorName: `${firstName} ${lastName}`,
             category,
-            authorId
+            authorId: id
         }
     })
 

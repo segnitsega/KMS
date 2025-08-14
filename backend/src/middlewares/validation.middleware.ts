@@ -57,9 +57,7 @@ export const validateDocumentData = [
 
 export const validateArticleData = [
   body("title").trim().notEmpty().withMessage("Title is required"),
-
   body("description").trim().notEmpty().withMessage("Description is required"),
-
   body("pages")
     .optional()
     .isInt({ gt: 0 })
@@ -86,6 +84,34 @@ export const validateArticleData = [
       );
     }
 
+    return true;
+  }),
+];
+
+export const validateDiscussionData = [
+  body("title").trim().notEmpty().withMessage("Title is required"),
+  body("description").trim().notEmpty().withMessage("Description is required"),
+  body("category").custom((value) => {
+    if (typeof value === "string") {
+      try {
+        value = JSON.parse(value);
+      } catch (e) {
+        value = value.split(",");
+      }
+    }
+
+    if (!Array.isArray(value)) {
+      throw new Error("Category must be an array");
+    }
+
+    if (
+      value.length === 0 ||
+      !value.every((item) => typeof item === "string" && item.trim().length > 0)
+    ) {
+      throw new Error(
+        "Category must be a non-empty array of non-empty strings"
+      );
+    }
     return true;
   }),
 ];
