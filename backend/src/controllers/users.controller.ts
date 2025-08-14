@@ -144,14 +144,16 @@ export const getUsers = catchAsync(
         skip,
         take: limit,
       }),
-      prisma.discussion.count(),
+      prisma.user.count(),
     ]);
     if (users.length === 0) throw new ApiError(400, "No users found");
+
+    const safeUsers = users.map(({ password, refreshToken, ...rest }) => rest);
     res.status(200).json({
       totalUsers: totalUsers,
       currentPage: page,
       totalPages: Math.ceil(totalUsers / limit),
-      users: users,
+      users: safeUsers,
     });
   }
 );
@@ -165,7 +167,9 @@ export const getUserById = catchAsync(
       },
     });
     if (!user) throw new ApiError(400, "Error finding user");
-    res.status(200).json({ user: user });
+    
+    const {password, refreshToken, ...safeUser} = user
+    res.status(200).json({ user: safeUser });
   }
 );
 
@@ -198,4 +202,3 @@ export const handleUserSearch = catchAsync(
     });
   }
 );
-
