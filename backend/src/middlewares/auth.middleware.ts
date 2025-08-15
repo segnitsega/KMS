@@ -24,3 +24,12 @@ export const verifyToken = (req: AuthenticatedRequest, res: Response, next: Next
     return res.status(403).json({ message: 'Forbidden: Invalid or expired token' });
   }
 };
+
+export const checkAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  if(req.user && req.user.role === "ADMIN"){
+    return next()
+  }
+  else {
+    return res.status(403).json({message: "Access denied: only for admins!"})
+  }
+}
