@@ -187,3 +187,34 @@ export const changeUserRole = catchAsync(
     });
   }
 );
+
+export const assignTask = catchAsync(async (req: Request, res: Response) => {
+  const { title, description, taskResource, userIDs, priorityLevel, dueDate } =
+    req.body;
+
+  if (!Array.isArray(userIDs)) {
+    return res.status(400).json({
+      message: "userIDs must be an array",
+    });
+  }
+
+  const tasksCreated = await Promise.all(
+    userIDs.map((id: string) => {
+      return prisma.task.create({
+        data: {
+          title,
+          description,
+          taskResource,
+          priorityLevel,
+          dueDate,
+          userId: id,
+        },
+      });
+    })
+  );
+
+  res.status(201).json({
+    message: "Task assigned successfully!",
+    tasksCreated,
+  });
+});
