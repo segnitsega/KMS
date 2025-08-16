@@ -85,7 +85,7 @@ export const updateDiscussion = catchAsync(
     const discussionID = req.params.id;
     const { title, description, category } = req.body;
 
-    const discussionUpdated = await prisma.article.update({
+    const discussionUpdated = await prisma.discussion.update({
       where: {
         id: discussionID,
       },
@@ -107,7 +107,7 @@ export const deleteDiscussion = catchAsync(
   async (req: Request, res: Response) => {
     const discussionID = req.params.id;
 
-    const deletedDiscussion = await prisma.article.delete({
+    const deletedDiscussion = await prisma.discussion.delete({
       where: {
         id: discussionID,
       },

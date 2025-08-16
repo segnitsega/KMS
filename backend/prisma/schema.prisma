@@ -23,9 +23,9 @@ model User {
   joinedAt       DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   skills         String[]     @default([])
-  userDetail     UserDetail?
-  replies        Replies[]
-  discussions    Discussion[]
+  userDetail     UserDetail?  @relation("UserToUserDetail")
+  replies        Replies[]    @relation("UserToReplies")
+  discussions    Discussion[] @relation("UserToDiscussion")
   password       String?
   refreshToken   String?
 }
@@ -36,7 +36,7 @@ model UserDetail {
   birthPlace  Json?
   address     String?
   socialMedia Json?
-  user        User    @relation(fields: [id], references: [id])
+  user        User    @relation("UserToUserDetail", fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Document {
@@ -48,7 +48,7 @@ model Document {
   uploadedAt  DateTime          @default(now())
   category    String[]
   documentUrl String
-  version     DocumentVersion[]
+  version     DocumentVersion[] @relation("DocumentToDocumentVersion")
   downloads   Int               @default(0)
   views       Int               @default(0)
 }
@@ -56,7 +56,7 @@ model Document {
 model DocumentVersion {
   id          String   @id @default(uuid())
   version     Int
-  document    Document @relation(fields: [documentId], references: [id])
+  document    Document @relation("DocumentToDocumentVersion", fields: [documentId], references: [id], onDelete: Cascade)
   documentId  String
   documentUrl String
   createdAt   DateTime @default(now())
@@ -83,18 +83,18 @@ model Discussion {
   authorName  String
   category    String[]
   likes       Int       @default(0)
-  replies     Replies[]
+  replies     Replies[] @relation("DiscussionToReplies")
   authorId    String
-  author      User      @relation(fields: [authorId], references: [id])
+  author      User      @relation("UserToDiscussion", fields: [authorId], references: [id], onDelete: Cascade)
   uploadedAt  DateTime  @default(now())
 }
 
 model Replies {
   id           String     @id @default(uuid())
-  discussion   Discussion @relation(fields: [discussionId], references: [id])
+  discussion   Discussion @relation("DiscussionToReplies", fields: [discussionId], references: [id], onDelete: Cascade)
   discussionId String
   userId       String
-  user         User       @relation(fields: [userId], references: [id])
+  user         User       @relation("UserToReplies", fields: [userId], references: [id], onDelete: Cascade)
   message      String
 }
 
