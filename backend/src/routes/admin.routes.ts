@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addUser,
+  assignTask,
   changeUserRole,
   deleteArticle,
   deleteDiscussion,
@@ -30,3 +31,6 @@ adminRouter.delete("/delete-disc/:id", deleteDiscussion);
 adminRouter.post("/add-user", addUser);
 adminRouter.delete("/remove-user/:id", removeUser);
 adminRouter.post("/change-user-role/:id", changeUserRole);
+
+//task assignment
+adminRouter.post("/task-assign", assignTask)
