@@ -13,12 +13,10 @@ import CreateArticleModal from "@/components/create-article-modal";
 import NewDiscussionModal from "@/components/NewDiscussionModal";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
-import { jwtDecode, type JwtPayload } from "jwt-decode";
 import loadingSpinner from "../assets/loading-spinner.svg";
+import { useAuthStore } from "@/stores/auth-store";
 
-type jwtPayload = JwtPayload & {
-  id: string;
-};
+
 
 // type docsAndArticles = {
 //   author: string,
@@ -31,25 +29,13 @@ type jwtPayload = JwtPayload & {
 //   downloads?: number
 // }
 
-const token = localStorage.getItem("accessToken") as string;
-
-let decoded: jwtPayload | string = ""
-let userId: string
-
-if (token) {
-  decoded = jwtDecode<jwtPayload>(token);
-  userId = decoded.id;
-}
-
 const getData = async () => {
-  const user = await api.get(`/user/${userId}`);
   const statsCount = await api.get(`/status-count`);
   const documents = await api.get(`/docs?page=1&limit=3`);
   const articles = await api.get(`/articles?page=1&limit=3`);
   console.log("arts: ", articles.data.articles);
   console.log("docs: ", documents.data.documents);
   return {
-    user: user.data.user,
     statsCount: statsCount.data,
     documents: documents.data.documents,
     articles: articles.data.articles,
@@ -57,6 +43,8 @@ const getData = async () => {
 };
 
 const Dashboard = () => {
+  const userData = useAuthStore((state) => state.userData);
+
   const { data, isLoading } = useQuery({
     queryFn: getData,
     queryKey: ["dashboard"],
@@ -129,13 +117,13 @@ const Dashboard = () => {
         )}
         {showPopularModal && (
           <PopularArticlesModal
-            articles={popularArticles}
+            articles={data.articles}
             onClose={() => setShowPopularModal(false)}
           />
         )}
         <div className="px-4 py-6 flex flex-col gap-4 bg-blue-500 rounded-md text-white">
           <h1 className="font-bold text-xl">
-            Hello, {data.user.firstName} {data.user.lastName} !
+            Hello, {userData.firstName} {userData.lastName} !
           </h1>
           <span className="text-lg">
             Ready to share knowledge and collaborate with your team?
