@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import KnowledgebaseModal from '@/components/KnowledgebaseModal';
 import Header from '@/components/reusable-header';
+import CreateArticleModal from '@/components/create-article-modal';
 import FeaturedArticles from '@/components/featured-articles';
 import PostCard from '@/components/PostCard';
+
 
 type Post = {
   title: string;
@@ -48,6 +50,7 @@ const KnowledgeBase = () => {
   ];
 
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleView = (post: Post) => {
     setSelectedPost(post);
@@ -59,7 +62,15 @@ const KnowledgeBase = () => {
 
   return (
     <div className='flex flex-col gap-6'>
-      <Header title='Knowledge Base' subtitle='Collaborative wiki and knowledge articles' buttonText='New Article' dropDownText='Recently Updated ' dropDownOptions={["Recently Updated", "Most Popular", "Alphabetical"]} searchPlaceholder='Search document...'/>
+      <Header
+        title='Knowledge Base'
+        subtitle='Collaborative wiki and knowledge articles'
+        buttonText='New Article'
+        dropDownText='Recently Updated '
+        dropDownOptions={["Recently Updated", "Most Popular", "Alphabetical"]}
+        searchPlaceholder='Search document...'
+        onButtonClick={() => setShowCreateModal(true)}
+      />
 
       <FeaturedArticles articles={articles} />
       <div className="flex flex-col gap-4">
@@ -76,6 +87,14 @@ const KnowledgeBase = () => {
           />
         ))}
       </div>
+
+      {/* Modal for creating new article */}
+      {showCreateModal && (
+        <CreateArticleModal
+          onClose={() => setShowCreateModal(false)}
+          onCreate={() => setShowCreateModal(false)}
+        />
+      )}
 
       {/* Modal for knowledgebase view */}
       {selectedPost && (

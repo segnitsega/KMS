@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "../components/ui/button";
 import { cn } from "../lib/utils";
 import Header from "../components/reusable-header";
+import UploadDocumentModal from "../components/UploadDocumentModal";
 import {
   FiPlay,
   FiBookOpen,
@@ -60,6 +61,7 @@ const TRAINING_CONTENT = [
 const Training = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [search, setSearch] = useState("");
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   const filteredContent = TRAINING_CONTENT.filter((item) => {
     const matchesSearch = item.title.toLowerCase().includes(search.toLowerCase());
@@ -76,8 +78,18 @@ const Training = () => {
         dropDownText="All Content"
         dropDownOptions={TABS.map((tab) => tab.label)}
         searchPlaceholder="Search courses, books, videos..."
-        onButtonClick={() => {}}
+        onButtonClick={() => setShowUploadModal(true)}
       />
+
+      {showUploadModal && (
+        <UploadDocumentModal
+          onClose={() => setShowUploadModal(false)}
+          onUpload={(file, description) => {
+            // TODO: handle upload logic here
+            setShowUploadModal(false);
+          }}
+        />
+      )}
 
       {/* Tabs */}
       <div className="flex items-center gap-3 my-4 flex-wrap">

@@ -17,8 +17,8 @@ interface KnowledgebaseModalProps {
 
 const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({ post, onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg w-full  max-w-[1200px] max-h-[200vh] relative flex flex-col md:flex-row p-0">
+    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+      <div className="bg-white rounded-lg shadow-lg w-full  max-w-[900px] max-h-[600px] relative flex flex-col md:flex-row p-0">
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl"
           onClick={onClose}
@@ -54,7 +54,7 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({ post, onClose }
             {post.description}
           </div>
         </div>
-        <div className="w-full md:w-80 bg-gray-50 rounded-r-lg flex flex-col items-center py-8 px-4 border-l border-gray-200">
+        <div className="w-full md:w-50 bg-gray-50 rounded-r-lg flex flex-col items-center py-8 px-4 border-l border-gray-200">
           <h3 className="text-xl font-bold mb-6">Article Actions</h3>
           <div className="flex flex-col gap-4 w-full">
             <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-green-500 text-white font-semibold text-lg hover:bg-green-600 transition">

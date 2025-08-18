@@ -11,24 +11,31 @@ interface navBarProps {
 }
 
 const NavBar = ({ userName, department, role }: navBarProps) => {
-
-  const [clicked, setClicked] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  // Control dropdown visibility with state, not click
+  const [showDropdown, setShowDropdown] = useState(false); // Show on click
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node)
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
       ) {
-        setClicked(false);
+        setShowDropdown(false);
       }
     };
-
-    document.addEventListener("mousedown", handleClickOutside);
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [showDropdown]);
+  const [searchFocused, setSearchFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Remove click outside logic for dropdown
   }, []);
 
   return (
@@ -41,8 +48,8 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
       </h1>
       <div
         ref={inputRef}
-        className={`flex items-center border  rounded-md p-2 w-[100%] ${
-          clicked ? "border-blue-500" : "border-gray-300"
+        className={`flex items-center border rounded-md p-2 w-[100%] ${
+          searchFocused ? "border-blue-500" : "border-gray-300"
         }`}
       >
         <CiSearch className="text-gray-500 text-lg " />
@@ -52,7 +59,8 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
           id=""
           placeholder="Search knowledge base, documents, people..."
           className="ml-2 outline-none w-full "
-          onFocus={() => setClicked(true)}
+          onFocus={() => setSearchFocused(true)}
+          onBlur={() => setSearchFocused(false)}
         />
       </div>
 
@@ -68,21 +76,24 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
           <span className="text-gray-500">{department}</span>
         </div>
         <div className="relative">
-          <button onClick={() => setClicked((open) => !open)} className="focus:outline">
-            <BsPerson className="text-gray-500 text-lg shadow-lg rounded-md text-gray-700 h over:bg-gray-100 transition duration-200" />
-          </button>
-          {clicked && (
-            <div className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg py-2 px-4 w-40 flex flex-col gap-2 z-10">
-              <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600 py-2 px-2 rounded transition">
-                <BsPerson className="text-lg" />
-                profile
-              </button>
-              <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition">
-                <FiLogOut className="text-lg" />
-                Logout
-              </button>
-            </div>
-          )}
+          <div ref={dropdownRef} className="inline-block relative">
+            <BsPerson
+              className="text-gray-500 text-lg shadow-lg rounded-md text-gray-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
+              onClick={() => setShowDropdown((open) => !open)}
+            />
+            {showDropdown && (
+              <div className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg py-2 px-4 w-40 flex flex-col gap-2 z-10">
+                <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600 py-2 px-2 rounded transition">
+                  <BsPerson className="text-lg" />
+                  Profile
+                </button>
+                <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition">
+                  <FiLogOut className="text-lg" />
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
