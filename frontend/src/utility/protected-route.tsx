@@ -25,11 +25,6 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
   if(!accessToken){
     navigate("/login")
   }
-  console.log(
-    "access token from protected route:",
-    localStorage.getItem("accessToken")
-  );
-
   const { isLoading, isError, error } = useQuery({
     queryKey: ["validateToken", accessToken],
     queryFn: async () => {

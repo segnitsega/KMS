@@ -36,7 +36,6 @@ const LoginPage = () => {
     onSuccess: (data: loginResponse) => {
       // if (rememberMe) localStorage.setItem("rememberMe", "true");
       localStorage.setItem("accessToken", data.accessToken);
-      console.log(`login successfull and here is token on localStorage: ${localStorage.getItem("accessToken")}`)
       useAuthStore.getState().setIsAuthenticated(true);
 
       toast("✅ Login successful!");

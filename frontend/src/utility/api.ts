@@ -18,18 +18,14 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log("response came successfully")
     return response
   },
   async (error) => {
-    console.log("error on response", error)
     const originalRequest = error.config;
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        console.log("trying to refresh token")
         const { data } = await api.get(`${api.defaults.baseURL}/auth/refresh-token`)
-        console.log("data from refreshing try:", data)
         const newAccessToken = data.accessToken;
 
         localStorage.setItem("accessToken", newAccessToken);

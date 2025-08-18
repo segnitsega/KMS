@@ -9,7 +9,6 @@ const refreshKey = process.env.refresh_key as string;
 
 export const handleRefreshToken = catchAsync(
   async (req: Request, res: Response) => {
-    console.log('refreshing token ran')
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) throw new ApiError(401, "No refresh token provided");
 
@@ -49,7 +48,6 @@ export const handleTokenVerifaction = catchAsync(
     }
 
     const token = authHeader.split(" ")[1];
-    console.log(token);
 
     jwt.verify(token, secretKey, (err, decoded) => {
       if (err) {
@@ -59,7 +57,6 @@ export const handleTokenVerifaction = catchAsync(
         });
         return;
       }
-      console.log(" a log from token validation ", decoded);
 
       res.status(200).json({
         message: "Token is valid",
