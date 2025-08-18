@@ -9,7 +9,7 @@ export interface AuthenticatedRequest extends Request {
 
 export const verifyToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
-
+  console.log("Verifying token")
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'Unauthorized: No token provided' });
   }
@@ -21,6 +21,7 @@ export const verifyToken = (req: AuthenticatedRequest, res: Response, next: Next
     req.user = decoded; 
     next();
   } catch (error) {
+    console.log("error verifi=ying")
     return res.status(403).json({ message: 'Forbidden: Invalid or expired token' });
   }
 };

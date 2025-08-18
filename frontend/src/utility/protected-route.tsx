@@ -1,41 +1,61 @@
 import { useAuthStore } from "@/stores/auth-store";
 import { useQuery } from "@tanstack/react-query";
 import type { PropsWithChildren } from "react";
-import loadingSpinner from "../assets/loading-spinner.svg"
+import loadingSpinner from "../assets/loading-spinner.svg";
 import api from "./api";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode, type JwtPayload } from "jwt-decode";
 
+type jwtPayload = JwtPayload & {
+  id: string;
+};
 
-const validateToken = async (accessToken: string | null) => {
-  if (!accessToken) throw new Error("No Token");
-  const response = await api.get(`/auth/validate-token`);
-  return response.data.valid;
+const getUser = async (token: string) => {
+  const decoded = jwtDecode<jwtPayload>(token);
+  const user = await api.get(`/user/${decoded.id}`);
+  return user.data.user;
 };
 
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
+  const setUserData = useAuthStore((state) => state.setUserData);
 
   const accessToken = localStorage.getItem("accessToken");
-  
-  const {
-    data: isValid,
-    isLoading,  
-    isError,
-  } = useQuery({
+  if(!accessToken){
+    navigate("/login")
+  }
+  console.log(
+    "access token from protected route:",
+    localStorage.getItem("accessToken")
+  );
+
+  const { isLoading, isError, error } = useQuery({
     queryKey: ["validateToken", accessToken],
-    queryFn: () => validateToken(accessToken),
+    queryFn: async () => {
+      const user = await getUser(`${localStorage.getItem("accessToken")}`);
+      setUserData(user);
+      return user
+    },
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
-  if (isLoading) return <div className="flex h-screen justify-center items-center"><img src={loadingSpinner} width={80} alt="loading"/></div>;
-  if (isError || !isValid) {
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen justify-center items-center">
+        <img src={loadingSpinner} width={80} alt="loading" />
+      </div>
+    );
+  if (isError) {
+    console.log("Error here: ", error)
     localStorage.removeItem("accessToken");
     setIsAuthenticated(false);
-    navigate('/login')
+    navigate("/login");
   }
 
   return children;
 };
 
 export default ProtectedRoute;
+
