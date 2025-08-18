@@ -13,7 +13,7 @@ const Layout = () => {
           department={userData.department}
           role={userData.role}
         />
-        <div className="flex bg-gray-50">
+        <div className="flex bg-gray-175">
           <SideBar />
           <main className="p-6 flex-1">
             <Outlet />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import { Brain, Search,Settings,Users,FileText,BookOpen,TrendingUp,UserCheck,Play,ArrowRight} from 'lucide-react';
+import { Brain, Search, Settings, Users, FileText, BookOpen, TrendingUp, UserCheck, Play, ArrowRight, Lock } from 'lucide-react';
+const LockIcon = Lock;
 import '../pages/LoginPage'
 import AnimatedUnlockText from '../components/AnimatedUnlockText';
 import AnimatedButtons from '../components/AnimatedButtons';
@@ -10,9 +11,9 @@ const LandingPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-800 to-cyan-600" id="home">
       {/* Navigation */}
       <nav className="flex items-center justify-between px-8 py-3 ">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-cyan-400 rounded-lg flex items-center justify-center">
-            <span className="text-blue-900 font-bold text-sm">KMS</span>
+        <div className="flex items-center space-x-10">
+          <div className="w-15 h-8 bg-cyan-400 rounded-lg flex items-center justify-center">
+            <span className="text-blue-900 font-bold text-md">K-Hub</span>
           </div>
         </div>
         
@@ -138,33 +139,38 @@ const LandingPage = () => {
       </div>
 
       {/* Why Teams Rely Section */}
-      <div className="bg-gray-900 py-20" id="About">
+      <div className="bg-gradient-to-br from-blue-600 via-blue-800 to-blue-600 py-20" id="About">
         <div className="max-w-7xl mx-auto px-8">
-          <h2 className="text-4xl font-bold text-center text-white mb-16">Why Teams Rely on Our KMS</h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div className="space-y-4">
-              <div className="text-3xl font-bold text-cyan-400">Easy to Use Interface</div>
-              <p className="text-gray-300">Intuitive design that requires minimal training</p>
+          <h2 className="text-4xl font-extrabold text-center text-white mb-16 tracking-tight drop-shadow-lg">Why Teams Rely on Our KMS</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+            {/* Card 1 */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-xl hover:scale-105 transition-transform duration-300 border border-cyan-400 flex flex-col items-center">
+              <Settings className="w-12 h-12 text-cyan-400 mb-4 drop-shadow-lg" />
+              <div className="text-xl font-bold text-white mb-2">Easy to Use Interface</div>
+              <p className="text-blue-100">Intuitive design that requires minimal training</p>
             </div>
-            <div className="space-y-4">
-              <div className="text-3xl font-bold text-cyan-400">Cloud-Based Access & Full Encryption</div>
-              <p className="text-gray-300">Secure access from anywhere with enterprise-grade security</p>
+            {/* Card 2 */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-xl hover:scale-105 transition-transform duration-300 border border-blue-400 flex flex-col items-center">
+              <LockIcon className="w-12 h-12 text-blue-400 mb-4 drop-shadow-lg" />
+              <div className="text-xl font-bold text-white mb-2">Cloud-Based Access & Full Encryption</div>
+              <p className="text-blue-100">Secure access from anywhere with enterprise-grade security</p>
             </div>
-            <div className="space-y-4">cd
-              <div className="text-3xl font-bold text-cyan-400">24/7 Global Access & Support</div>
-              <p className="text-gray-300">Round-the-clock availability and expert support</p>
+            {/* Card 3 */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-xl hover:scale-105 transition-transform duration-300 border border-purple-400 flex flex-col items-center">
+              <Users className="w-12 h-12 text-purple-400 mb-4 drop-shadow-lg" />
+              <div className="text-xl font-bold text-white mb-2">24/7 Global Access & Support</div>
+              <p className="text-blue-100">Round-the-clock availability and expert support</p>
             </div>
-            <div className="space-y-4">
-              <div className="text-3xl font-bold text-cyan-400">Integrates with Slack, Teams, Google Drive, Dropbox & Customizable to Your Team</div>
-              <p className="text-gray-300">Seamless integration with your existing workflow</p>
+            {/* Card 4 */}
+            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-xl hover:scale-105 transition-transform duration-300 border border-pink-400 flex flex-col items-center">
+              <TrendingUp className="w-12 h-12 text-pink-400 mb-4 drop-shadow-lg" />
+              <div className="text-xl font-bold text-white mb-2">Integrates & Customizable</div>
+              <p className="text-blue-100">Slack, Teams, Google Drive, Dropbox & more. Seamless integration with your workflow.</p>
             </div>
           </div>
-          
           <div className="mt-16 text-center" id="Contact">
-            <p className="text-gray-300 text-lg leading-relaxed max-w-4xl mx-auto">
-              "The platform cut our onboarding time in half. It's been our team's go-to help for all internal knowledge 
-              management."
+            <p className="text-blue-100 text-lg leading-relaxed max-w-4xl mx-auto italic">
+              "The platform cut our onboarding time in half. It's been our team's go-to help for all internal knowledge management."
             </p>
             <p className="text-cyan-400 font-semibold mt-4">- HR Manager</p>
           </div>
@@ -172,16 +178,17 @@ const LandingPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 py-12">
+      <footer className="bg-gradient-to-r from-sky-900 via-blue-800 to-indigo-700 py-6 mt-0 border-t border-blue-900">
         <div className="max-w-7xl mx-auto px-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-gray-400">
-              © 2025 INSA onboarding | Privacy Policy | Terms | Contact
+            <div className="flex items-center space-x-3">
+              <span className="text-blue-200 font-extrabold text-xl tracking-wide">K-Hub</span>
+              <span className="text-blue-100">© 2025 INSA onboarding Empowering knowledge for everyone.</span>
             </div>
-            <div className="flex space-x-6">
-              <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
-              <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
-              <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+            <div className="flex items-center space-x-6">
+              <a href="#" className="text-blue-200 hover:text-white transition-colors font-medium">Privacy Policy</a>
+              <a href="#" className="text-blue-200 hover:text-white transition-colors font-medium">Terms</a>
+              <a href="#Contact" className="text-blue-200 hover:text-white transition-colors font-medium">Contact</a>
             </div>
           </div>
         </div>

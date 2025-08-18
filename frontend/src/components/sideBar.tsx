@@ -14,14 +14,14 @@ import { useLocation, Link } from "react-router-dom";
 const SideBar = () => {
   const location = useLocation();
   return (
-    <div className="border border-t-0 mb-8 bg-white h-[110vh] ">
+    <div className="border border-t-0 mb-8 shadow-md bg-white h-[110vh] ">
       <div className="flex p-6 flex-col gap-4 ">
         <Link
           to="dashboard"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             ["/kms/dashboard", "/kms"].includes(location.pathname) &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <FiHome size={20}/> Dashboard
@@ -30,9 +30,9 @@ const SideBar = () => {
         <Link
           to="documents"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/documents" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <IoDocumentTextOutline size={20}/>
@@ -41,9 +41,9 @@ const SideBar = () => {
         <Link
           to="knowledge-base"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer border-r-2 border-white",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer border-r-2 border-white",
             location.pathname === "/kms/knowledge-base" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <PiBookOpen size={20}/>
@@ -52,9 +52,9 @@ const SideBar = () => {
         <Link
           to="discussions"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/discussions" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <FiMessageCircle size={20}/>
@@ -63,9 +63,9 @@ const SideBar = () => {
         <Link
           to="expert-directory"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/expert-directory" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <FiUsers size={20}/>
@@ -74,9 +74,9 @@ const SideBar = () => {
         <Link
           to="training"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/training" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <SlGraduation size={20}/>
@@ -85,9 +85,9 @@ const SideBar = () => {
         <Link
           to="my-tasks"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/my-tasks" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <FaTasks size={17}/>
@@ -96,9 +96,9 @@ const SideBar = () => {
         <Link
           to="notifications"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/notifications" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <IoIosNotificationsOutline size={19}/>
@@ -107,9 +107,9 @@ const SideBar = () => {
         <Link
           to="analytics"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
             location.pathname === "/kms/analytics" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <FaRegChartBar size={17}/>
@@ -118,9 +118,9 @@ const SideBar = () => {
         <Link
           to="administration"
           className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+            "flex gap-1 items-center text-lg p-2 rounded-md cursor-pointer",
             location.pathname === "/kms/administration" &&
-              "bg-blue-50  text-blue-600 border-r-2 border-blue-600"
+              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <LuUser size={18}/>
@@ -128,11 +128,9 @@ const SideBar = () => {
         </Link>
       </div>
 
-      <div className="border-t mt-4"></div>
-
       <Link
         to="help-support"
-        className="flex gap-2 items-center text-lg p-2 cursor-pointer my-8"
+        className="flex gap-1 items-center text-lg p-2 cursor-pointer my-8 shadow-m rounded-md text-gray-700 hover:bg-gray-100 transition duration-200"
       >
         <IoIosHelpCircleOutline size={30}/>
         Help & Support
