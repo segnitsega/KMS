@@ -6,6 +6,7 @@ import UserManagement from '@/components/UserManagement'
 
 const Administration: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Content')
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
 
   return (
     <div>
@@ -16,7 +17,7 @@ const Administration: React.FC = () => {
         dropDownText=""
         dropDownOptions={['content', 'users', 'assign tasks']}
         searchPlaceholder="search content, users, tasks"
-        onButtonClick={() => {}}
+        onButtonClick={() => setShowAddUserModal(true)}
       />
       <div className="flex gap-0 mt-6 mb-8 bg-[#f6fafd] rounded-full overflow-hidden shadow">
         {['Content', 'Users', 'Assign Tasks'].map((tab) => (
@@ -33,9 +34,35 @@ const Administration: React.FC = () => {
           </button>
         ))}
       </div>
-  {activeTab === 'Content' && <ContentManagement />}
-  {activeTab === 'Users' && <UserManagement />}
-  {activeTab === 'Assign Tasks' && <AssignTaskManagement />}
+      {activeTab === 'Content' && <ContentManagement />}
+      {activeTab === 'Users' && <UserManagement />}
+      {activeTab === 'Assign Tasks' && <AssignTaskManagement />}
+
+      {/* Add User Modal */}
+      {showAddUserModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl p-15 w-full max-w-md relative">
+            <button
+              className="absolute top-4 right-4 text-gray-500 text-2xl font-bold hover:text-red-500"
+              onClick={() => setShowAddUserModal(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold mb-6 text-blue-700">Add New User</h2>
+            <form className="flex flex-col gap-4">
+              <input className="border rounded-md p-2" type="text" placeholder="Full Name" />
+              <input className="border rounded-md p-2" type="email" placeholder="Email" />
+              <input className="border rounded-md p-2" type="text" placeholder="Role" />
+              <input className="border rounded-md p-2" type="text" placeholder="Department" />
+              <div className="flex gap-4 mt-4">
+                <button type="button" className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition">Add</button>
+                <button type="button" className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-semibold hover:bg-gray-300 transition" onClick={() => setShowAddUserModal(false)}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
