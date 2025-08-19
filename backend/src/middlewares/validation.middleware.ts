@@ -1,6 +1,14 @@
 import { body, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
+const categories = [
+  "Financial & Accounting",
+  "Technical & Project Docs",
+  "Reports & Analytics ",
+  "Policies & Procedures",
+  "HR",
+];
+
 export const validateDocumentData = [
   body("title").trim().notEmpty().withMessage("Title is required"),
 
@@ -115,29 +123,7 @@ export const validateArticleData = [
 export const validateDiscussionData = [
   body("title").trim().notEmpty().withMessage("Title is required"),
   body("description").trim().notEmpty().withMessage("Description is required"),
-  body("category").custom((value) => {
-    if (typeof value === "string") {
-      try {
-        value = JSON.parse(value);
-      } catch (e) {
-        value = value.split(",");
-      }
-    }
-
-    if (!Array.isArray(value)) {
-      throw new Error("Category must be an array");
-    }
-
-    if (
-      value.length === 0 ||
-      !value.every((item) => typeof item === "string" && item.trim().length > 0)
-    ) {
-      throw new Error(
-        "Category must be a non-empty array of non-empty strings"
-      );
-    }
-    return true;
-  }),
+  body("category").notEmpty().withMessage("Category is required").isIn(categories).withMessage(`Category must be one of: ${categories.join(", ")}`),
 ];
 
 export const handleValidationErrors = (

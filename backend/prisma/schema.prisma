@@ -88,7 +88,7 @@ model Discussion {
   title       String
   description String
   authorName  String
-  category    String[]
+  category    String
   likes       Int       @default(0)
   replies     Replies[] @relation("DiscussionToReplies")
   authorId    String
