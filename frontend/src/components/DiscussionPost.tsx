@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   FiMessageCircle,
   FiUser,
@@ -6,13 +6,13 @@ import {
   FiThumbsUp,
   FiCornerDownLeft,
   FiTag,
-} from 'react-icons/fi';
+} from "react-icons/fi";
 
 interface Reply {
   author: string;
   text: string;
   timestamp: string;
-  message: string
+  message: string;
 }
 
 interface DiscussionPostProps {
@@ -22,7 +22,7 @@ interface DiscussionPostProps {
   categories: string[];
   timestamp: string;
   replies: Reply[];
-  likes: number
+  likes: number;
 }
 
 const DiscussionPost: React.FC<DiscussionPostProps> = ({
@@ -32,7 +32,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
   categories,
   timestamp,
   replies,
-  likes
+  likes,
 }) => {
   return (
     <div className="discussion-post border rounded-lg p-4 bg-white gap-2">
@@ -49,14 +49,12 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
               <FiUser className="w-4 h-4" />
               {author}
             </span>
-            {categories.map((tag) => (
-              <span
-                key={tag}
-                className="bg-gray-100 border text-xs text-gray-700 px-2 py-0.5 rounded-full flex items-center gap-1"
-              >
-                <FiTag className="w-3 h-3" /> {tag}
-              </span>
-            ))}
+
+            <span
+              className="bg-gray-100 border text-xs text-gray-700 px-2 py-0.5 rounded-full flex items-center gap-1"
+            >
+              <FiTag className="w-3 h-3" /> {categories}
+            </span>
           </div>
           <div className="flex items-center gap-6 mt-3 text-sm text-gray-500">
             <button className="flex items-center gap-1 hover:text-gray-700 cursor-pointer">
@@ -84,7 +82,9 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
               <p className="font-semibold text-gray-900">{reply.author}</p>
               <p className="text-gray-700">{reply.message}</p>
             </div>
-            <div className="text-gray-400 text-xs whitespace-nowrap">{reply.timestamp}</div>
+            <div className="text-gray-400 text-xs whitespace-nowrap">
+              {reply.timestamp}
+            </div>
           </div>
         ))}
       </div>

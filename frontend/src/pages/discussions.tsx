@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import loadingSpinner from "../assets/loading-spinner.svg";
 
 const getDiscussionData = async () => {
-  const response = await api.get("/discussions");
+  const response = await api.get("/discussions?limit=5");
   return response.data.discussions;
 };
 
@@ -33,6 +33,14 @@ const Discussions = () => {
         <img src={loadingSpinner} width={50} alt="loading" />
       </div>
     );
+
+  if (isError)
+    return (
+      <div className="flex h-screen bg-white text-red-500 justify-center items-center">
+        Error getting discussions please refresh the page !
+      </div>
+    );
+
   if (data)
     return (
       <div>
@@ -53,7 +61,7 @@ const Discussions = () => {
           onButtonClick={openModal}
         />
         {data.map((discussion) => (
-          <div className="mt-6">
+          <div key={discussion.id} className="mt-6">
             <DiscussionPost
               title={discussion.title}
               description={discussion.description}
@@ -67,13 +75,6 @@ const Discussions = () => {
         ))}
 
         {isModalOpen && <NewDiscussionModal onClose={closeModal} />}
-      </div>
-    );
-
-  if (isError)
-    return (
-      <div className="flex h-screen bg-white text-red-500 justify-center items-center">
-        Error getting discussions please refresh the page !
       </div>
     );
 };
