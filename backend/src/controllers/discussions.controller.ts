@@ -13,10 +13,24 @@ export const getDiscussions = catchAsync(
       prisma.discussion.findMany({
         skip,
         take: limit,
+        include: {
+          replies: {
+            select: {
+              message: true,
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
+        },
       }),
       prisma.discussion.count(),
     ]);
-    if (discussions.length === 0) throw new ApiError(400, "No discussions found");
+    if (discussions.length === 0)
+      throw new ApiError(400, "No discussions found");
     res.status(200).json({
       totalDiscussions: totalDiscussions,
       currentPage: page,
@@ -45,16 +59,17 @@ export const handleDiscussionPost = catchAsync(
     const { title, description, category } = req.body;
 
     const newDiscussion = await prisma.discussion.create({
-        data: {
-            title,
-            description,
-            authorName: `${firstName} ${lastName}`,
-            category,
-            authorId: id
-        }
-    })
+      data: {
+        title,
+        description,
+        authorName: `${firstName} ${lastName}`,
+        category,
+        authorId: id,
+      },
+    });
 
-    if(!newDiscussion) throw new ApiError(400, "Error while creating new discussion")
+    if (!newDiscussion)
+      throw new ApiError(400, "Error while creating new discussion");
 
     res.status(201).json({
       success: true,
