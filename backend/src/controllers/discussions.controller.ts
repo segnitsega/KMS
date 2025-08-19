@@ -6,11 +6,15 @@ import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 
 export const getDiscussions = catchAsync(
   async (req: Request, res: Response): Promise<any> => {
+    const query = (req.query.q as string) || "";
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
+    const categoryQuery = query ? {category: query} : {}
+
     const [discussions, totalDiscussions] = await Promise.all([
       prisma.discussion.findMany({
+        where: categoryQuery,
         skip,
         take: limit,
         orderBy: {
@@ -30,7 +34,9 @@ export const getDiscussions = catchAsync(
           },
         },
       }),
-      prisma.discussion.count(),
+      prisma.discussion.count({
+        where: categoryQuery
+      }),
     ]);
     if (discussions.length === 0)
       throw new ApiError(400, "No discussions found");
