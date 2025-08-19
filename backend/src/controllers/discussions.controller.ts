@@ -14,7 +14,7 @@ export const getDiscussions = catchAsync(
         skip,
         take: limit,
         orderBy: {
-          uploadedAt: "desc", 
+          uploadedAt: "desc",
         },
         include: {
           replies: {
@@ -108,6 +108,27 @@ export const handleDiscussionSearch = catchAsync(
     res.status(200).json({
       totalResults: results.length,
       discussions: results,
+    });
+  }
+);
+
+export const handleDiscussionReply = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { id } = req.user;
+    const { message, discussionId } = req.body;
+    const replyCreated = await prisma.replies.create({
+      data: {
+        discussionId,
+        userId: id,
+        message,
+      },
+    });
+    if (!replyCreated) {
+      throw new ApiError(400, "Error creating reply!");
+    }
+    res.status(201).json({
+      success: true,
+      reply: replyCreated,
     });
   }
 );
