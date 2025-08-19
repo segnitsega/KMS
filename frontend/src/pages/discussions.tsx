@@ -15,7 +15,7 @@ import loadingSpinner from "../assets/loading-spinner.svg";
 // ];
 
 const getDiscussionData = async () => {
-  const response = await api.get(`/discussions?q=${}`);
+  const response = await api.get(`/discussions`);
   return response.data.discussions;
 };
 
