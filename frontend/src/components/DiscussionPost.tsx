@@ -34,6 +34,8 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
   replies,
   likes,
 }) => {
+  console.log(replies);
+
   return (
     <div className="discussion-post border rounded-lg p-4 bg-white gap-2">
       <div className="flex gap-2">
@@ -50,9 +52,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
               {author}
             </span>
 
-            <span
-              className="bg-gray-100 border text-xs text-gray-700 px-2 py-0.5 rounded-full flex items-center gap-1"
-            >
+            <span className="bg-gray-100 border text-xs text-gray-700 px-2 py-0.5 rounded-full flex items-center gap-1">
               <FiTag className="w-3 h-3" /> {categories}
             </span>
           </div>
@@ -79,7 +79,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
             className="reply bg-gray-100 rounded-md p-4 flex justify-between items-start gap-4"
           >
             <div>
-              <p className="font-semibold text-gray-900">{reply.author}</p>
+              <p className="font-semibold text-gray-900">{reply.user.firstName} {reply.user.lastName}</p>
               <p className="text-gray-700">{reply.message}</p>
             </div>
             <div className="text-gray-400 text-xs whitespace-nowrap">
