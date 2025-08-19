@@ -13,11 +13,13 @@ export const getDiscussions = catchAsync(
       prisma.discussion.findMany({
         skip,
         take: limit,
+        orderBy: {
+          uploadedAt: "desc", 
+        },
         include: {
           replies: {
             select: {
               message: true,
-              
               user: {
                 select: {
                   firstName: true,
