@@ -63,6 +63,7 @@ const Discussions = () => {
         {data.map((discussion) => (
           <div key={discussion.id} className="mt-6">
             <DiscussionPost
+            discussionId={discussion.id}
               title={discussion.title}
               description={discussion.description}
               author={discussion.authorName}

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button } from "./ui/button";
 import {
   FiMessageCircle,
   FiUser,
@@ -7,6 +8,10 @@ import {
   FiCornerDownLeft,
   FiTag,
 } from "react-icons/fi";
+import { useMutation } from "@tanstack/react-query";
+import api from "@/utility/api";
+import { toast } from "sonner";
+import { useAuthStore } from "@/stores/auth-store";
 
 interface Reply {
   author: string;
@@ -23,6 +28,7 @@ interface DiscussionPostProps {
   timestamp: string;
   replies: Reply[];
   likes: number;
+  discussionId: string;
 }
 
 const DiscussionPost: React.FC<DiscussionPostProps> = ({
@@ -33,8 +39,44 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
   timestamp,
   replies,
   likes,
+  discussionId,
 }) => {
-  console.log(replies);
+  const [message, setMessage] = useState("")
+  const [makeReply, setMakeReply] = useState(false);
+  const userData = useAuthStore((state) => state);
+  const { mutate: makeReplyMutation, isPending } = useMutation({
+    mutationFn: async (data: {
+      discussionId: string;
+      userId: string;
+      message: string;
+    }) => {
+      console.log("data of reply", data);
+      const res = await api.post(`/discussions/reply`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast("✅ Reply made successfully!");
+      setMakeReply(false);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast("❌ Failed to make reply");
+    },
+  });
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value)
+  }
+
+  const handleReply = () => {
+    makeReplyMutation({
+      discussionId: discussionId,
+      userId: userData.userData.id,
+      message: message,
+    });
+  };
+
+  // console.log(replies);
 
   return (
     <div className="discussion-post border rounded-lg p-4 bg-white gap-2">
@@ -61,11 +103,26 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
               <FiThumbsUp className="w-4 h-4" />
               Like({likes})
             </button>
-            <button className="flex items-center gap-1 hover:text-gray-700 cursor-pointer">
+            <button
+              className="flex items-center gap-1 hover:text-gray-700 cursor-pointer"
+              onClick={() => setMakeReply(!makeReply)}
+            >
               <FiCornerDownLeft className="w-4 h-4" />
               Reply ({replies.length})
             </button>
           </div>
+
+          {makeReply && (
+            <div className="mt-4 flex flex-col gap-2">
+              <textarea className="border border-gray-200 rounded-md p-2" onChange={handleMessageChange}/>
+              <Button
+                className={` hover:bg-blue-500 cursor-pointer w-[150px] ${isPending ? "bg-blue-400" : "bg-blue-500"}`}
+                onClick={handleReply}
+              >
+                {isPending ? "Sendin Reply..." : "Send Reply"}
+              </Button>
+            </div>
+          )}
         </div>
         <div className="text-gray-400 text-xs whitespace-nowrap flex items-start">
           <FiClock className="w-4 h-4 mr-0.5 mt-0.5" />
@@ -79,7 +136,9 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
             className="reply bg-gray-100 rounded-md p-4 flex justify-between items-start gap-4"
           >
             <div>
-              <p className="font-semibold text-gray-900">{reply.user.firstName} {reply.user.lastName}</p>
+              <p className="font-semibold text-gray-900">
+                {reply.user.firstName} {reply.user.lastName}
+              </p>
               <p className="text-gray-700">{reply.message}</p>
             </div>
             <div className="text-gray-400 text-xs whitespace-nowrap">
