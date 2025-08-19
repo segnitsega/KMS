@@ -17,6 +17,7 @@ export const getDiscussions = catchAsync(
           replies: {
             select: {
               message: true,
+              
               user: {
                 select: {
                   firstName: true,

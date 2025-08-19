@@ -1,63 +1,81 @@
-import React, { useState } from 'react'
-import Header from '@/components/reusable-header'
-import DiscussionPost from '@/components/DiscussionPost'
-import NewDiscussionModal from '@/components/NewDiscussionModal'
+import { useState } from "react";
+import Header from "@/components/reusable-header";
+import DiscussionPost from "@/components/DiscussionPost";
+import NewDiscussionModal from "@/components/NewDiscussionModal";
+import api from "@/utility/api";
+import { useQuery } from "@tanstack/react-query";
+import loadingSpinner from "../assets/loading-spinner.svg";
+
+const getDiscussionData = async () => {
+  const response = await api.get("/discussions");
+  return response.data.discussions;
+};
 
 const Discussions = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { data, isLoading, isError } = useQuery({
+    queryFn: getDiscussionData,
+    queryKey: ["discussions"],
+  });
 
-  const samplePost = {
-    title: 'Best practices for team collaboration',
-    description: 'What are your favorite tools and techniques for team collaboration?',
-    author: 'Michael Chen',
-    tags: ['collaboration', 'tools', 'productivity'],
-    timestamp: '562d ago',
-    replies: [
-      {
-        author: 'Sarah Johnson',
-        text: 'I recommend using Slack for quick communication and Notion for documentation.',
-        timestamp: '562d ago',
-      },
-      {
-        author: 'Emily Rodriguez',
-        text: 'Regular stand-ups and retrospectives have been game-changers for our team.',
-        timestamp: '562d ago',
-      },
-    ],
-  }
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
 
   const closeModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
-  return (
-    <div>
-      <Header
-        title="Discussions"
-        subtitle="Collaborate and share ideas with your team"
-        buttonText="New Discussions"
-        dropDownText="All Categories"
-        dropDownOptions={[
-          'All Categories',
-          'General',
-          'Technical',
-          'HR',
-          'Training',
-          'Announcements',
-        ]}
-        searchPlaceholder="Search document..."
-        onButtonClick={openModal}
-      />
-      <div className="mt-6">
-        <DiscussionPost {...samplePost} />
+  if (isLoading)
+    return (
+      <div className="flex h-screen bg-white justify-center items-center">
+        <img src={loadingSpinner} width={50} alt="loading" />
       </div>
-      {isModalOpen && <NewDiscussionModal onClose={closeModal} />}
-    </div>
-  )
-}
+    );
+  if (data)
+    return (
+      <div>
+        <Header
+          title="Discussions"
+          subtitle="Collaborate and share ideas with your team"
+          buttonText="New Discussions"
+          dropDownText="All Categories"
+          dropDownOptions={[
+            "All Categories",
+            "General",
+            "Technical",
+            "HR",
+            "Training",
+            "Announcements",
+          ]}
+          searchPlaceholder="Search document..."
+          onButtonClick={openModal}
+        />
+        {data.map((discussion) => (
+          <div className="mt-6">
+            <DiscussionPost
+              title={discussion.title}
+              description={discussion.description}
+              author={discussion.authorName}
+              categories={discussion.category}
+              replies={discussion.replies}
+              likes={discussion.likes}
+              timestamp={discussion.uploadedAt}
+            />
+          </div>
+        ))}
 
-export default Discussions
+        {isModalOpen && <NewDiscussionModal onClose={closeModal} />}
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className="flex h-screen bg-white text-red-500 justify-center items-center">
+        Error getting discussions please refresh the page !
+      </div>
+    );
+};
+
+export default Discussions;
