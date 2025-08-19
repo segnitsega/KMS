@@ -7,10 +7,10 @@ interface NewDiscussionModalProps {
   onClose: () => void;
 }
 const categories = [
-  "Financial & Accounting",
-  "Technical & Project Docs",
-  "Reports & Analytics ",
-  "Policies & Procedures",
+  "Financial and Accounting",
+  "Technical and Project Docs",
+  "Reports and Analytics ",
+  "Policies and Procedures",
   "HR",
 ];
 
