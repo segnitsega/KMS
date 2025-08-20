@@ -117,9 +117,9 @@ model Task {
   id            String    @id @default(uuid())
   title         String
   description   String
-  taskResource  String
+  // taskResource  String
   userId        String
-  priorityLevel String
+  // priorityLevel String
   dueDate       String
   taskStatus    TaskSatus @default(PENDING)
   user          User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
