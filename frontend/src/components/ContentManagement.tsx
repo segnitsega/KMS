@@ -1,12 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiFileText, FiBookOpen, FiMessageSquare } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import ManageDocuments from "@/components/ManageDocuments";
 import ManageDiscussions from "@/components/ManageDiscussions";
 import ManageArticles from "@/components/ManageArticles";
 
+interface contentProps {
+  totalDocuments: number;
+  totalArticles: number;
+  totalDiscussions: number;
+}
 
-const ContentManagement: React.FC = () => {
+const ContentManagement = ({
+  totalDocuments,
+  totalArticles,
+  totalDiscussions,
+}: contentProps) => {
   const [showDocs, setShowDocs] = useState(false);
   const [showDiscussions, setShowDiscussions] = useState(false);
   const [showArticles, setShowArticles] = useState(false);
@@ -31,11 +40,13 @@ const ContentManagement: React.FC = () => {
           <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
             <FiFileText className="text-3xl text-[#1976ed] mb-2" />
             <h2 className="font-semibold text-lg mb-2">Documents</h2>
-            <p className="text-gray-600 text-sm mb-4">Manage all documents and files</p>
+            <p className="text-gray-600 text-sm mb-4">
+              Manage all documents and files
+            </p>
             <div className="w-full mb-4 text-sm">
               <div className="flex justify-between font-medium mb-1">
                 <span>Total Documents:</span>
-                <span>1,248</span>
+                <span>{totalDocuments}</span>
               </div>
             </div>
             <Button
@@ -50,14 +61,16 @@ const ContentManagement: React.FC = () => {
           <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
             <FiBookOpen className="text-3xl text-[#7c4dff] mb-2" />
             <h2 className="font-semibold text-lg mb-2">Articles</h2>
-            <p className="text-gray-600 text-sm mb-4">Manage knowledge base articles</p>
+            <p className="text-gray-600 text-sm mb-4">
+              Manage knowledge base articles
+            </p>
             <div className="w-full mb-4 text-sm">
               <div className="flex justify-between font-medium mb-1">
                 <span>Total Articles:</span>
-                <span>89</span>
+                <span>{totalArticles}</span>
               </div>
             </div>
-            <Button 
+            <Button
               onClick={() => setShowArticles(true)}
               className="bg-[#1976ed] text-white rounded-lg w-full py-2 text-sm font-medium mb-2"
             >
@@ -69,11 +82,13 @@ const ContentManagement: React.FC = () => {
           <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center">
             <FiMessageSquare className="text-3xl text-[#00c853] mb-2" />
             <h2 className="font-semibold text-lg mb-2">Discussions</h2>
-            <p className="text-gray-600 text-sm mb-4">Moderate forum discussions</p>
+            <p className="text-gray-600 text-sm mb-4">
+              Moderate forum discussions
+            </p>
             <div className="w-full mb-4 text-sm">
               <div className="flex justify-between font-medium mb-1">
                 <span>Total Discussions:</span>
-                <span>156</span>
+                <span>{totalDiscussions}</span>
               </div>
             </div>
             <Button
