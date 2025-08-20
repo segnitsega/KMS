@@ -25,7 +25,7 @@ api.interceptors.response.use(
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const { data } = await api.get(`${api.defaults.baseURL}/auth/refresh-token`)
+        const { data } = await api.get(`/auth/refresh-token`)
         const newAccessToken = data.accessToken;
 
         localStorage.setItem("accessToken", newAccessToken);
