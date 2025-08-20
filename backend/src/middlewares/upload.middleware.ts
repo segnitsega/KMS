@@ -8,7 +8,7 @@ import multer, { FileFilterCallback } from 'multer';
 
 const allowedMimeTypes = [
   "application/pdf",
-  "application/jpeg",
+  // "application/jpeg",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/vnd.ms-excel",

@@ -2,10 +2,10 @@ import { body, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
 const categories = [
-  "Financial & Accounting",
-  "Technical & Project Docs",
-  "Reports & Analytics ",
-  "Policies & Procedures",
+  "Financial and Accounting",
+  "Technical and Project Docs",
+  "Reports and Analytics ",
+  "Policies and Procedures",
   "HR",
 ];
 
