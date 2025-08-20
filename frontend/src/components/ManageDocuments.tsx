@@ -4,6 +4,7 @@ import { FiEdit2, FiTrash2, FiX, FiCheck, FiXCircle } from "react-icons/fi";
 interface Document {
   id: string;
   title: string;
+  description: string;
   fileName: string;
   author: string;
   category: string;
@@ -31,6 +32,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({
     {
       id: "1",
       title: "Employee Onboarding Guide",
+      description: "Comprehensive guide for onboarding new employees",
       fileName: "onboarding-guide-2024.pdf",
       author: "Sarah Wilson",
       category: "HR",
@@ -39,6 +41,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({
     {
       id: "2",
       title: "API Documentation v2.1",
+      description: "Complete API documentation for version 2.1",
       fileName: "api-docs-v2.1.pdf",
       author: "Michael Chen",
       category: "Development",
@@ -47,6 +50,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({
     {
       id: "3",
       title: "Marketing Strategy Q1",
+      description: "Marketing strategies for the first quarter",
       fileName: "marketing-strategy-q1-2024.pdf",
       author: "Emma Davis",
       category: "Marketing",
@@ -60,12 +64,13 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({
     setEditingId(document.id);
     setEditForm({
       title: document.title,
+      description: document.description,
       category: document.category
     });
   };
 
   const handleSaveEdit = () => {
-    if (editingId && editForm.title) {
+    if (editingId && editForm.title && editForm.description) {
       const updatedDocuments = displayDocuments.map(document =>
         document.id === editingId
           ? { ...document, ...editForm, updatedAt: new Date().toISOString().split('T')[0] }
@@ -137,6 +142,15 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({
                   />
                 </div>
                 <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
+                  <textarea
+                    value={editForm.description || ''}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    rows={2}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
                   <input
                     type="text"
@@ -166,6 +180,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-900">{document.title}</h3>
+                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">{document.description}</p>
                   <div className="flex items-center gap-3 mt-1">
                     <span className="text-xs text-gray-500">{document.fileName}</span>
                     <span className="text-xs text-gray-500">{document.category}</span>
