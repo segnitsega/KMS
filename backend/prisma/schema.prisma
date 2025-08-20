@@ -123,4 +123,5 @@ model Task {
   dueDate       String
   taskStatus    TaskSatus @default(PENDING)
   user          User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
+  uploadedAt DateTime @default(now())
 }
