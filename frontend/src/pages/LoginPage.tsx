@@ -45,8 +45,10 @@ const LoginPage = () => {
       let errorMessage: string = ""
       if (error.response.status === 400) {
          errorMessage = "Unregistered email";
-      }else{
+      }else if(error.response.status === 401){
          errorMessage = "Invalid password";
+      }else{
+        errorMessage = "Error logging in, please try again!"
       }
       toast(errorMessage);
     },
