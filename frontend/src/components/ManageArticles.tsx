@@ -7,7 +7,6 @@ interface Article {
   content: string;
   author: string;
   category: string;
-  createdAt: string;
   updatedAt: string;
 }
 
@@ -28,33 +27,29 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Article>>({});
 
-  // Sample articles if none provided
   const sampleArticles: Article[] = [
     {
       id: "1",
       title: "Understanding React Hooks",
-      content: "A comprehensive guide to React Hooks and their usage...",
+      content: "A comprehensive guide to React Hooks...",
       author: "John Doe",
       category: "Technology",
-      createdAt: "2024-01-15",
       updatedAt: "2024-01-15"
     },
     {
       id: "2",
       title: "Best Practices for TypeScript",
-      content: "Learn the best practices for writing clean TypeScript code...",
+      content: "Learn the best practices for writing clean TypeScript...",
       author: "Jane Smith",
       category: "Programming",
-      createdAt: "2024-01-14",
       updatedAt: "2024-01-14"
     },
     {
       id: "3",
       title: "Building Scalable Applications",
-      content: "Strategies for building applications that scale with your business...",
+      content: "Strategies for building applications that scale...",
       author: "Mike Johnson",
       category: "Architecture",
-      createdAt: "2024-01-13",
       updatedAt: "2024-01-13"
     },
   ];
@@ -112,67 +107,67 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({
   };
 
   return (
-    <div className="p-10 bg-white rounded-3xl shadow-md w-full max-w-2xl relative">
+    <div className="p-6 bg-white rounded-2xl shadow-md w-full max-w-md relative">
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-xl"
+          className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-lg"
         >
           <FiX />
         </button>
       )}
       
-      <h2 className="text-lg font-semibold mb-2">Manage Articles</h2>
-      <p className="text-sm text-gray-500 mb-4">Edit or delete articles</p>
+      <h2 className="text-base font-semibold mb-1">Manage Articles</h2>
+      <p className="text-xs text-gray-500 mb-3">Edit or delete articles</p>
 
-      <div className="space-y-3">
+      <div className="space-y-2 max-h-80 overflow-y-auto">
         {displayArticles.map((article) => (
           <div
             key={article.id}
-            className="bg-gray-50 rounded-lg p-4 shadow-sm"
+            className="bg-gray-50 rounded-lg p-3 shadow-sm"
           >
             {editingId === article.id ? (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Title</label>
                   <input
                     type="text"
                     value={editForm.title || ''}
                     onChange={(e) => handleInputChange('title', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Content</label>
                   <textarea
                     value={editForm.content || ''}
                     onChange={(e) => handleInputChange('content', e.target.value)}
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={2}
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
                   <input
                     type="text"
                     value={editForm.category || ''}
                     onChange={(e) => handleInputChange('category', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1">
                   <button
                     onClick={handleSaveEdit}
-                    className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
                   >
-                    <FiCheck className="w-4 h-4" />
+                    <FiCheck className="w-3 h-3" />
                     Save
                   </button>
                   <button
                     onClick={handleCancelEdit}
-                    className="flex items-center gap-1 px-3 py-1 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                    className="flex items-center gap-1 px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
                   >
-                    <FiXCircle className="w-4 h-4" />
+                    <FiXCircle className="w-3 h-3" />
                     Cancel
                   </button>
                 </div>
@@ -181,27 +176,26 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <h3 className="text-sm font-medium text-gray-900">{article.title}</h3>
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2">{article.content}</p>
-                  <div className="flex items-center gap-4 mt-2">
+                  <div className="flex items-center gap-3 mt-1">
                     <span className="text-xs text-gray-500">By {article.author}</span>
-                    <span className="text-xs text-gray-500">Category: {article.category}</span>
-                    <span className="text-xs text-gray-400">Updated: {article.updatedAt}</span>
+                    <span className="text-xs text-gray-500">{article.category}</span>
+                    <span className="text-xs text-gray-400">{article.updatedAt}</span>
                   </div>
                 </div>
-                <div className="flex gap-2 ml-4">
+                <div className="flex gap-1 ml-2">
                   <button
                     onClick={() => handleEdit(article)}
                     className="text-blue-500 hover:text-blue-700 p-1"
                     title="Edit article"
                   >
-                    <FiEdit2 className="w-4 h-4" />
+                    <FiEdit2 className="w-3 h-3" />
                   </button>
                   <button
                     onClick={() => handleDelete(article.id)}
                     className="text-red-500 hover:text-red-700 p-1"
                     title="Delete article"
                   >
-                    <FiTrash2 className="w-4 h-4" />
+                    <FiTrash2 className="w-3 h-3" />
                   </button>
                 </div>
               </div>
@@ -211,8 +205,8 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({
       </div>
       
       {displayArticles.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-gray-500">No articles found</p>
+        <div className="text-center py-4">
+          <p className="text-sm text-gray-500">No articles found</p>
         </div>
       )}
     </div>
