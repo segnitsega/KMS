@@ -42,7 +42,6 @@ const App = () => {
           <Route path="analytics" element={<Analytics />} />
           <Route path="administration" element={<Administration />} />
           <Route path="help-support" element={<HelpSupport />} />
-        
         </Route>
       </Routes>
       <Toaster position="top-center"/>
