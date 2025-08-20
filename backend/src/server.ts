@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import { statusRoute } from "./routes/dashboard.route";
 import { adminRouter } from "./routes/admin.routes";
 import { checkAdmin, verifyToken } from "./middlewares/auth.middleware";
+import { taskRouter } from "./routes/tasks.routes";
 
 dotenv.config();
 const port = process.env.port;
@@ -34,6 +35,7 @@ server.use("/discussions", discussionRouter);
 server.use("/auth", authRoute);
 server.use("/status-count", statusRoute)
 server.use("/admin", verifyToken, checkAdmin ,adminRouter)
+server.use("/tasks", taskRouter)
 
 server.use(errorHandler);
 
