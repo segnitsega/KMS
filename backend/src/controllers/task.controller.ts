@@ -6,17 +6,25 @@ import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 
 export const getTasks = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
-    const tasks = await prisma.task.findMany({
-      orderBy: {
-        uploadedAt: "desc",
-      },
-    });
-
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+    const [tasks, totalTasks] = await Promise.all([
+      prisma.task.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+          uploadedAt: "desc",
+        },
+      }),
+      prisma.task.count(),
+    ]);
     res.status(200).json({
       status: "success",
-      data: {
-        tasks,
-      },
+      currentPage: page,
+      totalPages: Math.ceil(totalTasks / limit),
+      totalTasks,
+      tasks,
     });
   }
 );
