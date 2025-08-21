@@ -11,7 +11,7 @@ interface createDocumentCardProp {
   numberOfDownloads: number;
   categories: string[];
   description?: string;
-  // onView?: () => void;
+  onView?: () => void;
   downloadUrl?: string;
 }
 
@@ -22,7 +22,7 @@ const DocumentPageCard = ({
   numberOfDownloads,
   categories,
   description,
-  // onView,
+  onView,
   downloadUrl,
 }: createDocumentCardProp) => {
   return (
@@ -46,13 +46,13 @@ const DocumentPageCard = ({
       </div>
 
       <div className="flex gap-4 mt-4 text-gray-500 text-sm px-4 ">
-       {categories}
+      {categories}
       </div>
 
       <div className="flex gap-4 border-t-1 mt-6 px-6 py-4">
         <button
           className="flex gap-1 items-center text-blue-600 hover:underline focus:outline-none"
-          // onClick={onView}
+          onClick={onView}
           type="button"
         >
           <IoEyeOutline /> View

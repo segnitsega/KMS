@@ -1,109 +1,122 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
+import api from "@/utility/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface CreateArticleModalProps {
   onClose: () => void;
-  onCreate?: (article: {
-    title: string;
-    category: string;
-    content: string;
-    tags: string[];
-  }) => void;
 }
 
-const categories = ["Financial & Accounting", "Technical & Project Docs", "Reports & Analytics ", "Policies & Procedures", "HR"];
+const categories = [
+  "Financial and Accounting",
+  "Technical and Project Docs",
+  "Reports and Analytics",
+  "Policies and Procedures",
+  "HR",
+];
 
-const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose, onCreate }) => {
+const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose }) => {
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState(categories[0]);
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [category, setCategory] = useState(categories[0]);
+
+  const queryClient = useQueryClient();
+
+  const { mutate: createArticle, isPending } = useMutation({
+    mutationFn: async (data: {
+      title: string;
+      description: string;
+      category: string;
+    }) => {
+      const res = await api.post(`/articles/post`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("✅ Article created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
+      onClose();
+    },
+    onError: (error: any) => {
+      console.error(error.response?.data || error.message);
+      toast.error(
+        error.response?.data?.message || "❌ Failed to create article"
+      );
+    },
+  });
 
   const handleCreate = () => {
-    if (title && content) {
-      const tagsArr = tags.split(",").map(t => t.trim()).filter(Boolean);
-      onCreate?.({ title, category, content, tags: tagsArr });
-      setTitle("");
-      setCategory(categories[0]);
-      setContent("");
-      setTags("");
-      onClose();
+    if (!title.trim() || !content.trim()) {
+      toast.error("⚠️ Title and Content are required");
+      return;
     }
+    createArticle({ title, description: content, category });
   };
 
   return (
-    <div className="fixed inset-0 px-40 z-50 flex items-center justify-center bg-black/15 backdrop-blur-md animate-fadeIn">
-      <div className="bg-white rounded-t-md shadow-xl w-full max-w-8xl max-h-[100vh] relative border border-blue-200 transform scale-95 animate-scaleIn flex flex-col">
-        <button
-          className="absolute top-5 right-5 text-white  text-4xl z-20 cursor-pointer"
-          onClick={onClose}
-          aria-label="Close Modal"
-        >
-          &times;
-        </button>
-        <div className="flex items-center pl-8 py-6 bg-blue-500 text-white rounded-t-md z-10">
-          <h2 className="text-2xl tracking-wide">Create New Article</h2>
-        </div>
-        <div className="p-8 flex-1 flex flex-col gap-8 overflow-y-auto">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-1">
-              <label className="block text-gray-700 font-semibold mb-2">Article Title</label>
-              <input
-                className="w-full border border-gray-300 rounded-md p-2    outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter a descriptive title..."
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-gray-700 font-semibold mb-2">Category</label>
-              <select
-                className="w-full border border-gray-300 rounded-md p-2  outline-none focus:ring-1 focus:ring-blue-500"
-                value={category}
-                onChange={e => setCategory(e.target.value)}
-              >
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">Content</label>
-            <textarea
-              ref={textareaRef}
-              className="w-full border border-gray-300 rounded-lg p-4 min-h-[180px] text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Write your article content here..."
-              value={content}
-              onChange={e => setContent(e.target.value)}
-            />
-          </div>
-          {/* <div>
-            <label className="block text-gray-700 font-semibold mb-2">Tags</label>
+    <div className="fixed inset-0 bg-gray-700/85 backdrop-blur-sm flex justify-center items-center z-50">
+      <div className="bg-white rounded-md px-6 py-8 w-full max-w-2xl shadow-md">
+        <h2 className="text-xl font-bold mb-4">Create New Article</h2>
+
+        <div className="flex gap-6 mb-4">
+          {/* Title */}
+          <div className="flex-1">
+            <label className="block font-semibold mb-1">Title</label>
             <input
-              className="w-full border border-gray-200 rounded-lg p-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter tags separated by commas (e.g., policy, guidelines, training)..."
-              value={tags}
-              onChange={e => setTags(e.target.value)}
+              type="text"
+              placeholder="Enter article title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full border border-gray-300 rounded-md p-2"
             />
-          </div> */}
-          <div className="flex justify-end gap-4 mt-2">
-            <button
-            className="px-6 py-3 rounded-md text-gray-600 bg-gray-100 font-semibold hover:bg-gray-200 transition-colors cursor-pointer"
-              onClick={onClose}
-              type="button"
-            >
-              Cancel
-            </button>
-            <button
-              className="bg-blue-500 text-white p-3 rounded-md text-lg cursor-pointer hover:bg-blue-600 font-bold"
-              onClick={handleCreate}
-              disabled={!title || !content}
-              type="button"
-            >
-              Create Article
-            </button>
           </div>
+
+          {/* Category */}
+          <div className="flex-1">
+            <label className="block font-semibold mb-1">Category</label>
+            <select
+              className="w-full border border-gray-300 rounded-md p-2 outline-none focus:ring-1 focus:ring-blue-500"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="mb-4">
+          <label className="block font-semibold mb-1">Content</label>
+          <textarea
+            placeholder="Write your article content here..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="w-full border border-gray-300 rounded-md p-2 resize-none"
+            rows={5}
+          />
+        </div>
+
+        {/* Actions */}
+        <div className="flex justify-end gap-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+
+          <button
+            onClick={handleCreate}
+            className={`px-4 py-2 rounded-md text-white ${
+              isPending ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+            }`}
+            disabled={isPending}
+          >
+            {isPending ? "Creating Article..." : "Create Article"}
+          </button>
         </div>
       </div>
     </div>

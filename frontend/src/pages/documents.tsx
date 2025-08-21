@@ -34,7 +34,13 @@ const Documents = () => {
         subtitle="Manage and share organizational documents"
         buttonText="Upload Document"
         dropDownText="All Catagories"
-        dropDownOptions={["All Catagories", "Engineering", "Marketing"]}
+        dropDownOptions={[
+          "Financial and Accounting",
+          "Technical and Project Docs",
+          "Reports and Analytics ",
+          "Policies and Procedures",
+          "HR",
+        ]}
         searchPlaceholder="Search document..."
         onButtonClick={() => setShowUploadModal(true)}
       />
@@ -57,35 +63,36 @@ const Documents = () => {
             <DocumentPageCard
               key={doc.id}
               title={doc.title}
-              author={doc.firstName + " " + doc.lastName}
+              author={doc.author}
               date={doc.uploadedAt}
               numberOfDownloads={doc.downloads}
               categories={doc.category}
               description={doc.description}
               downloadUrl={doc.documentUrl}
+              onView={() =>
+                setPreviewDoc({
+                  title: doc.title,
+                  author: doc.author,
+                  date: doc.uploadedAt,
+                  category: doc.category,
+                  description: doc.description,
+                  downloads: doc.downloads,
+                  downloadUrl: doc.documentUrl,
+                })
+              }
             />
           ))}
         </div>
+      )}
+      {previewDoc && (
+        <DocumentPreviewModal
+          open={!!previewDoc}
+          onClose={() => setPreviewDoc(null)}
+          document={previewDoc}
+        />
       )}
     </div>
   );
 };
 
 export default Documents;
-
-{
-  /**
-            onView={() => setPreviewDoc({
-                category: doc.category[0],
-                downloads: doc.numberOfDownloads ? parseFloat(doc.numberOfDownloads) : 0,
-              })}
-            />
-        {previewDoc && (
-          <DocumentPreviewModal
-            open={!!previewDoc}
-            onClose={() => setPreviewDoc(null)}
-            document={previewDoc}
-          />
-        )}
-          **/
-}

@@ -1,12 +1,22 @@
 import React from "react";
-import { HiUser,HiCalendar,HiEye,HiThumbUp,HiBookmark,HiShare,HiPencil,HiX} from "react-icons/hi";
+import {
+  HiUser,
+  HiCalendar,
+  HiEye,
+  HiThumbUp,
+  HiBookmark,
+  HiShare,
+  HiPencil,
+  HiX,
+} from "react-icons/hi";
 
 type Post = {
+  id?: string;
   title: string;
   description: string;
-  tags: string[];
+  category: string;
   author: string;
-  updatedDate: string;
+  updatedAt: string;
   views: number;
 };
 
@@ -15,17 +25,23 @@ interface KnowledgebaseModalProps {
   onClose: () => void;
 }
 
-const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({ post, onClose }) => {
+const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
+  post,
+  onClose,
+}) => {
   return (
     <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg w-full  max-w-[900px] max-h-[600px] relative flex flex-col md:flex-row p-0">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-[900px] max-h-[600px] relative flex flex-col md:flex-row p-0">
+        {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl"
           onClick={onClose}
         >
           <HiX />
         </button>
-        <div className="flex-1 p-8">
+
+        {/* Content */}
+        <div className="flex-1 p-8 overflow-y-auto">
           <h2 className="text-3xl font-bold mb-4 bg-green-50 rounded-t-lg px-2 py-4 -mx-8 -mt-8">
             {post.title}
           </h2>
@@ -34,26 +50,25 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({ post, onClose }
               <HiUser className="text-lg" /> By {post.author}
             </span>
             <span className="flex items-center gap-1">
-              <HiCalendar className="text-lg" /> Updated {post.updatedDate}
+              <HiCalendar className="text-lg" /> Updated {post.updatedAt}
             </span>
             <span className="flex items-center gap-1">
               <HiEye className="text-lg" /> {post.views} views
             </span>
           </div>
           <div className="flex flex-wrap gap-2 mb-6">
-            {post.tags.map((tag) => (
-              <span
-                key={tag}
-                className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-base font-semibold"
-              >
-                {tag}
-              </span>
-            ))}
+            <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-base font-semibold">
+              {post.category}
+            </span>
           </div>
+
+          {/* Description */}
           <div className="bg-gray-50 p-8 rounded-lg text-gray-700 text-lg min-h-[100px]">
             {post.description}
           </div>
         </div>
+
+        {/* Sidebar */}
         <div className="w-full md:w-50 bg-gray-50 rounded-r-lg flex flex-col items-center py-8 px-4 border-l border-gray-200">
           <h3 className="text-xl font-bold mb-6">Article Actions</h3>
           <div className="flex flex-col gap-4 w-full">

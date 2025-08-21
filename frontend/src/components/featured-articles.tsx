@@ -1,7 +1,6 @@
 import { AiOutlineEye } from "react-icons/ai";
 import { HiArrowTrendingUp } from "react-icons/hi2";
 
-
 interface Article {
   title: string;
   author: string;
@@ -12,13 +11,11 @@ interface FeaturedArticlesProps {
   articles: Article[];
 }
 
-const FeaturedArticles = ({
-  articles,
-}: FeaturedArticlesProps) => {
+const FeaturedArticles = ({ articles }: FeaturedArticlesProps) => {
   return (
     <div className=" bg-blue-50 p-6 rounded-md border">
       <div className="flex items-center mb-4 font-semibold text-lg">
-        <HiArrowTrendingUp className="mr-2 text-blue-500 " size={30}/>
+        <HiArrowTrendingUp className="mr-2 text-blue-500 " size={30} />
         Featured Articles
       </div>
       <div className="flex gap-4">
