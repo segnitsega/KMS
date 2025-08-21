@@ -27,10 +27,7 @@ const Documents = () => {
   return (
     <div className="flex flex-col gap-6">
       {showUploadModal && (
-        <UploadDocumentModal
-          onClose={() => setShowUploadModal(false)}
-          onUpload={() => setShowUploadModal(false)}
-        />
+        <UploadDocumentModal onClose={() => setShowUploadModal(false)} />
       )}
       <Header
         title="Documents"

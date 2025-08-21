@@ -43,7 +43,6 @@ export const handleArticlePost = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { firstName, lastName } = req.user;
     const { title, description, category } = req.body;
-console.log(category)
     const newArticle = await prisma.article.create({
         data: {
             title,
