@@ -4,8 +4,9 @@ import { useState } from "react";
 import Header from "@/components/reusable-header";
 import UserManagement from "@/components/UserManagement";
 import api from "@/utility/api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import loadingSpinner from "../assets/loading-spinner.svg";
+import { toast } from "sonner";
 
 const getStatus = async () => {
   const statsCount = await api.get(`/status-count`);
@@ -13,14 +14,58 @@ const getStatus = async () => {
   return statsCount.data;
 };
 
+const handleUserRegistration = async (data: {
+  firstName: string;
+  lastName: string;
+  password: string;
+  email: string;
+}) => {
+  const newUser = await api.post("/admin/add-user", data);
+console.log("User data: ", newUser.data)
+  return newUser.data;  
+};
+
 const Administration = () => {
+  const [activeTab, setActiveTab] = useState("Content");
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const userData = {
+    firstName,
+    lastName,
+    email,
+    password,
+  };
+
+  const generatePassword = (length = 12) => {
+    const charset =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+    const array = new Uint32Array(length);
+    window.crypto.getRandomValues(array);
+    setPassword(Array.from(array, (x) => charset[x % charset.length]).join(""));
+  };
+
+  const { mutate: addUser, isPending } = useMutation({
+    mutationFn: () => handleUserRegistration(userData),
+    onSuccess: () => {
+      toast("✅ User added successfully!");
+      setFirstName("")
+      setLastName("")
+      setPassword("")
+      setEmail("")
+    },
+    onError: () => {
+      toast("❌ Failed to add discussion");
+    },
+  });
+
   const { data, isLoading } = useQuery({
     queryFn: getStatus,
     queryKey: ["statusData"],
   });
-
-  const [activeTab, setActiveTab] = useState("Content");
-  const [showAddUserModal, setShowAddUserModal] = useState(false);
 
   return (
     <div>
@@ -71,7 +116,7 @@ const Administration = () => {
       {/* Add User Modal */}
       {showAddUserModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl p-15 w-full max-w-md relative">
+          <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md relative">
             <button
               className="absolute top-4 right-4 text-gray-500 text-2xl font-bold hover:text-red-500"
               onClick={() => setShowAddUserModal(false)}
@@ -86,29 +131,45 @@ const Administration = () => {
               <input
                 className="border rounded-md p-2"
                 type="text"
-                placeholder="Full Name"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <input
+                className="border rounded-md p-2"
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
               <input
                 className="border rounded-md p-2"
                 type="email"
                 placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <input
-                className="border rounded-md p-2"
-                type="text"
-                placeholder="Role"
-              />
-              <input
-                className="border rounded-md p-2"
-                type="text"
-                placeholder="Department"
-              />
+              <div className="flex gap-4">
+                <input
+                  className="border rounded-md p-2"
+                  type="text"
+                  placeholder="password"
+                  value={password}
+                />
+                <input
+                  className="rounded-md p-2 bg-blue-500 text-white"
+                  type="button"
+                  value="Generate Password"
+                  onClick={() => generatePassword()}
+                />
+              </div>
               <div className="flex gap-4 mt-4">
                 <button
                   type="button"
                   className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+                onClick={addUser}
                 >
-                  Add
+                  {isPending ? "Adding...": "Add"}
                 </button>
                 <button
                   type="button"
