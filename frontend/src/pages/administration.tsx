@@ -21,7 +21,7 @@ const handleUserRegistration = async (data: {
   email: string;
 }) => {
   const newUser = await api.post("/admin/add-user", data);
-console.log("User data: ", data)
+console.log("User data: ", newUser.data)
   return newUser.data;  
 };
 
@@ -52,6 +52,10 @@ const Administration = () => {
     mutationFn: () => handleUserRegistration(userData),
     onSuccess: () => {
       toast("✅ User added successfully!");
+      setFirstName("")
+      setLastName("")
+      setPassword("")
+      setEmail("")
     },
     onError: () => {
       toast("❌ Failed to add discussion");
@@ -128,18 +132,21 @@ const Administration = () => {
                 className="border rounded-md p-2"
                 type="text"
                 placeholder="First Name"
+                value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
               <input
                 className="border rounded-md p-2"
                 type="text"
                 placeholder="Last Name"
+                value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
               <input
                 className="border rounded-md p-2"
                 type="email"
                 placeholder="Email"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <div className="flex gap-4">
