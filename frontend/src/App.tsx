@@ -13,7 +13,7 @@ import Administration from "./pages/administration";
 import HelpSupport from "./pages/help-support";
 import ProtectedRoute from "./utility/protected-route";
 import LandingPage from "./pages/landing-page";
-import LoginPage from './pages/LoginPage';
+import LoginPage from "./pages/LoginPage";
 import { Toaster } from "sonner";
 
 const App = () => {
@@ -44,7 +44,7 @@ const App = () => {
           <Route path="help-support" element={<HelpSupport />} />
         </Route>
       </Routes>
-      <Toaster position="top-center"/>
+      <Toaster position="top-center" />
     </BrowserRouter>
   );
 };
