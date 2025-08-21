@@ -10,6 +10,7 @@ interface HeaderProps {
   dropDownText: string;
   dropDownOptions: string[];
   searchPlaceholder: string;
+  onButtonClick?: () => void;
 }
 const Header = ({
   title,
@@ -19,7 +20,7 @@ const Header = ({
   dropDownOptions,
   searchPlaceholder,
   onButtonClick,
-}: HeaderProps & { onButtonClick?: () => void }) => {
+}: HeaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [clicked, setClicked] = useState(false);
   const [selected, setSelected] = useState(dropDownText);
