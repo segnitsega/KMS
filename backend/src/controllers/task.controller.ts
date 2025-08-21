@@ -16,6 +16,14 @@ export const getTasks = catchAsync(
         orderBy: {
           uploadedAt: "desc",
         },
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            }
+          }
+        }
       }),
       prisma.task.count(),
     ]);
