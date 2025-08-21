@@ -43,7 +43,6 @@ export const handleArticlePost = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { firstName, lastName } = req.user;
     const { title, description, category } = req.body;
-console.log(category)
     const newArticle = await prisma.article.create({
         data: {
             title,
@@ -74,7 +73,7 @@ export const handleArticlesearch = catchAsync(
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { description: { contains: query, mode: "insensitive" } },
-          { category: { has: query } },
+          { category: { contains: query, mode: "insensitive" } },
         ],
       },
       orderBy: {

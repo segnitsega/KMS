@@ -110,26 +110,32 @@ export const handleDocumentUpload = catchAsync(
       description,
       pages: parseInt(pages),
       author: `${firstName} ${lastName}`,
-      // category: finalCategory,
       category,
       documentUrl,
     };
 
-    const result = await prisma.$transaction(async (prisma) => {
-      const newDocument = await prisma.document.create({ data: documentData });
-      const storeDocumentVersion = await prisma.documentVersion.create({
-        data: {
-          version: parseFloat(documentVersion),
-          documentId: newDocument.id,
-          documentUrl,
-        },
-      });
-      return { newDocument, storeDocumentVersion };
+    const newDocument = await prisma.document.create({
+      data: documentData,
     });
+    if (!newDocument) {
+      throw new ApiError(400, "Error uploading documenting");
+    }
+
+    // const result = await prisma.$transaction(async (prisma) => {
+    //   const newDocument = await prisma.document.create({ data: documentData });
+    //   const storeDocumentVersion = await prisma.documentVersion.create({
+    //     data: {
+    //       version: parseFloat(documentVersion),
+    //       documentId: newDocument.id,
+    //       documentUrl,
+    //     },
+    //   });
+    //   return { newDocument, storeDocumentVersion };
+    // });
 
     res.status(201).json({
       success: true,
-      document: result.newDocument,
+      newDocument,
     });
   }
 );
@@ -137,7 +143,7 @@ export const handleDocumentUpload = catchAsync(
 export const handleDocumentSearch = catchAsync(
   async (req: Request, res: Response): Promise<any> => {
     const query = (req.query.q as string) || "";
-    console.log(query)
+    console.log(query);
     if (!query.trim()) {
       throw new ApiError(400, "Search query is required");
     }
@@ -147,7 +153,7 @@ export const handleDocumentSearch = catchAsync(
         OR: [
           { title: { contains: query, mode: "insensitive" } },
           { description: { contains: query, mode: "insensitive" } },
-          { category: { has: query } },
+          { category: { contains: query, mode: "insensitive" } },
         ],
       },
       orderBy: {

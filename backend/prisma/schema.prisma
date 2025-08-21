@@ -53,30 +53,30 @@ model Document {
   pages       Int?
   author      String
   uploadedAt  DateTime          @default(now())
-  category    String[]
+  category    String
   documentUrl String
-  version     DocumentVersion[] @relation("DocumentToDocumentVersion")
+  // version     DocumentVersion[] @relation("DocumentToDocumentVersion")
   downloads   Int               @default(0)
   views       Int               @default(0)
 }
 
-model DocumentVersion {
-  id          String   @id @default(uuid())
-  version     Int
-  document    Document @relation("DocumentToDocumentVersion", fields: [documentId], references: [id], onDelete: Cascade)
-  documentId  String
-  documentUrl String
-  createdAt   DateTime @default(now())
+// model DocumentVersion {
+//   id          String   @id @default(uuid())
+//   version     Int
+//   document    Document @relation("DocumentToDocumentVersion", fields: [documentId], references: [id], onDelete: Cascade)
+//   documentId  String
+//   documentUrl String
+//   createdAt   DateTime @default(now())
 
-  @@unique([documentId, version])
-}
+//   @@unique([documentId, version])
+// }
 
 model Article {
   id          String   @id @default(uuid())
   title       String
   description String
   author      String
-  category    String[]
+  category    String
   views       Int      @default(0)
   likes       Int      @default(0)
   uploadedAt  DateTime @default(now())
