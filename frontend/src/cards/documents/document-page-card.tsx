@@ -46,11 +46,7 @@ const DocumentPageCard = ({
       </div>
 
       <div className="flex gap-4 mt-4 text-gray-500 text-sm px-4 ">
-        {categories.map((cat) => (
-              <span key={cat} className="bg-gray-100 p-1 rounded-md">
-                {cat}
-              </span>
-            ))}
+       {categories}
       </div>
 
       <div className="flex gap-4 border-t-1 mt-6 px-6 py-4">
