@@ -10,6 +10,7 @@ import {
   updateArticle,
   updateDiscussion,
   updateDocument,
+  updateUser,
 } from "../controllers/admin.controller";
 
 export const adminRouter = express.Router();
@@ -31,6 +32,7 @@ adminRouter.delete("/delete-disc/:id", deleteDiscussion);
 adminRouter.post("/add-user", addUser);
 adminRouter.delete("/remove-user/:id", removeUser);
 adminRouter.post("/change-user-role/:id", changeUserRole);
+adminRouter.post("/update-user/:id", updateUser);
 
 //task assignment
 adminRouter.post("/task-assign", assignTask)

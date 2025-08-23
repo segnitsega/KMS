@@ -181,16 +181,38 @@ export const changeUserRole = catchAsync(
         role,
       },
     });
-    return res.status(200).json({
+   res.status(200).json({
       message: "User role updated successfully",
       roleUpdatedUser,
     });
   }
 );
 
+export const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const userID = req.params.id;
+  const { firstName, lastName, email, role, password } = req.body;
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userID,
+    },
+    data: {
+      firstName,
+      lastName,
+      email,
+      role,
+      password
+    },
+  })
+
+  res.status(200).json({
+      message: "User updated successfully",
+      updatedUser,
+    });
+});
+
 export const assignTask = catchAsync(async (req: Request, res: Response) => {
-  const { title, description, id, dueDate } =
-    req.body;
+  const { title, description, id, dueDate } = req.body;
 
   // if (!Array.isArray(userIDs)) {
   //   return res.status(400).json({
@@ -210,14 +232,14 @@ export const assignTask = catchAsync(async (req: Request, res: Response) => {
   //       },
   //     });
   //   })
-    const tasksCreated = await prisma.task.create({
-        data: {
-          title,
-          description,
-          dueDate,
-          userId: id,
-        },
-      });
+  const tasksCreated = await prisma.task.create({
+    data: {
+      title,
+      description,
+      dueDate,
+      userId: id,
+    },
+  });
   res.status(201).json({
     message: "Task assigned successfully!",
     tasksCreated,
