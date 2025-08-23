@@ -4,6 +4,8 @@ import loadingSpinner from "../assets/loading-spinner.svg";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { useState } from "react";
 import { toast } from "sonner";
+import { FiTrash2 } from "react-icons/fi";
+import spinner from "../assets/tiny-spinner.svg"
 
 const getUsers = async () => {
   const users = await api.get("/user");
@@ -22,6 +24,7 @@ const UserManagement = () => {
   });
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<any>(null);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
 
   const generatePassword = (length = 12) => {
     const charset =
@@ -52,10 +55,24 @@ const UserManagement = () => {
       return response.data;
     },
     onSuccess: () => {
-      toast("Update success");
+      toast("✅ Update success");
     },
     onError: () => {
-      toast("Error updating");
+      toast("❌ Error updating");
+    },
+  });
+
+    const { mutate: removeUser, isPending: deletePending } = useMutation({
+    mutationFn: async (userId: string) => {
+      const response = await api.delete(`/admin/remove-user/${userId}`)
+      return response.data
+    },
+    onSuccess: () => {
+      setDeletingUserId(null)
+      toast("✅ User removed from the system");
+    },
+    onError: () => {
+      toast("✅ Error removing user");
     },
   });
 
@@ -69,6 +86,11 @@ const UserManagement = () => {
   }) => {
     saveUserData(data);
   };
+
+  const handleDeleteuser = async(id: string) => {
+    setDeletingUserId(id)
+    removeUser(id)
+  }
 
   if (isLoading)
     return (
@@ -188,7 +210,9 @@ const UserManagement = () => {
                 </button>
                 <button
                   onClick={() => handleUserEdit(formData)}
-                  className={`px-3 py-1  text-white rounded   ${isPending ? "bg-blue-400" : "bg-blue-600"}`}
+                  className={`px-3 py-1  text-white rounded   ${
+                    isPending ? "bg-blue-400" : "bg-blue-600"
+                  }`}
                 >
                   {isPending ? "Saving..." : "Save"}
                 </button>
@@ -221,7 +245,7 @@ const UserManagement = () => {
                 <div className="text-gray-500 text-sm">{user.email}</div>
               </div>
               <span
-                className={`px-3 py-1 rounded-lg text-xs font-medium mr-3 ${user.roleColor}`}
+                className="px-3 py-1 rounded-lg text-xs font-medium mr-3"
               >
                 {user.role}
               </span>
@@ -242,6 +266,14 @@ const UserManagement = () => {
                 }}
               >
                 Edit
+              </button>
+              <button
+                className="text-red-500 hover:text-red-700 p-1 cursor-pointer text-lg"
+                title="Delete document"
+                onClick={() => handleDeleteuser(user.id)}
+              >
+                { deletingUserId === user.id ? <img src={spinner} className="w-8"/> : <FiTrash2
+                />}
               </button>
             </div>
           ))}

@@ -115,7 +115,7 @@ const Administration = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md relative">
             <button
-              className="absolute top-4 right-4 text-gray-500 text-2xl font-bold hover:text-red-500"
+              className="absolute top-4 right-4 text-gray-500 text-3xl font-bold hover:text-red-500 cursor-pointer"
               onClick={() => setShowAddUserModal(false)}
               aria-label="Close"
             >
@@ -124,21 +124,25 @@ const Administration = () => {
             <h2 className="text-xl font-bold mb-6 text-blue-700">
               Add New User
             </h2>
-            <form className="flex flex-col gap-4">
+            <form className="flex flex-col gap-2">
+              <label>First Name </label>
               <input
                 className="border rounded-md p-2"
                 type="text"
-                placeholder="First Name"
+                placeholder="Enter first Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
               />
+              <label>Last Name </label>
               <input
                 className="border rounded-md p-2"
                 type="text"
-                placeholder="Last Name"
+                placeholder="Enter last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
+
+              <label>Email </label>
               <input
                 className="border rounded-md p-2"
                 type="email"
@@ -146,6 +150,8 @@ const Administration = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+
+            
               <div className="flex gap-4">
                 <input
                   className="border rounded-md p-2"
@@ -154,7 +160,7 @@ const Administration = () => {
                   value={password}
                 />
                 <input
-                  className="rounded-md p-2 bg-blue-500 text-white"
+                  className="rounded-md p-2 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                   type="button"
                   value="Generate Password"
                   onClick={() => generatePassword()}
@@ -163,14 +169,14 @@ const Administration = () => {
               <div className="flex gap-4 mt-4">
                 <button
                   type="button"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition"
+                  className={`bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition cursor-pointer transition`}
                 onClick={addUser}
                 >
                   {isPending ? "Adding...": "Add"}
                 </button>
                 <button
                   type="button"
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-semibold hover:bg-gray-300 transition"
+                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-semibold hover:bg-gray-300 transition cursor-pointer"
                   onClick={() => setShowAddUserModal(false)}
                 >
                   Cancel
