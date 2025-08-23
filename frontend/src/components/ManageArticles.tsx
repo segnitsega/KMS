@@ -1,5 +1,18 @@
 import React, { useState } from "react";
 import { FiEdit2, FiTrash2, FiX, FiCheck, FiXCircle } from "react-icons/fi";
+import spinner from "../assets/loading-spinner.svg";
+import { toast } from "sonner";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "@/utility/api";
+
+
+const categories = [
+  "Financial and Accounting",
+  "Technical and Project Docs",
+  "Reports and Analytics ",
+  "Policies and Procedures",
+  "HR",
+];
 
 interface Article {
   id: string;
@@ -12,201 +25,216 @@ interface Article {
 
 interface ManageArticlesProps {
   onClose?: () => void;
-  articles?: Article[];
   onUpdate?: (updatedArticle: Article) => void;
   onDelete?: (articleId: string) => void;
 }
 
-const ManageArticles: React.FC<ManageArticlesProps> = ({ 
-  onClose, 
-  articles: initialArticles = [], 
-  onUpdate, 
-  onDelete 
-}) => {
-  const [articles, setArticles] = useState<Article[]>(initialArticles);
+const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<Partial<Article>>({});
-
-  const sampleArticles: Article[] = [
-    {
-      id: "1",
-      title: "Understanding React Hooks",
-      content: "A comprehensive guide to React Hooks...",
-      author: "John Doe",
-      category: "Technology",
-      updatedAt: "2024-01-15"
-    },
-    {
-      id: "2",
-      title: "Best Practices for TypeScript",
-      content: "Learn the best practices for writing clean TypeScript...",
-      author: "Jane Smith",
-      category: "Programming",
-      updatedAt: "2024-01-14"
-    },
-    {
-      id: "3",
-      title: "Building Scalable Applications",
-      content: "Strategies for building applications that scale...",
-      author: "Mike Johnson",
-      category: "Architecture",
-      updatedAt: "2024-01-13"
-    },
-  ];
-
-  const displayArticles = articles.length > 0 ? articles : sampleArticles;
-
-  const handleEdit = (article: Article) => {
-    setEditingId(article.id);
-    setEditForm({
-      title: article.title,
-      content: article.content,
-      category: article.category
-    });
-  };
-
-  const handleSaveEdit = () => {
-    if (editingId && editForm.title && editForm.content) {
-      const updatedArticles = displayArticles.map(article =>
-        article.id === editingId
-          ? { ...article, ...editForm, updatedAt: new Date().toISOString().split('T')[0] }
-          : article
-      );
-      
-      setArticles(updatedArticles);
-      
-      const updatedArticle = updatedArticles.find(a => a.id === editingId);
-      if (updatedArticle && onUpdate) {
-        onUpdate(updatedArticle);
-      }
-      
-      setEditingId(null);
-      setEditForm({});
-    }
-  };
+  const [editForm, setEditForm] = useState<{
+    title: string;
+    description: string;
+    category: string;
+  }>({ title: "", description: "", category: "" });
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditForm({});
+    setEditForm({ title: "", description: "", category: "" });
   };
 
-  const handleDelete = (articleId: string) => {
-    const shouldDelete = window.confirm("Are you sure you want to delete this article?");
-    if (shouldDelete) {
-      const updatedArticles = displayArticles.filter(article => article.id !== articleId);
-      setArticles(updatedArticles);
-      
-      if (onDelete) {
-        onDelete(articleId);
-      }
-    }
+  const getArticles = async (limit: number) => {
+    const articles = await api.get(`/articles?&limit=${limit}`);
+    return articles.data;
   };
 
-  const handleInputChange = (field: keyof Article, value: string) => {
-    setEditForm(prev => ({ ...prev, [field]: value }));
+  const { data, isLoading, isError } = useQuery({
+    queryFn: () => getArticles(100),
+    queryKey: ["articles"],
+  });
+
+  const { mutate: updateArticle, isPending } = useMutation({
+    mutationFn: async (data: {
+      title: string;
+      description: string;
+      category: string;
+      id: string;
+    }) => {
+      console.log(data);
+      const response = await api.post(`/admin/update-art/${data.id}`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast("✅ Article updated successfully");
+    },
+    onError: () => {
+      toast("❌ Error updating article");
+    },
+  });
+
+  const { mutate: deleteArticle, isPending: deletePending } = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await api.delete(`/admin/delete-art/${id}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast("✅ Document deleted successfully");
+    },
+    onError: () => {
+      toast("❌ Error deleting document");
+    },
+  });
+
+  const handleDeletAarticle = (id: string) => {
+    deleteArticle(id);
+  };
+
+  const handleArticleUpdate = (id: string) => {
+    const requestData = {
+      title: editForm.title,
+      description: editForm.description,
+      category: editForm.category,
+      id: id,
+    };
+    updateArticle(requestData);
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-md w-full max-w-md relative">
-      {onClose && (
+    <div className="p-6 bg-white rounded-lg w-xl">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Manage Articles</h2>
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-lg"
+          className="text-gray-600 hover:text-gray-900 text-xl"
         >
           <FiX />
         </button>
+      </div>
+      <p className=" text-gray-500 mb-3">Edit or delete articles</p>
+      {isLoading && (
+        <div className="flex bg-white justify-center mt-10">
+          <img src={spinner} width={50} alt="loading" />
+        </div>
       )}
-      
-      <h2 className="text-base font-semibold mb-1">Manage Articles</h2>
-      <p className="text-xs text-gray-500 mb-3">Edit or delete articles</p>
 
-      <div className="space-y-2 max-h-80 overflow-y-auto">
-        {displayArticles.map((article) => (
-          <div
-            key={article.id}
-            className="bg-gray-50 rounded-lg p-3 shadow-sm"
-          >
-            {editingId === article.id ? (
-              <div className="space-y-2">
+      {isError && (
+        <div className="flex h-screen bg-white text-red-500 justify-center items-center">
+          Error getting documents please refresh the page !
+        </div>
+      )}
+
+      {data && (
+        <div className="max-h-100 overflow-y-auto">
+          {data.articles.map((article) => (
+            <div
+              key={article.id}
+              className="border mr-2 mb-4 rounded-lg p-3 shadow"
+            >
+              <div className="flex gap-2 justify-between items-start">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Title</label>
-                  <input
-                    type="text"
-                    value={editForm.title || ''}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Content</label>
-                  <textarea
-                    value={editForm.content || ''}
-                    onChange={(e) => handleInputChange('content', e.target.value)}
-                    rows={2}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
-                  <input
-                    type="text"
-                    value={editForm.category || ''}
-                    onChange={(e) => handleInputChange('category', e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex gap-1">
-                  <button
-                    onClick={handleSaveEdit}
-                    className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-                  >
-                    <FiCheck className="w-3 h-3" />
-                    Save
-                  </button>
-                  <button
-                    onClick={handleCancelEdit}
-                    className="flex items-center gap-1 px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
-                  >
-                    <FiXCircle className="w-3 h-3" />
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-gray-900">{article.title}</h3>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {article.description}
+                  </p>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-gray-500">By {article.author}</span>
-                    <span className="text-xs text-gray-500">{article.category}</span>
-                    <span className="text-xs text-gray-400">{article.updatedAt}</span>
+                    <span className="text-xs bg-gray-200 border p-1 rounded-lg">
+                      {article.category}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {article.uploadedAt}
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-1 ml-2">
                   <button
-                    onClick={() => handleEdit(article)}
+                    onClick={() => setEditingId(article.id)}
                     className="text-blue-500 hover:text-blue-700 p-1"
                     title="Edit article"
                   >
                     <FiEdit2 className="w-3 h-3" />
                   </button>
                   <button
-                    onClick={() => handleDelete(article.id)}
                     className="text-red-500 hover:text-red-700 p-1"
                     title="Delete article"
+                    onClick={() => handleDeletAarticle(article.id)}
                   >
-                    <FiTrash2 className="w-3 h-3" />
+                    <FiTrash2
+                      className={`w-3 h-3  ${deletePending && "text-red-400"} `}
+                    />
                   </button>
                 </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
-      
-      {displayArticles.length === 0 && (
-        <div className="text-center py-4">
-          <p className="text-sm text-gray-500">No articles found</p>
+
+              {editingId === article.id && (
+                <div className="space-y-2 mt-6">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.title}
+                      placeholder="Add new title"
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, title: e.target.value })
+                      }
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Description
+                    </label>
+                    <textarea
+                      value={editForm.description}
+                      placeholder="Add new description"
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          description: e.target.value,
+                        })
+                      }
+                      rows={2}
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <select
+                      className="border p-1 rounded"
+                      value={editForm.category}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          category: e.target.value,
+                        })
+                      }
+                    >
+                      {categories.map((category) => (
+                        <option value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleArticleUpdate(article.id)}
+                      className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                    >
+                      <FiCheck className="w-3 h-3" />
+                      {isPending ? "Saving..." : "Save"}
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="flex items-center gap-1 px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
+                    >
+                      <FiXCircle className="w-3 h-3" />
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>
