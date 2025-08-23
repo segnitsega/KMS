@@ -23,7 +23,7 @@ const ContentManagement = ({
   return (
     <div className="p-6">
       {showDocs ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 p-10 flex justify-center  bg-black/30 backdrop-blur-sm">
           <ManageDocuments onClose={() => setShowDocs(false)} />
         </div>
       ) : showDiscussions ? (
