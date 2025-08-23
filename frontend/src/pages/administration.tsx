@@ -73,9 +73,6 @@ const Administration = () => {
         title="Administration"
         subtitle="Manage users, documents, and tasks from one place."
         buttonText={"Add User"}
-        dropDownText=""
-        dropDownOptions={["content", "users", "assign tasks"]}
-        searchPlaceholder="search content, users, tasks"
         onButtonClick={() => setShowAddUserModal(true)}
       />
       <div className="flex gap-0 mt-6 mb-8 bg-[#f6fafd] rounded-full overflow-hidden shadow">
