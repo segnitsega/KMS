@@ -25,9 +25,6 @@ interface Document {
 
 interface ManageDocumentsProps {
   onClose?: () => void;
-  documents?: Document[];
-  onUpdate?: (updatedDocument: Document) => void;
-  onDelete?: (documentId: string) => void;
 }
 
 const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
@@ -72,8 +69,8 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
     },
   });
 
-   const { mutate: deleteDocument, isPending: deletePending } = useMutation({
-    mutationFn: async(id: string) => {
+  const { mutate: deleteDocument, isPending: deletePending } = useMutation({
+    mutationFn: async (id: string) => {
       const response = await api.delete(`/admin/delete-doc/${id}`);
       return response.data;
     },
@@ -86,8 +83,8 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
   });
 
   const handleDeleteDocument = (id: string) => {
-   deleteDocument(id)
-  }
+    deleteDocument(id);
+  };
 
   const handleDocumentUpdate = (id: string) => {
     const requestData = {
@@ -160,7 +157,9 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
                     title="Delete document"
                     onClick={() => handleDeleteDocument(document.id)}
                   >
-                    <FiTrash2 className={`w-3 h-3  ${deletePending && "text-red-400"} `} />
+                    <FiTrash2
+                      className={`w-3 h-3  ${deletePending && "text-red-400"} `}
+                    />
                   </button>
                 </div>
               </div>
