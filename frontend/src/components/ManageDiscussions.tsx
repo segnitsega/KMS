@@ -1,216 +1,238 @@
 import React, { useState } from "react";
 import { FiEdit2, FiTrash2, FiX, FiCheck, FiXCircle } from "react-icons/fi";
+import spinner from "../assets/loading-spinner.svg";
+import { toast } from "sonner";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "@/utility/api";
+
+const categories = [
+  "Financial and Accounting",
+  "Technical and Project Docs",
+  "Reports and Analytics ",
+  "Policies and Procedures",
+  "HR",
+];
 
 interface Discussion {
   id: string;
   title: string;
-  description: string;
+  content: string;
   author: string;
   category: string;
-  replies: number;
   updatedAt: string;
 }
 
 interface ManageDiscussionsProps {
   onClose?: () => void;
-  discussions?: Discussion[];
   onUpdate?: (updatedDiscussion: Discussion) => void;
   onDelete?: (discussionId: string) => void;
 }
 
-const ManageDiscussions: React.FC<ManageDiscussionsProps> = ({ 
-  onClose, 
-  discussions: initialDiscussions = [], 
-  onUpdate, 
-  onDelete 
-}) => {
-  const [discussions, setDiscussions] = useState<Discussion[]>(initialDiscussions);
+const ManageDiscussions: React.FC<ManageDiscussionsProps> = ({ onClose }) => {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState<Partial<Discussion>>({});
-
-  const sampleDiscussions: Discussion[] = [
-    {
-      id: "1",
-      title: "Best practices for code reviews",
-      description: "Let's discuss the best practices...",
-      author: "Sarah Wilson",
-      category: "Development",
-      replies: 12,
-      updatedAt: "2024-01-15"
-    },
-    {
-      id: "2",
-      title: "New project management tools",
-      description: "Evaluating different project management tools...",
-      author: "Michael Chen",
-      category: "Management",
-      replies: 8,
-      updatedAt: "2024-01-14"
-    },
-    {
-      id: "3",
-      title: "Customer feedback integration",
-      description: "How should we integrate customer feedback...",
-      author: "Emma Davis",
-      category: "Product",
-      replies: 15,
-      updatedAt: "2024-01-13"
-    },
-  ];
-
-  const displayDiscussions = discussions.length > 0 ? discussions : sampleDiscussions;
-
-  const handleEdit = (discussion: Discussion) => {
-    setEditingId(discussion.id);
-    setEditForm({
-      title: discussion.title,
-      description: discussion.description,
-      category: discussion.category
-    });
-  };
-
-  const handleSaveEdit = () => {
-    if (editingId && editForm.title && editForm.description) {
-      const updatedDiscussions = displayDiscussions.map(discussion =>
-        discussion.id === editingId
-          ? { ...discussion, ...editForm, updatedAt: new Date().toISOString().split('T')[0] }
-          : discussion
-      );
-      
-      setDiscussions(updatedDiscussions);
-      
-      const updatedDiscussion = updatedDiscussions.find(d => d.id === editingId);
-      if (updatedDiscussion && onUpdate) {
-        onUpdate(updatedDiscussion);
-      }
-      
-      setEditingId(null);
-      setEditForm({});
-    }
-  };
+  const [editForm, setEditForm] = useState<{
+    title: string;
+    description: string;
+    category: string;
+  }>({ title: "", description: "", category: "" });
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditForm({});
+    setEditForm({ title: "", description: "", category: "" });
   };
 
-  const handleDelete = (discussionId: string) => {
-    const shouldDelete = window.confirm("Are you sure you want to delete this discussion?");
-    if (shouldDelete) {
-      const updatedDiscussions = displayDiscussions.filter(discussion => discussion.id !== discussionId);
-      setDiscussions(updatedDiscussions);
-      
-      if (onDelete) {
-        onDelete(discussionId);
-      }
-    }
+  const getDiscussions = async (limit: number) => {
+    const discussions = await api.get(`/discussions?&limit=${limit}`);
+    return discussions.data;
   };
 
-  const handleInputChange = (field: keyof Discussion, value: string) => {
-    setEditForm(prev => ({ ...prev, [field]: value }));
+  const { data, isLoading, isError } = useQuery({
+    queryFn: () => getDiscussions(100),
+    queryKey: ["discussions"],
+  });
+
+  const { mutate: updateDiscussion, isPending } = useMutation({
+    mutationFn: async (data: {
+      title: string;
+      description: string;
+      category: string;
+      id: string;
+    }) => {
+      const response = await api.post(`/admin/update-disc/${data.id}`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast("✅ Discussion updated successfully");
+    },
+    onError: () => {
+      toast("❌ Error updating discussion");
+    },
+  });
+
+  const { mutate: deleteDiscussion, isPending: deletePending } = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await api.delete(`/admin/delete-disc/${id}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast("✅ Document deleted successfully");
+    },
+    onError: () => {
+      toast("❌ Error deleting document");
+    },
+  });
+
+  const handleDeleteDiscussion = (id: string) => {
+    deleteDiscussion(id);
+  };
+
+  const handleDiscussionUpdate = (id: string) => {
+    const requestData = {
+      title: editForm.title,
+      description: editForm.description,
+      category: editForm.category,
+      id: id,
+    };
+    updateDiscussion(requestData);
   };
 
   return (
-    <div className="p-6 bg-white rounded-2xl shadow-md w-full max-w-md relative">
-      {onClose && (
+    <div className="p-6 bg-white rounded-lg w-xl">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Manage Discussions</h2>
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-lg"
+          className="text-gray-600 hover:text-gray-900 text-xl"
         >
           <FiX />
         </button>
+      </div>
+      <p className=" text-gray-500 mb-3">Edit or delete discussions</p>
+      {isLoading && (
+        <div className="flex bg-white justify-center mt-10">
+          <img src={spinner} width={50} alt="loading" />
+        </div>
       )}
-      
-      <h2 className="text-base font-semibold mb-1">Manage Discussions</h2>
-      <p className="text-xs text-gray-500 mb-3">Edit or delete discussions</p>
 
-      <div className="space-y-2 max-h-80 overflow-y-auto">
-        {displayDiscussions.map((discussion) => (
-          <div
-            key={discussion.id}
-            className="bg-gray-50 rounded-lg p-3 shadow-sm"
-          >
-            {editingId === discussion.id ? (
-              <div className="space-y-2">
+      {isError && (
+        <div className="flex h-screen bg-white text-red-500 justify-center items-center">
+          Error getting documents please refresh the page !
+        </div>
+      )}
+
+      {data && (
+        <div className="max-h-100 overflow-y-auto">
+          {data.discussions.map((discussion) => (
+            <div
+              key={discussion.id}
+              className="border mr-2 mb-4 rounded-lg p-3 shadow"
+            >
+              <div className="flex gap-2 justify-between items-start">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Title</label>
-                  <input
-                    type="text"
-                    value={editForm.title || ''}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Description</label>
-                  <textarea
-                    value={editForm.description || ''}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    rows={2}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Category</label>
-                  <input
-                    type="text"
-                    value={editForm.category || ''}
-                    onChange={(e) => handleInputChange('category', e.target.value)}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex gap-1">
-                  <button
-                    onClick={handleSaveEdit}
-                    className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-                  >
-                    <FiCheck className="w-3 h-3" />
-                    Save
-                  </button>
-                  <button
-                    onClick={handleCancelEdit}
-                    className="flex items-center gap-1 px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
-                  >
-                    <FiXCircle className="w-3 h-3" />
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="text-sm font-medium text-gray-900">{discussion.title}</h3>
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {discussion.title}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {discussion.description}
+                  </p>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-xs text-gray-500">{discussion.replies} replies</span>
-                    <span className="text-xs text-gray-500">{discussion.category}</span>
-                    <span className="text-xs text-gray-400">{discussion.updatedAt}</span>
+                    <span className="text-xs bg-gray-200 border p-1 rounded-lg">
+                      {discussion.category}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {discussion.uploadedAt}
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-1 ml-2">
                   <button
-                    onClick={() => handleEdit(discussion)}
+                    onClick={() => setEditingId(discussion.id)}
                     className="text-blue-500 hover:text-blue-700 p-1"
                     title="Edit discussion"
                   >
                     <FiEdit2 className="w-3 h-3" />
                   </button>
                   <button
-                    onClick={() => handleDelete(discussion.id)}
                     className="text-red-500 hover:text-red-700 p-1"
-                    title="Delete discussion"
+                    title="Delete article"
+                    onClick={() => handleDeleteDiscussion(discussion.id)}
                   >
-                    <FiTrash2 className="w-3 h-3" />
+                    <FiTrash2
+                      className={`w-3 h-3  ${deletePending && "text-red-400"} `}
+                    />
                   </button>
                 </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
-      
-      {displayDiscussions.length === 0 && (
-        <div className="text-center py-4">
-          <p className="text-sm text-gray-500">No discussions found</p>
+
+              {editingId === discussion.id && (
+                <div className="space-y-2 mt-6">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.title}
+                      placeholder="Add new title"
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, title: e.target.value })
+                      }
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Description
+                    </label>
+                    <textarea
+                      value={editForm.description}
+                      placeholder="Add new description"
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          description: e.target.value,
+                        })
+                      }
+                      rows={2}
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <select
+                      className="border p-1 rounded"
+                      value={editForm.category}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          category: e.target.value,
+                        })
+                      }
+                    >
+                      {categories.map((category) => (
+                        <option value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleDiscussionUpdate(discussion.id)}
+                      className="flex items-center gap-1 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                    >
+                      <FiCheck className="w-3 h-3" />
+                      {isPending ? "Saving..." : "Save"}
+                    </button>
+                    <button
+                      onClick={handleCancelEdit}
+                      className="flex items-center gap-1 px-2 py-1 bg-gray-300 text-gray-700 text-xs rounded hover:bg-gray-400"
+                    >
+                      <FiXCircle className="w-3 h-3" />
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>
