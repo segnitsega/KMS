@@ -125,3 +125,11 @@ model Task {
   user          User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
   uploadedAt DateTime @default(now())
 }
+
+model Book {
+  id String @id @default(uuid())
+  title String
+  author String
+  genre String
+  description String
+}

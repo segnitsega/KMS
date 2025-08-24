@@ -72,15 +72,15 @@ const SideBar = () => {
           Expert Directory
         </Link>
         <Link
-          to="training"
+          to="library"
           className={cn(
             "flex gap-1 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/kms/training" &&
+            location.pathname === "/kms/library" &&
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
           <SlGraduation size={20}/>
-          Training
+          Library
         </Link>
         <Link
           to="my-tasks"

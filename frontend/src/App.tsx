@@ -5,7 +5,7 @@ import Documents from "./pages/documents";
 import KnowledgeBase from "./pages/knowledge-base";
 import Discussions from "./pages/discussions";
 import ExpertDirectory from "./pages/expert-directory";
-import Training from "./pages/training";
+import Library from "./pages/library-page";
 import MyTasks from "./pages/my-tasks";
 import Analytics from "./pages/analytics";
 import Administration from "./pages/administration";
@@ -35,7 +35,7 @@ const App = () => {
           <Route path="knowledge-base" element={<KnowledgeBase />} />
           <Route path="discussions" element={<Discussions />} />
           <Route path="expert-directory" element={<ExpertDirectory />} />
-          <Route path="training" element={<Training />} />
+          <Route path="library" element={<Library />} />
           <Route path="my-tasks" element={<MyTasks />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="administration" element={<Administration />} />

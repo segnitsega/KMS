@@ -12,6 +12,7 @@ import { statusRoute } from "./routes/dashboard.route";
 import { adminRouter } from "./routes/admin.routes";
 import { checkAdmin, verifyToken } from "./middlewares/auth.middleware";
 import { taskRouter } from "./routes/tasks.routes";
+import { libraryRouter } from "./routes/library.routes";
 
 dotenv.config();
 const port = process.env.port;
@@ -36,6 +37,7 @@ server.use("/auth", authRoute);
 server.use("/status-count", statusRoute)
 server.use("/admin", verifyToken, checkAdmin ,adminRouter)
 server.use("/tasks", taskRouter)
+server.use("/library", libraryRouter)
 
 server.use(errorHandler);
 
