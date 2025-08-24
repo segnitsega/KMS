@@ -7,7 +7,6 @@ import Discussions from "./pages/discussions";
 import ExpertDirectory from "./pages/expert-directory";
 import Training from "./pages/training";
 import MyTasks from "./pages/my-tasks";
-import Notifications from "./pages/notifications";
 import Analytics from "./pages/analytics";
 import Administration from "./pages/administration";
 import HelpSupport from "./pages/help-support";
@@ -38,7 +37,6 @@ const App = () => {
           <Route path="expert-directory" element={<ExpertDirectory />} />
           <Route path="training" element={<Training />} />
           <Route path="my-tasks" element={<MyTasks />} />
-          <Route path="notifications" element={<Notifications />} />
           <Route path="analytics" element={<Analytics />} />
           <Route path="administration" element={<Administration />} />
           <Route path="help-support" element={<HelpSupport />} />

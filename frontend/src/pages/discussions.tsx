@@ -41,15 +41,6 @@ const Discussions = () => {
         title="Discussions"
         subtitle="Collaborate and share ideas with your team"
         buttonText="New Discussions"
-        dropDownText="All Categories"
-        dropDownOptions={[
-          "Financial and Accounting",
-          "Technical and Project Docs",
-          "Reports and Analytics ",
-          "Policies and Procedures",
-          "HR",
-        ]}
-        searchPlaceholder="Search document..."
         onButtonClick={openModal}
       />
       {isLoading && (

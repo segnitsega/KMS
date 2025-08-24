@@ -32,15 +32,6 @@ const KnowledgeBase = () => {
         title="Knowledge Base"
         subtitle="Collaborative wiki and knowledge articles"
         buttonText="New Article"
-        dropDownText="Recently Updated"
-        dropDownOptions={[
-          "Financial and Accounting",
-          "Technical and Project Docs",
-          "Reports and Analytics",
-          "Policies and Procedures",
-          "HR",
-        ]}
-        searchPlaceholder="Search articles..."
         onButtonClick={openModal}
       />
 
