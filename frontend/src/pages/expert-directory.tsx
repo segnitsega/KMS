@@ -40,15 +40,6 @@ const ExpertDirectory = () => {
       <Header
         title="Expert Directory"
         subtitle="Find colleagues with specific skills and expertise"
-        dropDownText="All Departments"
-        dropDownOptions={[
-          "All Departments",
-          "Engineering",
-          "Marketing",
-          "Sales",
-          "IT",
-        ]}
-        searchPlaceholder="Search by name, skill..."
         onSearch={setSearch}
       />
 

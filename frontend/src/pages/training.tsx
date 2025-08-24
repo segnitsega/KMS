@@ -75,9 +75,6 @@ const Training = () => {
         title="Learning Library"
         subtitle="Browse and download training resources."
         buttonText="Add Content"
-        dropDownText="All Content"
-        dropDownOptions={TABS.map((tab) => tab.label)}
-        searchPlaceholder="Search courses, books, videos..."
         onButtonClick={() => setShowUploadModal(true)}
       />
 

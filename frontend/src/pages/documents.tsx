@@ -33,15 +33,6 @@ const Documents = () => {
         title="Documents"
         subtitle="Manage and share organizational documents"
         buttonText="Upload Document"
-        dropDownText="All Catagories"
-        dropDownOptions={[
-          "Financial and Accounting",
-          "Technical and Project Docs",
-          "Reports and Analytics ",
-          "Policies and Procedures",
-          "HR",
-        ]}
-        searchPlaceholder="Search document..."
         onButtonClick={() => setShowUploadModal(true)}
       />
 
