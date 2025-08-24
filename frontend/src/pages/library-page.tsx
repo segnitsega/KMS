@@ -58,7 +58,7 @@ const TRAINING_CONTENT = [
   },
 ];
 
-const Training = () => {
+const Library = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [search, setSearch] = useState("");
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -164,4 +164,4 @@ const Training = () => {
   );
 };
 
-export default Training;
+export default Library;
