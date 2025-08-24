@@ -5,8 +5,6 @@ import { FiMessageCircle } from "react-icons/fi";
 import StatusCard from "@/cards/dashboard/status-cards";
 import DocumentCard from "@/cards/dashboard/documents-card";
 import CreateDocumentCard from "@/cards/dashboard/document-discusion-card";
-import RecentDocumentsModal from "@/components/RecentDocumentsModal";
-import PopularArticlesModal from "@/components/PopularArticlesModal";
 import { useState } from "react";
 import UploadDocumentModal from "@/components/UploadDocumentModal";
 import CreateArticleModal from "@/components/create-article-modal";
@@ -15,19 +13,6 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { useAuthStore } from "@/stores/auth-store";
-
-
-
-// type docsAndArticles = {
-//   author: string,
-//   category: string[],
-//   description: string,
-//   title: string,
-//   id: string,
-//   likes?: number,
-//   views?: number,
-//   downloads?: number
-// }
 
 const getData = async () => {
   const statsCount = await api.get(`/status-count`);
@@ -50,8 +35,6 @@ const Dashboard = () => {
     queryKey: ["dashboard"],
   });
 
-  const [showRecentModal, setShowRecentModal] = useState(false);
-  const [showPopularModal, setShowPopularModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showCreateArticleModal, setShowCreateArticleModal] = useState(false);
   const [showDiscussionModal, setShowDiscussionModal] = useState(false);
@@ -94,32 +77,19 @@ const Dashboard = () => {
         {showUploadModal && (
           <UploadDocumentModal
             onClose={() => setShowUploadModal(false)}
-            onUpload={(file, description) => {
-              // TODO: handle upload logic here
-              setShowUploadModal(false);
-            }}
+            //   onUpload={(file, description) => {
+            //     setShowUploadModal(false);
+            //   }}
           />
         )}
         {showCreateArticleModal && (
           <CreateArticleModal
             onClose={() => setShowCreateArticleModal(false)}
-            onCreate={() => setShowCreateArticleModal(false)}
+            // onCreate={() => setShowCreateArticleModal(false)}
           />
         )}
         {showDiscussionModal && (
           <NewDiscussionModal onClose={() => setShowDiscussionModal(false)} />
-        )}
-        {showRecentModal && (
-          <RecentDocumentsModal
-            documents={documentsFromBackend}
-            onClose={() => setShowRecentModal(false)}
-          />
-        )}
-        {showPopularModal && (
-          <PopularArticlesModal
-            articles={data.articles}
-            onClose={() => setShowPopularModal(false)}
-          />
         )}
         <div className="px-4 py-6 flex flex-col gap-4 bg-blue-500 rounded-md text-white">
           <h1 className="font-bold text-xl">
@@ -167,7 +137,6 @@ const Dashboard = () => {
             downloads={data.documents.map((document) => document.downloads)}
             dates={dates}
             icon={IoDocumentTextOutline}
-            onViewAll={() => setShowRecentModal(true)}
           />
           <DocumentCard
             heading="Popular Articles"
@@ -175,7 +144,6 @@ const Dashboard = () => {
             owners={data.articles.map((article) => article.author)}
             articleViews={data.articles.map((article) => article.views)}
             dates={dates}
-            onViewAll={() => setShowPopularModal(true)}
           />
         </div>
         <div className="flex justify-between ">

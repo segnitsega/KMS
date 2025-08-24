@@ -22,21 +22,15 @@ const DocumentCard = ({
   dates,
   icon: Icon,
   articleViews,
-  onViewAll,
-}: documentCardProp) => {
+}: 
+documentCardProp) => {
   return (
     <div className="border rounded-md w-full bg-white">
       <div className="flex justify-between p-6">
         <h1>{heading}</h1>
-        {onViewAll ? (
-          <button className="text-blue-500 hover:underline" onClick={onViewAll}>
-            View all
-          </button>
-        ) : (
-          <Link to="/documents" className="text-blue-500">
-            View all
-          </Link>
-        )}
+        <Link to={articleViews ? "/kms/knowledge-base" :  "/kms/documents"} className="text-blue-500">
+          View all
+        </Link>
       </div>
 
       <div className="border-b my-2"></div>
