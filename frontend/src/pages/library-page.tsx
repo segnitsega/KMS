@@ -74,7 +74,7 @@ const Library = () => {
       <Header
         title="Learning Library"
         subtitle="Browse and download training resources."
-        buttonText="Add Content"
+        buttonText="Add Book"
         onButtonClick={() => setShowUploadModal(true)}
       />
 

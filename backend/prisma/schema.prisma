@@ -132,4 +132,6 @@ model Book {
   author String
   genre String
   description String
+  bookUrl String
+  uploadedAt DateTime @updatedAt
 }

@@ -45,43 +45,13 @@ export const getDocumentById = catchAsync(
 export const handleDocumentUpload = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { firstName, lastName } = req.user;
-    const { title, description, pages, category, documentVersion } = req.body;
+    const { title, description, pages, category } = req.body;
 
     const file = req.file;
-    // console.log(`Category: ${category}  is an Array:  ${Array.isArray(category)}`)
     if (!file) throw new ApiError(400, "No file uploaded");
 
     var documentUrl = "";
     const isDevelopment = process.env.STORAGE === "development";
-
-    // let finalCategory: string[] = [];
-
-    // if (Array.isArray(category)) {
-    //   finalCategory = category;
-    // } else if (typeof category === "string") {
-    //   const trimmed = category.trim();
-    //   if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-    //     try {
-    //       finalCategory = JSON.parse(trimmed);
-    //     } catch {
-    //       throw new ApiError(400, "Invalid category JSON format");
-    //     }
-    //   } else {
-    //     finalCategory = trimmed.split(",").map((item) => item.trim());
-    //   }
-    // }
-    // finalCategory = finalCategory.map((item) =>
-    //   item.replace(/^"(.*)"$/, "$1").trim()
-    // );
-
-    // if (
-    //   !finalCategory.length ||
-    //   !finalCategory.every(
-    //     (item) => typeof item === "string" && item.trim().length > 0
-    //   )
-    // ) {
-    //   throw new ApiError(400, "Category must be a non-empty array of strings");
-    // }
 
     if (isDevelopment) {
       const publicId = `document_${Date.now()}_${Math.round(
@@ -120,18 +90,6 @@ export const handleDocumentUpload = catchAsync(
     if (!newDocument) {
       throw new ApiError(400, "Error uploading documenting");
     }
-
-    // const result = await prisma.$transaction(async (prisma) => {
-    //   const newDocument = await prisma.document.create({ data: documentData });
-    //   const storeDocumentVersion = await prisma.documentVersion.create({
-    //     data: {
-    //       version: parseFloat(documentVersion),
-    //       documentId: newDocument.id,
-    //       documentUrl,
-    //     },
-    //   });
-    //   return { newDocument, storeDocumentVersion };
-    // });
 
     res.status(201).json({
       success: true,
