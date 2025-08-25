@@ -4,7 +4,7 @@ import { cn } from "../lib/utils";
 import Header from "../components/reusable-header";
 import UploadDocumentModal from "../components/UploadDocumentModal";
 import { FiDownload, FiEye, FiBookOpen } from "react-icons/fi";
-import api from "../utility/api"; // your axios wrapper
+import api from "../utility/api";
 
 const TABS = [
   { label: "All Books", value: "all" },
