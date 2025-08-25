@@ -6,6 +6,10 @@ import path from "path";
 import * as fs from "fs";
 import { ApiError } from "../utils/api-error-class";
 
+interface bookInterface extends Request{
+   file?: Express.Multer.File;
+}
+
 export const getBooks = catchAsync(async (req: Request, res: Response) => {
   const books = await prisma.book.findMany();
   res.status(200).json({
@@ -15,9 +19,9 @@ export const getBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const addBook = catchAsync(async (req: any, res: Response) => {
+export const addBook = catchAsync(async (req: bookInterface, res: Response) => {
   const { title, author, genre, description } = req.body;
-  const book = req.book;
+  const book = req.file;
   if (!book) throw new ApiError(400, "No book uploaded");
 
   var bookUrl = "";
