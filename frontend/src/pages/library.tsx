@@ -4,7 +4,7 @@ import { cn } from "../lib/utils";
 import Header from "../components/reusable-header";
 import AddBookModal from "../components/AddBookModal";
 import { FiDownload, FiEye, FiBookOpen } from "react-icons/fi";
-import api from "../utility/api";
+import api from "../utility/api"
 import { useQuery } from "@tanstack/react-query";
 import loadingSpinner from "@/assets/loading-spinner.svg";
 

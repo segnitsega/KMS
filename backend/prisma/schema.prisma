@@ -19,22 +19,23 @@ enum TaskSatus {
 }
 
 model User {
-  id             String       @id @default(uuid())
-  email          String       @unique
+  id             String        @id @default(uuid())
+  email          String        @unique
   firstName      String
   lastName       String
-  department     String       @default("knowledge")
-  role           UserRole     @default(USER)
+  department     String        @default("knowledge")
+  role           UserRole      @default(USER)
   profilePicture String?
-  joinedAt       DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  skills         String[]     @default([])
-  userDetail     UserDetail?  @relation("UserToUserDetail")
-  replies        Replies[]    @relation("UserToReplies")
-  discussions    Discussion[] @relation("UserToDiscussion")
+  joinedAt       DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  skills         String[]      @default([])
+  userDetail     UserDetail?   @relation("UserToUserDetail")
+  replies        Replies[]     @relation("UserToReplies")
+  discussions    Discussion[]  @relation("UserToDiscussion")
   password       String?
   refreshToken   String?
-  tasks          Task[]       @relation("UserToTask")
+  tasks          Task[]        @relation("UserToTask")
+  userLibrary    UserLibrary[] @relation("UserToUserLibrary") 
 }
 
 model UserDetail {
@@ -47,29 +48,17 @@ model UserDetail {
 }
 
 model Document {
-  id          String            @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   description String
   pages       Int?
   author      String
-  uploadedAt  DateTime          @default(now())
+  uploadedAt  DateTime @default(now())
   category    String
   documentUrl String
-  // version     DocumentVersion[] @relation("DocumentToDocumentVersion")
-  downloads   Int               @default(0)
-  views       Int               @default(0)
+  downloads   Int      @default(0)
+  views       Int      @default(0)
 }
-
-// model DocumentVersion {
-//   id          String   @id @default(uuid())
-//   version     Int
-//   document    Document @relation("DocumentToDocumentVersion", fields: [documentId], references: [id], onDelete: Cascade)
-//   documentId  String
-//   documentUrl String
-//   createdAt   DateTime @default(now())
-
-//   @@unique([documentId, version])
-// }
 
 model Article {
   id          String   @id @default(uuid())
@@ -114,24 +103,34 @@ model Training {
 }
 
 model Task {
-  id            String    @id @default(uuid())
-  title         String
-  description   String
-  // taskResource  String
-  userId        String
-  // priorityLevel String
-  dueDate       String
-  taskStatus    TaskSatus @default(PENDING)
-  user          User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
-  uploadedAt DateTime @default(now())
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  userId      String
+  dueDate     String
+  taskStatus  TaskSatus @default(PENDING)
+  user        User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
+  uploadedAt  DateTime  @default(now())
 }
 
 model Book {
-  id String @id @default(uuid())
-  title String
-  author String
-  genre String
+  id          String        @id @default(uuid())
+  title       String
+  author      String
+  genre       String
   description String
-  bookUrl String
+  bookUrl     String
+  userLibrary UserLibrary[] @relation("BookToUserLibrary")
+  uploadedAt  DateTime      @updatedAt
+}
+
+model UserLibrary {
+  id         String   @id @default(uuid())
+  userId     String
+  bookId     String
+  book       Book     @relation("BookToUserLibrary", fields: [bookId], references: [id], onDelete: Cascade)
+  user       User     @relation("UserToUserLibrary", fields: [userId], references: [id], onDelete: Cascade)
   uploadedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
 }
