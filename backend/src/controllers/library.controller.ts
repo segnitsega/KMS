@@ -128,14 +128,16 @@ export const removeBookFromUserLibrary = catchAsync(
     const userId = req.params.id;
     const { bookId } = req.body;
 
-    if(!bookId) throw new ApiError(400, "bookId required")
+    if (!bookId) throw new ApiError(400, "bookId required");
 
     const bookRemoved = await prisma.userLibrary.delete({
       where: {
-        userId,
-        bookId
-      }
-    })
+        userId_bookId: {
+          userId,
+          bookId,
+        },
+      },
+    });
 
     if (!bookRemoved)
       throw new ApiError(400, "Error adding book to user library");
