@@ -3,68 +3,100 @@ import { Button } from "../components/ui/button";
 import { cn } from "../lib/utils";
 import Header from "../components/reusable-header";
 import AddBookModal from "../components/AddBookModal";
-import { FiDownload, FiEye, FiBookOpen } from "react-icons/fi";
-import api from "../utility/api"
-import { useQuery } from "@tanstack/react-query";
+import { FiDownload, FiEye, FiBookOpen, FiHeart } from "react-icons/fi";
+import api from "../utility/api";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import loadingSpinner from "@/assets/loading-spinner.svg";
+import { useAuthStore } from "@/stores/auth-store";
 
 const getBooksData = async () => {
   const response = await api.get("/library");
   return response.data.data;
 };
 
+const getUserLibrary = async (userId: string) => {
+  const response = await api.get(`/library/user/${userId}`);
+  return response.data.userBooks;
+};
+
 const Library = () => {
   const [search, setSearch] = useState("");
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showAll, setShowAll] = useState(false); // ✅ state for show more/less
+
+  const { userData } = useAuthStore();
+  const userId = userData?.id; // UUID from backend
 
   const TABS = [
     { label: "All Books", value: "all" },
     { label: "My Library", value: "my-library" },
   ];
-
   const [activeTab, setActiveTab] = useState(TABS[0].value);
 
   const {
     data: books = [],
     isLoading,
     isError,
-    refetch,
   } = useQuery({
     queryFn: getBooksData,
     queryKey: ["books"],
   });
 
+  const { data: userLibrary = [], refetch: refetchLibrary } = useQuery({
+    queryFn: () => getUserLibrary(userId!),
+    queryKey: ["userLibrary", userId],
+    enabled: !!userId,
+  });
+
+  const addMutation = useMutation({
+    mutationFn: (bookId: string) =>
+      api.post(`/library/user/${userId}`, { bookId }),
+    onSuccess: () => refetchLibrary(),
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: (bookId: string) =>
+      api.delete(`/library/user/${userId}`, { data: { bookId } }),
+    onSuccess: () => refetchLibrary(),
+  });
+
+  const isInLibrary = (bookId: string) => {
+    return userLibrary?.some((b: any) => b.bookId === bookId);
+  };
+
+  const toggleLibrary = (bookId: string) => {
+    if (!userId) {
+      alert("Please log in to save books to your library.");
+      return;
+    }
+    if (isInLibrary(bookId)) {
+      removeMutation.mutate(bookId);
+    } else {
+      addMutation.mutate(bookId);
+    }
+  };
+
   const filteredBooks = books.filter((book: any) => {
     const matchesSearch = book.title
       .toLowerCase()
       .includes(search.toLowerCase());
-    const matchesTab = activeTab === "all" || activeTab === book.category;
+    const matchesTab =
+      activeTab === "all" ||
+      (activeTab === "my-library" && isInLibrary(book.id));
     return matchesSearch && matchesTab;
   });
 
-  const handleUpload = async (
-    file: File,
-    description: string,
-    metadata: any
-  ) => {
-    try {
-      const formData = new FormData();
-      formData.append("book", file);
-      formData.append("title", metadata.title);
-      formData.append("author", metadata.author);
-      formData.append("genre", metadata.genre);
-      formData.append("description", description);
+  if (!userId) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <p className="text-gray-500">
+          Please log in to view and manage your library.
+        </p>
+      </div>
+    );
+  }
 
-      await api.post("/library/upload-book", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      setShowUploadModal(false);
-      refetch();
-    } catch (error) {
-      console.error("Upload failed:", error);
-    }
-  };
+  const displayedBooks = showAll ? filteredBooks : filteredBooks.slice(0, 6);
 
   return (
     <div className="flex flex-col gap-6">
@@ -113,13 +145,28 @@ const Library = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {!isLoading && !isError && filteredBooks.length > 0
-          ? filteredBooks.map((book: any) => (
+        {!isLoading && !isError && displayedBooks.length > 0
+          ? displayedBooks.map((book: any) => (
               <div
                 key={book.id}
-                className="rounded-2xl shadow-lg overflow-hidden flex flex-col bg-gradient-to-br from-white to-gray-50"
+                className="rounded-2xl shadow-lg overflow-hidden flex flex-col bg-gradient-to-br from-white to-gray-50 relative"
               >
-                <div className="p-6 pb-4 flex-1 flex flex-col justify-between relative">
+                {/* Heart Icon */}
+                <button
+                  onClick={() => toggleLibrary(book.id)}
+                  className="absolute top-4 right-4 text-xl"
+                >
+                  <FiHeart
+                    className={cn(
+                      "transition-colors",
+                      isInLibrary(book.id)
+                        ? "text-red-500 fill-red-500"
+                        : "text-gray-400 hover:text-red-400"
+                    )}
+                  />
+                </button>
+
+                <div className="p-6 pb-4 flex-1 flex flex-col justify-between">
                   <span className="absolute top-4 left-4 text-xs font-semibold px-3 py-1 rounded-full bg-purple-400 text-white">
                     {book.genre || "Book"}
                   </span>
@@ -127,6 +174,7 @@ const Library = () => {
                     <FiBookOpen size={40} className="text-purple-600" />
                   </div>
                 </div>
+
                 <div className="bg-white p-6 pt-4 flex flex-col gap-2">
                   <h2 className="font-semibold text-lg text-gray-800 mb-1">
                     {book.title}
@@ -162,6 +210,18 @@ const Library = () => {
               </p>
             )}
       </div>
+
+      {filteredBooks.length > 6 && (
+        <div className="flex justify-center mt-6">
+          <Button
+            onClick={() => setShowAll((prev) => !prev)}
+            variant="outline"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-full"
+          >
+            {showAll ? "Show Less" : "Show More"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
