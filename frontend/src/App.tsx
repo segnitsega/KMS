@@ -5,7 +5,7 @@ import Documents from "./pages/documents";
 import KnowledgeBase from "./pages/knowledge-base";
 import Discussions from "./pages/discussions";
 import ExpertDirectory from "./pages/expert-directory";
-import Library from "./pages/library-page";
+import Library from "./pages/library";
 import MyTasks from "./pages/my-tasks";
 import Analytics from "./pages/analytics";
 import Administration from "./pages/administration";
