@@ -165,24 +165,19 @@ export default function ProfilePage({ setProfileEdit }) {
   }
 
   const fullName = `${userData.firstName} ${userData.lastName}`;
-  const date = new Date(userData.updatedAt)
-
-  const joinDate = new Date(userData.joinedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-  });
+  const date = new Date(userData.updatedAt);
 
   return (
-    <div className=" bg-gray-50 p-6 rounded-md">
-      <div className="max-w-4xl mx-auto">
+    <div className=" bg-gray-50 p-6 rounded-md w-[800px]">
+      <div className="max-w-4xl ">
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-gray-900">
               Profile Settings
             </h1>
-            <button className="text-xl" onClick={() => setProfileEdit(false)}>
-              X
-            </button>
+            <Button onClick={() => setProfileEdit(false)} variant="outline">
+              Close
+            </Button>
           </div>
 
           <p className="text-gray-600 mt-2">
@@ -192,7 +187,7 @@ export default function ProfilePage({ setProfileEdit }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Profile Overview Card */}
-          <Card className="lg:col-span-1">
+          <Card className="lg:col-span-1 mb-12">
             <CardHeader className="text-center">
               <div className="relative mx-auto">
                 <Avatar className="w-24 h-24 mx-auto">
@@ -213,7 +208,9 @@ export default function ProfilePage({ setProfileEdit }) {
             <CardContent className="space-y-4">
               <div className="text-center">
                 <p className="text-sm text-gray-600">Member since</p>
-                <p className="font-medium">{date.toLocaleDateString("en-GB")}</p>
+                <p className="font-medium">
+                  {date.toLocaleDateString("en-GB")}
+                </p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-gray-600">Department</p>
@@ -223,7 +220,7 @@ export default function ProfilePage({ setProfileEdit }) {
           </Card>
 
           {/* Profile Details Card */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 mb-12">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Personal Information</CardTitle>
@@ -241,7 +238,7 @@ export default function ProfilePage({ setProfileEdit }) {
                   <div className="flex gap-2">
                     <Button onClick={handleSave} size="sm">
                       <Save className="w-4 h-4 mr-2" />
-                     {updateMutation.isPending ? "Saving.." : "Save"}
+                      {updateMutation.isPending ? "Saving.." : "Save"}
                     </Button>
                     <Button onClick={handleCancel} variant="outline" size="sm">
                       <X className="w-4 h-4 mr-2" />
@@ -299,7 +296,7 @@ export default function ProfilePage({ setProfileEdit }) {
                       id="email"
                       type="email"
                       value={editedProfile.email}
-                      onChange={(e) =>
+                      onhChange={(e) =>
                         setEditedProfile({
                           ...editedProfile,
                           email: e.target.value,
