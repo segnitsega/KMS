@@ -22,10 +22,10 @@ const getUserLibrary = async (userId: string) => {
 const Library = () => {
   const [search, setSearch] = useState("");
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [showAll, setShowAll] = useState(false); // ✅ state for show more/less
+  const [showAll, setShowAll] = useState(false);
 
   const { userData } = useAuthStore();
-  const userId = userData?.id; // UUID from backend
+  const userId = userData?.id;
 
   const TABS = [
     { label: "All Books", value: "all" },
@@ -151,7 +151,6 @@ const Library = () => {
                 key={book.id}
                 className="rounded-2xl shadow-lg overflow-hidden flex flex-col bg-gradient-to-br from-white to-gray-50 relative"
               >
-                {/* Heart Icon */}
                 <button
                   onClick={() => toggleLibrary(book.id)}
                   className="absolute top-4 right-4 text-xl"
