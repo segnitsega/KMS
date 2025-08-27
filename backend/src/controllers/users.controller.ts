@@ -210,16 +210,8 @@ export const handleUserSearch = catchAsync(
 export const handleProfileUpdate = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user.id;
-    const {
-      email,
-      firstName,
-      lastName,
-      skills,
-      phoneNumber,
-      birthPlace,
-      address,
-      socialMedia,
-    } = req.body;
+    const { email, firstName, lastName, phoneNumber, address, bio, gender } =
+      req.body;
 
     const updatedUser = await prisma.user.update({
       where: {
@@ -229,20 +221,18 @@ export const handleProfileUpdate = catchAsync(
         email,
         firstName,
         lastName,
-        skills,
+        gender,
         userDetail: {
           upsert: {
             create: {
               phoneNumber,
-              birthPlace,
+              bio,
               address,
-              socialMedia,
             },
             update: {
               phoneNumber,
-              birthPlace,
+              bio,
               address,
-              socialMedia,
             },
           },
         },

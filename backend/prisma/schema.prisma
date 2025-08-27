@@ -12,6 +12,7 @@ model User {
   email          String        @unique
   firstName      String
   lastName       String
+  gender         String?
   department     String        @default("knowledge")
   role           UserRole      @default(USER)
   profilePicture String?
@@ -29,6 +30,7 @@ model User {
 
 model UserDetail {
   id          String  @id
+  bio         String?
   phoneNumber String
   birthPlace  String?
   address     String?

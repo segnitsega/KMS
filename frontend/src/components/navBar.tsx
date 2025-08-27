@@ -3,16 +3,17 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { BsPerson } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
 import { useState, useRef, useEffect } from "react";
+import EditProfile from "./editProfile";
 
 interface navBarProps {
   userName: string;
   department: string;
-  role: string
+  role: string;
 }
 
 const NavBar = ({ userName, department, role }: navBarProps) => {
-  // Control dropdown visibility with state, not click
-  const [showDropdown, setShowDropdown] = useState(false); // Show on click
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [profileEdit, setProfileEdit] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +41,9 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
 
   return (
     <div className="border py-2 px-10 w-full flex items-center gap-20 shadow text-sm">
+      {profileEdit && <div className="fixed inset-0 flex justify-center bg-black/30 backdrop-blur-sm z-10">
+        <EditProfile setProfileEdit={setProfileEdit}/>
+        </div>}
       <h1 className="flex items-center gap-2 w-[50%]">
         <span className="bg-gradient-to-r from-sky-500 to-blue-600  text-white font-bold py-2 px-3 rounded-md ">
           K-Hub
@@ -68,9 +72,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
         <IoIosNotificationsOutline className="text-gray-500 text-xl" />
         <div>
           <h1>{userName}</h1>
-          <span
-            className={`bg-sky-500 text-white mr-1 py-0.2 px-2 rounded-lg`}
-          >
+          <span className={`bg-sky-500 text-white mr-1 py-0.2 px-2 rounded-lg`}>
             {role}
           </span>
           <span className="text-gray-500">{department}</span>
@@ -78,16 +80,19 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
         <div className="relative">
           <div ref={dropdownRef} className="inline-block relative">
             <BsPerson
-              className="text-gray-500 text-lg shadow-lg rounded-md text-gray-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
+              className="text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
               onClick={() => setShowDropdown((open) => !open)}
             />
             {showDropdown && (
               <div className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg py-2 px-4 w-40 flex flex-col gap-2 z-10">
-                <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600 py-2 px-2 rounded transition">
-                  <BsPerson className="text-lg" />
+                <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600 py-2 px-2 rounded transition cursor-pointer" onClick={()=>{
+                  setProfileEdit(true)
+                  setShowDropdown(false)
+                  }}>
+                  <BsPerson className="text-lg cursor-pointer" />
                   Profile
                 </button>
-                <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition">
+                <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition cursor-pointer">
                   <FiLogOut className="text-lg" />
                   Logout
                 </button>
