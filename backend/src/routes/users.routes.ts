@@ -1,5 +1,5 @@
 import express from "express"
-import { getUserById, getUsers, handleLogin, handleSignup, handleUserSearch } from "../controllers/users.controller"
+import { getUserById, getUsers, handleLogin, handleProfileUpdate, handleSignup, handleUserSearch } from "../controllers/users.controller"
 import { verifyToken } from "../middlewares/auth.middleware"
 // import { validateSignupData } from "../middlewares/validation.middleware"
 
@@ -11,4 +11,5 @@ userRouter.post('/login', handleLogin)
 userRouter.use(verifyToken);
 userRouter.get('/', getUsers)
 userRouter.get('/search', handleUserSearch)
+userRouter.post('/update-profile', handleProfileUpdate)
 userRouter.get('/:id', getUserById)

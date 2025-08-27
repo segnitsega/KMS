@@ -158,6 +158,7 @@ const Administration = () => {
                   type="text"
                   placeholder="password"
                   value={password}
+                  onChange = {(e) => setPassword(e.target.value)}
                 />
                 <input
                   className="rounded-md p-2 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
