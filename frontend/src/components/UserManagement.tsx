@@ -5,7 +5,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { useState } from "react";
 import { toast } from "sonner";
 import { FiTrash2 } from "react-icons/fi";
-import spinner from "../assets/tiny-spinner.svg"
+import spinner from "../assets/tiny-spinner.svg";
 
 const getUsers = async () => {
   const users = await api.get("/user");
@@ -24,7 +24,7 @@ const UserManagement = () => {
   });
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<any>(null);
-  const [deletingUserId, setDeletingUserId] = useState<string | null>(null)
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
   const generatePassword = (length = 12) => {
     const charset =
@@ -32,6 +32,10 @@ const UserManagement = () => {
     const array = new Uint32Array(length);
     window.crypto.getRandomValues(array);
     setPassword(Array.from(array, (x) => charset[x % charset.length]).join(""));
+    setFormData({
+      ...formData,
+      password: Array.from(array, (x) => charset[x % charset.length]).join(""),
+    });
   };
 
   const { data, isLoading, isError } = useQuery({
@@ -62,13 +66,13 @@ const UserManagement = () => {
     },
   });
 
-    const { mutate: removeUser, isPending: deletePending } = useMutation({
+  const { mutate: removeUser, isPending: deletePending } = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await api.delete(`/admin/remove-user/${userId}`)
-      return response.data
+      const response = await api.delete(`/admin/remove-user/${userId}`);
+      return response.data;
     },
     onSuccess: () => {
-      setDeletingUserId(null)
+      setDeletingUserId(null);
       toast("✅ User removed from the system");
     },
     onError: () => {
@@ -84,13 +88,14 @@ const UserManagement = () => {
     password: string;
     userId: string;
   }) => {
+    console.log("user data: ", data);
     saveUserData(data);
   };
 
-  const handleDeleteuser = async(id: string) => {
-    setDeletingUserId(id)
-    removeUser(id)
-  }
+  const handleDeleteuser = async (id: string) => {
+    setDeletingUserId(id);
+    removeUser(id);
+  };
 
   if (isLoading)
     return (
@@ -185,9 +190,10 @@ const UserManagement = () => {
                   <input
                     type="email"
                     value={password}
-                    onChange={(e) =>
-                      setFormData({ ...formData, password: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setFormData({ ...formData, password: e.target.value });
+                    }}
                     placeholder="Generate new password"
                     className="w-full border px-2 py-1 rounded"
                   />
@@ -244,9 +250,7 @@ const UserManagement = () => {
                 </div>
                 <div className="text-gray-500 text-sm">{user.email}</div>
               </div>
-              <span
-                className="px-3 py-1 rounded-lg text-xs font-medium mr-3"
-              >
+              <span className="px-3 py-1 rounded-lg text-xs font-medium mr-3">
                 {user.role}
               </span>
               <button
@@ -272,8 +276,11 @@ const UserManagement = () => {
                 title="Delete document"
                 onClick={() => handleDeleteuser(user.id)}
               >
-                { deletingUserId === user.id ? <img src={spinner} className="w-8"/> : <FiTrash2
-                />}
+                {deletingUserId === user.id ? (
+                  <img src={spinner} className="w-8" />
+                ) : (
+                  <FiTrash2 />
+                )}
               </button>
             </div>
           ))}

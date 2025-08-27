@@ -4,6 +4,7 @@ import prisma from "../lib/prisma";
 import { ApiError } from "../utils/api-error-class";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { AuthenticatedRequest } from "../middlewares/auth.middleware";
 
 const secretKey = process.env.secret_key as string;
 const refreshKey = process.env.refresh_key as string;
@@ -165,10 +166,13 @@ export const getUserById = catchAsync(
       where: {
         id: id,
       },
+      include: {
+        userDetail: true,
+      },
     });
     if (!user) throw new ApiError(400, "Error finding user");
-    
-    const {password, refreshToken, ...safeUser} = user
+
+    const { password, refreshToken, ...safeUser } = user;
     res.status(200).json({ user: safeUser });
   }
 );
@@ -199,6 +203,47 @@ export const handleUserSearch = catchAsync(
     res.status(200).json({
       totalResults: results.length,
       users: results,
+    });
+  }
+);
+
+export const handleProfileUpdate = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user.id;
+    const { email, firstName, lastName, phoneNumber, address, bio, gender } =
+      req.body;
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        email,
+        firstName,
+        lastName,
+        gender,
+        userDetail: {
+          upsert: {
+            create: {
+              phoneNumber,
+              bio,
+              address,
+            },
+            update: {
+              phoneNumber,
+              bio,
+              address,
+            },
+          },
+        },
+      },
+      include: {
+        userDetail: true,
+      },
+    });
+    if (!updatedUser) throw new ApiError(500, "Error updating profile");
+    res.status(200).json({
+      message: "Profile updated successfully",
     });
   }
 );
