@@ -13,9 +13,10 @@ import { adminRouter } from "./routes/admin.routes";
 import { checkAdmin, verifyToken } from "./middlewares/auth.middleware";
 import { taskRouter } from "./routes/tasks.routes";
 import { libraryRouter } from "./routes/library.routes";
+import { chatRouter } from "./routes/chat.routes";
 
 dotenv.config();
-const port = process.env.port;
+const port = process.env.port || 8000;
 const server = express();
 
 server.use(
@@ -34,10 +35,11 @@ server.use("/docs", documentRouter);
 server.use("/articles", articleRouter);
 server.use("/discussions", discussionRouter);
 server.use("/auth", authRoute);
-server.use("/status-count", statusRoute)
-server.use("/admin", verifyToken, checkAdmin ,adminRouter)
-server.use("/tasks", taskRouter)
-server.use("/library", libraryRouter)
+server.use("/status-count", statusRoute);
+server.use("/admin", verifyToken, checkAdmin, adminRouter);
+server.use("/tasks", taskRouter);
+server.use("/library", libraryRouter);
+server.use("/chat", chatRouter);
 
 server.use(errorHandler);
 
