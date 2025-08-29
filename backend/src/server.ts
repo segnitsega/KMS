@@ -14,6 +14,7 @@ import { checkAdmin, verifyToken } from "./middlewares/auth.middleware";
 import { taskRouter } from "./routes/tasks.routes";
 import { libraryRouter } from "./routes/library.routes";
 import { chatRouter } from "./routes/chat.routes";
+import searchRouter from "./routes/search.routes";
 
 dotenv.config();
 const port = process.env.port || 8000;
@@ -40,6 +41,7 @@ server.use("/admin", verifyToken, checkAdmin, adminRouter);
 server.use("/tasks", taskRouter);
 server.use("/library", libraryRouter);
 server.use("/chat", chatRouter);
+server.use("/search", searchRouter);
 
 server.use(errorHandler);
 
