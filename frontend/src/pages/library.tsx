@@ -8,9 +8,31 @@ import api from "../utility/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import loadingSpinner from "@/assets/loading-spinner.svg";
 import { useAuthStore } from "@/stores/auth-store";
+import { useDebounce } from "../hooks/useDebounce";
 
-const getBooksData = async () => {
-  const response = await api.get("/library");
+const highlightSearch = (text: string, searchTerm: string): React.ReactNode => {
+  if (!searchTerm.trim()) {
+    return text;
+  }
+
+  const regex = new RegExp(`(${searchTerm})`, "gi");
+  const parts = text.split(regex);
+
+  return parts.map((part, index) =>
+    regex.test(part) ? (
+      <span key={index} className="bg-blue-100 text-blue-800 rounded px-1">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+};
+
+const getBooksData = async ({ queryKey }: { queryKey: [string, string?] }) => {
+  const [, searchTerm] = queryKey;
+  const params = searchTerm ? { params: { search: searchTerm } } : {};
+  const response = await api.get("/library", params);
   return response.data.data;
 };
 
@@ -33,13 +55,15 @@ const Library = () => {
   ];
   const [activeTab, setActiveTab] = useState(TABS[0].value);
 
+  const debouncedSearch = useDebounce(search, 500);
+
   const {
     data: books = [],
     isLoading,
     isError,
   } = useQuery({
     queryFn: getBooksData,
-    queryKey: ["books"],
+    queryKey: ["books", debouncedSearch],
   });
 
   const { data: userLibrary = [], refetch: refetchLibrary } = useQuery({
@@ -77,13 +101,10 @@ const Library = () => {
   };
 
   const filteredBooks = books.filter((book: any) => {
-    const matchesSearch = book.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
     const matchesTab =
       activeTab === "all" ||
       (activeTab === "my-library" && isInLibrary(book.id));
-    return matchesSearch && matchesTab;
+    return matchesTab;
   });
 
   if (!userId) {
@@ -108,16 +129,16 @@ const Library = () => {
         dropDownOptions={TABS.map((tab) => tab.label)}
         searchPlaceholder="Search books..."
         onButtonClick={() => setShowUploadModal(true)}
+        onSearch={setSearch} // Added onSearch prop
       />
+      {isLoading && (
+        <div className="flex flex-col items-center mt-10">
+          <img src={loadingSpinner} width={50} alt="loading" />
+        </div>
+      )}
 
       {showUploadModal && (
         <AddBookModal onClose={() => setShowUploadModal(false)} />
-      )}
-
-      {isLoading && (
-        <div className="flex justify-center mt-10">
-          <img src={loadingSpinner} width={50} alt="loading" />
-        </div>
       )}
 
       {isError && (
@@ -176,10 +197,10 @@ const Library = () => {
 
                 <div className="bg-white p-6 pt-4 flex flex-col gap-2">
                   <h2 className="font-semibold text-lg text-gray-800 mb-1">
-                    {book.title}
+                    {highlightSearch(book.title, search)}
                   </h2>
                   <p className="text-gray-500 text-sm mb-2">
-                    {book.description}
+                    {highlightSearch(book.description, search)}
                   </p>
                   <div className="flex items-center text-gray-400 text-xs gap-4 mb-4">
                     <span>By {book.author}</span>

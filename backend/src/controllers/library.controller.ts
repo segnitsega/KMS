@@ -11,7 +11,26 @@ interface bookInterface extends Request {
 }
 
 export const getBooks = catchAsync(async (req: Request, res: Response) => {
-  const books = await prisma.book.findMany();
+  const { search } = req.query;
+  
+  let whereClause = {};
+  
+  if (search && typeof search === 'string' && search.trim() !== '') {
+    const searchTerm = search.trim();
+    whereClause = {
+      OR: [
+        { title: { contains: searchTerm, mode: 'insensitive' } },
+        { author: { contains: searchTerm, mode: 'insensitive' } },
+        { genre: { contains: searchTerm, mode: 'insensitive' } },
+        { description: { contains: searchTerm, mode: 'insensitive' } }
+      ]
+    };
+  }
+
+  const books = await prisma.book.findMany({
+    where: whereClause
+  });
+  
   res.status(200).json({
     status: "success",
     results: books.length,
