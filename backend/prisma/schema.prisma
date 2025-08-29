@@ -7,41 +7,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  ADMIN
-  USER
-}
-
-enum TaskSatus {
-  PENDING
-  ONPROGRESS
-  DONE
-}
-
 model User {
   id             String        @id @default(uuid())
   email          String        @unique
   firstName      String
   lastName       String
+  gender         String?
   department     String        @default("knowledge")
   role           UserRole      @default(USER)
   profilePicture String?
   joinedAt       DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   skills         String[]      @default([])
-  userDetail     UserDetail?   @relation("UserToUserDetail")
-  replies        Replies[]     @relation("UserToReplies")
-  discussions    Discussion[]  @relation("UserToDiscussion")
   password       String?
   refreshToken   String?
+  discussions    Discussion[]  @relation("UserToDiscussion")
+  replies        Replies[]     @relation("UserToReplies")
   tasks          Task[]        @relation("UserToTask")
-  userLibrary    UserLibrary[] @relation("UserToUserLibrary") 
+  userDetail     UserDetail?   @relation("UserToUserDetail")
+  userLibrary    UserLibrary[] @relation("UserToUserLibrary")
 }
 
 model UserDetail {
   id          String  @id
+  bio         String?
   phoneNumber String
-  birthPlace  Json?
+  birthPlace  String?
   address     String?
   socialMedia Json?
   user        User    @relation("UserToUserDetail", fields: [id], references: [id], onDelete: Cascade)
@@ -54,10 +45,10 @@ model Document {
   pages       Int?
   author      String
   uploadedAt  DateTime @default(now())
-  category    String
   documentUrl String
   downloads   Int      @default(0)
   views       Int      @default(0)
+  category    String
 }
 
 model Article {
@@ -65,33 +56,33 @@ model Article {
   title       String
   description String
   author      String
-  category    String
   views       Int      @default(0)
   likes       Int      @default(0)
   uploadedAt  DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  category    String
 }
 
 model Discussion {
   id          String    @id @default(uuid())
   title       String
-  description String
   authorName  String
-  category    String
   likes       Int       @default(0)
-  replies     Replies[] @relation("DiscussionToReplies")
   authorId    String
-  author      User      @relation("UserToDiscussion", fields: [authorId], references: [id], onDelete: Cascade)
+  category    String
+  description String
   uploadedAt  DateTime  @default(now())
+  author      User      @relation("UserToDiscussion", fields: [authorId], references: [id], onDelete: Cascade)
+  replies     Replies[] @relation("DiscussionToReplies")
 }
 
 model Replies {
   id           String     @id @default(uuid())
-  discussion   Discussion @relation("DiscussionToReplies", fields: [discussionId], references: [id], onDelete: Cascade)
   discussionId String
   userId       String
-  user         User       @relation("UserToReplies", fields: [userId], references: [id], onDelete: Cascade)
   message      String
+  discussion   Discussion @relation("DiscussionToReplies", fields: [discussionId], references: [id], onDelete: Cascade)
+  user         User       @relation("UserToReplies", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Training {
@@ -109,8 +100,8 @@ model Task {
   userId      String
   dueDate     String
   taskStatus  TaskSatus @default(PENDING)
-  user        User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
   uploadedAt  DateTime  @default(now())
+  user        User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Book {
@@ -120,17 +111,28 @@ model Book {
   genre       String
   description String
   bookUrl     String
-  userLibrary UserLibrary[] @relation("BookToUserLibrary")
   uploadedAt  DateTime      @updatedAt
+  userLibrary UserLibrary[] @relation("BookToUserLibrary")
 }
 
 model UserLibrary {
   id         String   @id @default(uuid())
   userId     String
   bookId     String
+  uploadedAt DateTime @updatedAt
   book       Book     @relation("BookToUserLibrary", fields: [bookId], references: [id], onDelete: Cascade)
   user       User     @relation("UserToUserLibrary", fields: [userId], references: [id], onDelete: Cascade)
-  uploadedAt DateTime @updatedAt
 
   @@unique([userId, bookId])
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum TaskSatus {
+  PENDING
+  ONPROGRESS
+  DONE
 }

@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDebounce } from "../hooks/useDebounce";
 import api from "../utility/api";
+import EditProfile from "./editProfile";
 
 interface navBarProps {
   userName: string;
@@ -23,6 +24,7 @@ interface SearchResult {
 const NavBar = ({ userName, department, role }: navBarProps) => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [profileEdit, setProfileEdit] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [searchFocused, setSearchFocused] = useState(false);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
         setShowResults(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -76,46 +78,42 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
 
       const results: SearchResult[] = [];
 
-      // Process articles
-      if (articlesResponse.status === 'fulfilled') {
+      if (articlesResponse.status === "fulfilled") {
         articlesResponse.value.data.articles?.forEach((article: any) => {
           results.push({
             id: article.id,
             title: article.title,
-            type: 'article'
+            type: "article",
           });
         });
       }
 
-      // Process documents
-      if (documentsResponse.status === 'fulfilled') {
+      if (documentsResponse.status === "fulfilled") {
         documentsResponse.value.data.documents?.forEach((document: any) => {
           results.push({
             id: document.id,
             title: document.title,
-            type: 'document'
+            type: "document",
           });
         });
       }
 
-      // Process discussions
-      if (discussionsResponse.status === 'fulfilled') {
+      if (discussionsResponse.status === "fulfilled") {
         discussionsResponse.value.data.discussions?.forEach((discussion: any) => {
           results.push({
             id: discussion.id,
             title: discussion.title,
-            type: 'discussion'
+            type: "discussion",
           });
         });
       }
 
-      // Process users
-      if (usersResponse.status === 'fulfilled') {
+      if (usersResponse.status === "fulfilled") {
         usersResponse.value.data.users?.forEach((user: any) => {
           results.push({
             id: user.id,
             name: `${user.firstName} ${user.lastName}`,
-            type: 'user'
+            type: "user",
           });
         });
       }
@@ -145,41 +143,35 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
   };
 
   const handleResultClick = (result: SearchResult) => {
-    // Save to recent searches
-    const recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+    const recentSearches = JSON.parse(localStorage.getItem("recentSearches") || "[]");
     const newRecentSearches = [
-      { 
-        id: result.id, 
-        type: result.type, 
+      {
+        id: result.id,
+        type: result.type,
         title: result.title || result.name,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       },
-      ...recentSearches.filter((item: any) => item.id !== result.id)
-    ].slice(0, 5); // Keep only last 5 searches
-    
-    localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
-
-    // Navigate based on result type
-    let path = '';
+      ...recentSearches.filter((item: any) => item.id !== result.id),
+    ].slice(0, 5);
+    localStorage.setItem("recentSearches", JSON.stringify(newRecentSearches));
+    let path = "";
     switch (result.type) {
-      case 'article':
+      case "article":
         path = `/articles/${result.id}`;
         break;
-      case 'document':
+      case "document":
         path = `/documents/${result.id}`;
         break;
-      case 'discussion':
+      case "discussion":
         path = `/discussions/${result.id}`;
         break;
-      case 'user':
+      case "user":
         path = `/profile/${result.id}`;
         break;
       default:
         console.log("Unknown result type:", result.type);
         return;
     }
-
-    // Navigate to the appropriate page using React Router with highlighting
     navigate(path, { state: { highlightId: result.id } });
     setShowResults(false);
     setSearchQuery("");
@@ -187,26 +179,31 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
 
   const getRecentSearches = () => {
     try {
-      return JSON.parse(localStorage.getItem('recentSearches') || '[]');
+      return JSON.parse(localStorage.getItem("recentSearches") || "[]");
     } catch {
       return [];
     }
   };
 
   const clearRecentSearches = () => {
-    localStorage.removeItem('recentSearches');
+    localStorage.removeItem("recentSearches");
     setShowResults(false);
   };
 
   return (
     <div className="border py-2 px-10 w-full flex items-center gap-20 shadow text-sm relative">
+      {profileEdit && (
+        <div className="fixed inset-0 flex justify-center bg-black/30 backdrop-blur-sm z-10">
+          <EditProfile setProfileEdit={setProfileEdit} />
+        </div>
+      )}
       <h1 className="flex items-center gap-2 w-[50%]">
         <span className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-2 px-3 rounded-md ">
           K-Hub
         </span>
         <span className="font-bold text-lg">Knowledge Hub</span>
       </h1>
-      
+
       {/* Search Section */}
       <div className="relative w-[100%]">
         <div
@@ -232,11 +229,9 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
           )}
         </div>
 
-        {/* Search Results Dropdown */}
         {showResults && (
           <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
             {searchResults.length > 0 ? (
-              // Show search results
               searchResults.map((result) => (
                 <div
                   key={`${result.type}-${result.id}`}
@@ -257,7 +252,6 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
                 </div>
               ))
             ) : (
-              // Show recent searches when no search results
               <>
                 <div className="p-3 border-b border-gray-100 bg-gray-50">
                   <p className="text-xs font-medium text-gray-500">RECENT SEARCHES</p>
@@ -268,12 +262,11 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
                       key={`recent-${index}`}
                       className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
                       onClick={() => {
-                        // Simulate clicking on this recent search
                         const fakeResult: SearchResult = {
                           id: recent.id,
                           type: recent.type,
                           title: recent.title,
-                          name: recent.title
+                          name: recent.title,
                         };
                         handleResultClick(fakeResult);
                       }}
@@ -329,16 +322,22 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
         <div className="relative">
           <div ref={dropdownRef} className="inline-block relative">
             <BsPerson
-              className="text-gray-500 text-lg shadow-lg rounded-md text-gray-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
+              className="text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
               onClick={() => setShowDropdown((open) => !open)}
             />
             {showDropdown && (
               <div className="absolute right-0 mt-2 bg-white rounded-xl shadow-lg py-2 px-4 w-40 flex flex-col gap-2 z-10">
-                <button className="flex items-center gap-2 text-gray-700 hover:text-blue-600 py-2 px-2 rounded transition">
-                  <BsPerson className="text-lg" />
+                <button
+                  className="flex items-center gap-2 text-gray-700 hover:text-blue-600 py-2 px-2 rounded transition cursor-pointer"
+                  onClick={() => {
+                    setProfileEdit(true);
+                    setShowDropdown(false);
+                  }}
+                >
+                  <BsPerson className="text-lg cursor-pointer" />
                   Profile
                 </button>
-                <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition">
+                <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition cursor-pointer">
                   <FiLogOut className="text-lg" />
                   Logout
                 </button>

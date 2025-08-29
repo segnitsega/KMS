@@ -181,7 +181,7 @@ export const changeUserRole = catchAsync(
         role,
       },
     });
-   res.status(200).json({
+    res.status(200).json({
       message: "User role updated successfully",
       roleUpdatedUser,
     });
@@ -192,6 +192,8 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
   const userID = req.params.id;
   const { firstName, lastName, email, role, password } = req.body;
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   const updatedUser = await prisma.user.update({
     where: {
       id: userID,
@@ -201,14 +203,14 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
       lastName,
       email,
       role,
-      password
+      password: hashedPassword,
     },
-  })
+  });
 
   res.status(200).json({
-      message: "User updated successfully",
-      updatedUser,
-    });
+    message: "User updated successfully",
+    updatedUser,
+  });
 });
 
 export const assignTask = catchAsync(async (req: Request, res: Response) => {
