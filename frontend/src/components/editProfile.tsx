@@ -100,7 +100,6 @@ export default function ProfilePage({ setProfileEdit }) {
 
   useState(() => {
     if (userData) {
-      console.log("User data is here: ", userData);
       setEditedProfile({
         firstName: userData.firstName,
         lastName: userData.lastName,
