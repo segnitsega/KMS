@@ -157,6 +157,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
   };
 
   const handleResultClick = (result: SearchResult) => {
+    console.log("handle result click")
     const recentSearches = JSON.parse(
       localStorage.getItem("recentSearches") || "[]"
     );
@@ -173,16 +174,17 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
     let path = "";
     switch (result.type) {
       case "article":
-        path = `/articles/${result.id}`;
+        console.log("Article")
+        path = `/kms/knowledge-base`;
         break;
       case "document":
-        path = `/documents/${result.id}`;
+        path = `/kms/documents/`;
         break;
       case "discussion":
-        path = `/discussions/${result.id}`;
+        path = `/kms/discussions/`;
         break;
       case "user":
-        path = `/profile/${result.id}`;
+        path = `/kms/expert-directory`;
         break;
       default:
         console.log("Unknown result type:", result.type);
@@ -252,7 +254,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
                 <div
                   key={`${result.type}-${result.id}`}
                   className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-100 last:border-b-0"
-                  onClick={() => handleResultClick(result)}
+                  onMouseDown={() => handleResultClick(result)}
                 >
                   <div className="flex items-center justify-between">
                     <div>

@@ -2,10 +2,11 @@ import Header from "@/components/reusable-header";
 import DocumentPageCard from "@/cards/documents/document-page-card";
 import UploadDocumentModal from "@/components/UploadDocumentModal";
 import DocumentPreviewModal from "@/components/document-preview-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
+import { useLocation } from "react-router-dom";
 
 const getDocs = async (page: number, limit: number) => {
   const docs = await api.get(`/docs?page=${page}&limit=${limit}`);
@@ -23,6 +24,26 @@ const Documents = () => {
     queryFn: () => getDocs(page, limit),
     queryKey: ["docs"],
   });
+
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state?.highlightId && data?.documents) {
+      const doc = data.documents.find(
+        (d: any) => d.id === location.state.highlightId
+      );
+      if (doc) {
+        setPreviewDoc({
+          title: doc.title,
+          author: doc.author,
+          date: doc.uploadedAt,
+          category: doc.category,
+          description: doc.description,
+          downloads: doc.downloads,
+          downloadUrl: doc.documentUrl,
+        });
+      }
+    }
+  }, [location.state, data]);
 
   return (
     <div className="flex flex-col gap-6">

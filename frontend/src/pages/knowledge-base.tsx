@@ -7,6 +7,8 @@ import CreateArticleModal from "@/components/create-article-modal";
 import api from "@/utility/api";
 import { useQuery } from "@tanstack/react-query";
 import loadingSpinner from "@/assets/loading-spinner.svg";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const getArticlesData = async () => {
   const response = await api.get(`/articles?page=1&limit=10`);
@@ -25,6 +27,18 @@ const KnowledgeBase = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const location = useLocation();
+  useEffect(() => {
+    if (location.state?.highlightId && data) {
+      const article = data.find(
+        (a: any) => a.id === location.state.highlightId
+      );
+      if (article) {
+        setSelectedPost(article);
+      }
+    }
+  }, [location.state, data]);
 
   return (
     <div>
