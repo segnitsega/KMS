@@ -14,6 +14,7 @@ import ProtectedRoute from "./utility/protected-route";
 import LandingPage from "./pages/landing-page";
 import LoginPage from "./pages/LoginPage";
 import { Toaster } from "sonner";
+import AdminRoute from "./utility/admin-route";
 
 const App = () => {
   return (
@@ -38,7 +39,15 @@ const App = () => {
           <Route path="library" element={<Library />} />
           <Route path="my-tasks" element={<MyTasks />} />
           <Route path="analytics" element={<Analytics />} />
-          <Route path="administration" element={<Administration />} />
+
+          <Route
+            path="administration"
+            element={
+              <AdminRoute>
+                <Administration />
+              </AdminRoute>
+            }
+          />
           <Route path="help-support" element={<HelpSupport />} />
         </Route>
       </Routes>

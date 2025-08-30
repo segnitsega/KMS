@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDebounce } from "../hooks/useDebounce";
 import api from "../utility/api";
 import EditProfile from "./editProfile";
+import { useAuthStore } from "@/stores/auth-store";
 
 interface navBarProps {
   userName: string;
@@ -22,6 +23,12 @@ interface SearchResult {
 }
 
 const NavBar = ({ userName, department, role }: navBarProps) => {
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    useAuthStore.getState().setIsAuthenticated(false);
+    navigate("/login");
+  };
+
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [profileEdit, setProfileEdit] = useState(false);
@@ -69,11 +76,16 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
     setLoading(true);
     setError("");
     try {
-      const [articlesResponse, documentsResponse, discussionsResponse, usersResponse] = await Promise.allSettled([
+      const [
+        articlesResponse,
+        documentsResponse,
+        discussionsResponse,
+        usersResponse,
+      ] = await Promise.allSettled([
         api.get(`/articles/search?q=${encodeURIComponent(query)}`),
         api.get(`/docs/search?q=${encodeURIComponent(query)}`),
         api.get(`/discussions/search?q=${encodeURIComponent(query)}`),
-        api.get(`/user/search?q=${encodeURIComponent(query)}`)
+        api.get(`/user/search?q=${encodeURIComponent(query)}`),
       ]);
 
       const results: SearchResult[] = [];
@@ -99,13 +111,15 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
       }
 
       if (discussionsResponse.status === "fulfilled") {
-        discussionsResponse.value.data.discussions?.forEach((discussion: any) => {
-          results.push({
-            id: discussion.id,
-            title: discussion.title,
-            type: "discussion",
-          });
-        });
+        discussionsResponse.value.data.discussions?.forEach(
+          (discussion: any) => {
+            results.push({
+              id: discussion.id,
+              title: discussion.title,
+              type: "discussion",
+            });
+          }
+        );
       }
 
       if (usersResponse.status === "fulfilled") {
@@ -143,7 +157,9 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
   };
 
   const handleResultClick = (result: SearchResult) => {
-    const recentSearches = JSON.parse(localStorage.getItem("recentSearches") || "[]");
+    const recentSearches = JSON.parse(
+      localStorage.getItem("recentSearches") || "[]"
+    );
     const newRecentSearches = [
       {
         id: result.id,
@@ -254,7 +270,9 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
             ) : (
               <>
                 <div className="p-3 border-b border-gray-100 bg-gray-50">
-                  <p className="text-xs font-medium text-gray-500">RECENT SEARCHES</p>
+                  <p className="text-xs font-medium text-gray-500">
+                    RECENT SEARCHES
+                  </p>
                 </div>
                 {getRecentSearches().length > 0 ? (
                   getRecentSearches().map((recent: any, index: number) => (
@@ -337,7 +355,10 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
                   <BsPerson className="text-lg cursor-pointer" />
                   Profile
                 </button>
-                <button className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition cursor-pointer">
+                <button
+                  className="flex items-center gap-2 text-gray-700 hover:text-red-600 py-2 px-2 rounded transition cursor-pointer"
+                  onClick={() => handleLogout()}
+                >
                   <FiLogOut className="text-lg" />
                   Logout
                 </button>

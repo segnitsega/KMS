@@ -5,13 +5,14 @@ import { FiMessageCircle } from "react-icons/fi";
 import { FiUsers } from "react-icons/fi";
 import { SlGraduation } from "react-icons/sl";
 import { FaRegChartBar, FaTasks } from "react-icons/fa";
-import { LuUser } from 'react-icons/lu';
-import { IoIosNotificationsOutline } from "react-icons/io";
+import { LuUser } from "react-icons/lu";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import { cn } from "@/lib/utils";
 import { useLocation, Link } from "react-router-dom";
+import { useAuthStore } from "@/stores/auth-store";
 
 const SideBar = () => {
+  const userData = useAuthStore((state) => state.userData);
   const location = useLocation();
   return (
     <div className="border border-t-0 mb-8 shadow-md bg-white h-[110vh] ">
@@ -24,7 +25,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <FiHome size={20}/> Dashboard
+          <FiHome size={20} /> Dashboard
         </Link>
 
         <Link
@@ -35,7 +36,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <IoDocumentTextOutline size={20}/>
+          <IoDocumentTextOutline size={20} />
           Documents
         </Link>
         <Link
@@ -46,7 +47,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <PiBookOpen size={20}/>
+          <PiBookOpen size={20} />
           Knowledge Base
         </Link>
         <Link
@@ -57,7 +58,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <FiMessageCircle size={20}/>
+          <FiMessageCircle size={20} />
           Discussions
         </Link>
         <Link
@@ -68,7 +69,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <FiUsers size={20}/>
+          <FiUsers size={20} />
           Expert Directory
         </Link>
         <Link
@@ -79,7 +80,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <SlGraduation size={20}/>
+          <SlGraduation size={20} />
           Library
         </Link>
         <Link
@@ -90,7 +91,7 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <FaTasks size={17}/>
+          <FaTasks size={17} />
           My Tasks
         </Link>
         <Link
@@ -101,27 +102,29 @@ const SideBar = () => {
               "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
           )}
         >
-          <FaRegChartBar size={17}/>
+          <FaRegChartBar size={17} />
           Analytics
         </Link>
-        <Link
-          to="administration"
-          className={cn(
-            "flex gap-1 items-center text-lg p-2 rounded-md cursor-pointer",
-            location.pathname === "/kms/administration" &&
-              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
-          )}
-        >
-          <LuUser size={18}/>
-          Administration
-        </Link>
+        {userData.role === "ADMIN" && (
+          <Link
+            to="administration"
+            className={cn(
+              "flex gap-1 items-center text-lg p-2 rounded-md cursor-pointer",
+              location.pathname === "/kms/administration" &&
+                "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
+            )}
+          >
+            <LuUser size={18} />
+            Administration
+          </Link>
+        )}
       </div>
 
       <Link
         to="help-support"
         className="flex gap-1 items-center text-lg p-2 cursor-pointer my-8 shadow-m rounded-md text-gray-700 hover:bg-gray-100 transition duration-200"
       >
-        <IoIosHelpCircleOutline size={30}/>
+        <IoIosHelpCircleOutline size={30} />
         Help & Support
       </Link>
     </div>
