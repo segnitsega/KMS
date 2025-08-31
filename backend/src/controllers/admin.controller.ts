@@ -247,3 +247,25 @@ export const assignTask = catchAsync(async (req: Request, res: Response) => {
     tasksCreated,
   });
 });
+
+export const updateTask = catchAsync(async (req: Request, res: Response) => {
+  const taskId = req.params.id;
+  const { title, description, id, dueDate } = req.body;
+
+  const updatedTask = await prisma.task.update({
+    where: {
+      id: taskId,
+    },
+    data: {
+      title,
+      description,
+      dueDate,
+      userId: id,
+    },
+  });
+
+  res.status(200).json({
+    message: "Task updated successfully!",
+    updatedTask,
+  });
+});

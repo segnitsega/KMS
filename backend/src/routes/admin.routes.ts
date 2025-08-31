@@ -10,6 +10,7 @@ import {
   updateArticle,
   updateDiscussion,
   updateDocument,
+  updateTask,
   updateUser,
 } from "../controllers/admin.controller";
 
@@ -36,3 +37,4 @@ adminRouter.post("/update-user/:id", updateUser);
 
 //task assignment
 adminRouter.post("/task-assign", assignTask)
+adminRouter.put("/task/:id", updateTask)
