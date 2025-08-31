@@ -14,7 +14,7 @@ export type TaskCardProps = {
   assignedAgo?: string;
   submitted?: string;
   assignedBy: string;
-  actions: Array<{ label: string; variant?: 'outline' | 'solid'; color?: string }>;
+  actions: Array<{ label: string; variant?: 'outline' | 'solid'; color?: string; onClick?: () => void }>;
   completedText?: string;
   completedTextColor?: string;
 };
@@ -56,7 +56,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </div>
       <div className="flex gap-2 mt-2">
         {actions.map((action, i) => (
-          <Button key={i} variant={action.variant === 'outline' ? 'outline' : undefined} className={`px-4 py-2 font-medium rounded-lg ${action.color}`}>{action.label}</Button>
+          <Button key={i} variant={action.variant === 'outline' ? 'outline' : undefined} className={`px-4 py-2 font-medium rounded-lg ${action.color}`} onClick={action.onClick}>{action.label}</Button>
         ))}
       </div>
       {completedText && (
