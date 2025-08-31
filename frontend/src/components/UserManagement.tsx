@@ -115,20 +115,20 @@ const UserManagement = () => {
       <div className="bg-white rounded-2xl shadow-lg p-8 mt-4">
         {editUser && (
           <div className="fixed inset-0 p-10 flex justify-center bg-black/30 backdrop-blur-sm ">
-            <div className="bg-white p-6 rounded-md ">
-              <h2 className="text-2xl font-semibold mb-4 text-center">
+            <div className="bg-white p-6 rounded-md space-y-8">
+              <h2 className="text-2xl font-semibold mb-4 text-center ">
                 Edit User
               </h2>
 
-              <div className="space-y-2 mb-4">
+              <div className="space-y-4 mb-4">
                 <h2 className="text-xl font-semibold">User Details</h2>
 
-                <div className="flex gap-20">
-                  <h2>First Name: {user.firstName}</h2>
-                  <h2>Last Name: {user.lastName}</h2>
+                <div className="flex gap-20 text-gray-900 font-serif">
+                  <h2>First Name: <span className="text-green-900">{user.firstName}</span></h2>
+                  <h2>Last Name: <span className="">{user.lastName}</span></h2>
                 </div>
 
-                <div className="flex gap-10">
+                <div className="flex gap-10 text-gray-900 font-serif">
                   <h2>Email: {user.email}</h2>
                   <h2>Role: {user.role}</h2>
                 </div>
@@ -138,7 +138,7 @@ const UserManagement = () => {
                 <h2 className="text-xl font-semibold">
                   Edit user details and password
                 </h2>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-gray-900 font-serif">
                   <label>First Name</label>
                   <input
                     type="text"
@@ -161,7 +161,7 @@ const UserManagement = () => {
                   />
                 </div>
 
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center text-gray-900 font-serif">
                   <label>Email</label>
                   <input
                     type="email"
@@ -185,7 +185,7 @@ const UserManagement = () => {
                   </select>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 text-gray-900 font-serif">
                   <label>Password</label>
                   <input
                     type="email"
@@ -199,9 +199,9 @@ const UserManagement = () => {
                   />
 
                   <input
-                    className="rounded-md p-1 bg-blue-600 text-white"
+                    className="rounded-md p-2 bg-blue-600 text-white"
                     type="button"
-                    value="Generate Password"
+                    value="Generate new password"
                     onClick={() => generatePassword()}
                   />
                 </div>
