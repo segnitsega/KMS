@@ -3,6 +3,7 @@ import NavBar from "./components/navBar";
 import SideBar from "./components/sideBar";
 import { Chatbot } from "./components/chatbot";
 import { useAuthStore } from "./stores/auth-store";
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const Layout = () => {
   const userData = useAuthStore((state) => state.userData)
@@ -14,7 +15,13 @@ const Layout = () => {
           role={userData.role}
         />
         <div className="flex bg-gray-175">
-          <SideBar />
+          <div className="hidden md:block">
+            <SideBar />
+          </div>
+          <div>
+        {/* <RxHamburgerMenu /> */}
+
+          </div>
           <main className="p-6 flex-1">
             <Outlet />
             <Chatbot />

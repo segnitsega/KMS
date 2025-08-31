@@ -25,7 +25,7 @@ const DocumentCard = ({
 }: 
 documentCardProp) => {
   return (
-    <div className="border rounded-md w-full bg-white">
+    <div className="border w-[300px] rounded-md md:w-full bg-white">
       <div className="flex justify-between p-6">
         <h1>{heading}</h1>
         <Link to={articleViews ? "/kms/knowledge-base" :  "/kms/documents"} className="text-blue-500">

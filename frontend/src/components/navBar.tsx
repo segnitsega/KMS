@@ -3,11 +3,15 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { BsPerson } from "react-icons/bs";
 import { FiLogOut } from "react-icons/fi";
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDebounce } from "../hooks/useDebounce";
 import api from "../utility/api";
 import EditProfile from "./editProfile";
 import { useAuthStore } from "@/stores/auth-store";
+import { RxHamburgerMenu } from "react-icons/rx";
+import SideBar from "./sideBar";
+import { cn } from "@/lib/utils";
+import { LuUser } from "react-icons/lu";
 
 interface navBarProps {
   userName: string;
@@ -157,7 +161,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
   };
 
   const handleResultClick = (result: SearchResult) => {
-    console.log("handle result click")
+    console.log("handle result click");
     const recentSearches = JSON.parse(
       localStorage.getItem("recentSearches") || "[]"
     );
@@ -174,7 +178,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
     let path = "";
     switch (result.type) {
       case "article":
-        console.log("Article")
+        console.log("Article");
         path = `/kms/knowledge-base`;
         break;
       case "document":
@@ -208,6 +212,9 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
     setShowResults(false);
   };
 
+  const [showSideBar, setShowSideBar] = useState(false);
+  const userData = useAuthStore((state) => state.userData);
+
   return (
     <div className="border py-2 px-10 w-full flex items-center gap-20 shadow text-sm relative">
       {profileEdit && (
@@ -215,15 +222,64 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
           <EditProfile setProfileEdit={setProfileEdit} />
         </div>
       )}
-      <h1 className="flex items-center gap-2 w-[50%]">
-        <span className="bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-2 px-3 rounded-md ">
+      <div className="md:hidden">
+        {showSideBar ? (
+          <div className="fixed inset-12 -ml-20 w-full bg-blue-500 rounded-md">
+            <div className="text-2xl mt-8 flex flex-col items-center text-white gap-8">
+              <Link to="dashboard" onClick={() => setShowSideBar(false)}>
+                Dashboard
+              </Link>
+
+              <Link to="documents" onClick={() => setShowSideBar(false)}>
+                Documents
+              </Link>
+              <Link to="knowledge-base" onClick={() => setShowSideBar(false)}>
+                Knowledge Base
+              </Link>
+              <Link to="discussions" onClick={() => setShowSideBar(false)}>
+                Discussions
+              </Link>
+              <Link to="expert-directory" onClick={() => setShowSideBar(false)}>
+                Expert Directory
+              </Link>
+              <Link to="library" onClick={() => setShowSideBar(false)}>
+                Library
+              </Link>
+              <Link to="my-tasks" onClick={() => setShowSideBar(false)}>
+                My Tasks
+              </Link>
+              <Link to="analytics" onClick={() => setShowSideBar(false)}>
+                Analytics
+              </Link>
+              {userData.role === "ADMIN" && (
+                <Link to="administration" onClick={() => setShowSideBar(false)}>
+                  <LuUser size={18} />
+                  Administration
+                </Link>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div>
+            <RxHamburgerMenu
+              className="md:hidden w-8 h-8 text-blue-500"
+              onClick={() => setShowSideBar(true)}
+            />
+          </div>
+        )}
+      </div>
+
+      <h1 className="flex items-center gap-1">
+        <span className="hidden md:block whitespace-nowrap bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-2 px-3 rounded-md ">
           K-Hub
         </span>
-        <span className="font-bold text-lg">Knowledge Hub</span>
+        <span className="whitespace-nowrap font-bold text-lg">
+          Knowledge Hub
+        </span>
       </h1>
 
       {/* Search Section */}
-      <div className="relative w-[100%]">
+      <div className="hidden md:block relative w-[100%]">
         <div
           ref={inputRef}
           className={`flex items-center border rounded-md p-2 ${
@@ -331,8 +387,8 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
 
       {/* User Section */}
       <div className="flex gap-3 items-center w-[400px] relative">
-        <IoIosNotificationsOutline className="text-gray-500 text-xl" />
-        <div>
+        <IoIosNotificationsOutline className="hidden text-gray-500 text-xl" />
+        <div className="hidden md:block">
           <h1>{userName}</h1>
           <span className="bg-sky-500 text-white mr-1 py-0.2 px-2 rounded-lg">
             {role}
@@ -342,7 +398,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
         <div className="relative">
           <div ref={dropdownRef} className="inline-block relative">
             <BsPerson
-              className="text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
+              className="text-2xl ml- md:ml-0 md:text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
               onClick={() => setShowDropdown((open) => !open)}
             />
             {showDropdown && (
