@@ -131,22 +131,6 @@ const Library = () => {
         onButtonClick={() => setShowUploadModal(true)}
         onSearch={setSearch} // Added onSearch prop
       />
-      {isLoading && (
-        <div className="flex flex-col items-center mt-10">
-          <img src={loadingSpinner} width={50} alt="loading" />
-        </div>
-      )}
-
-      {showUploadModal && (
-        <AddBookModal onClose={() => setShowUploadModal(false)} />
-      )}
-
-      {isError && (
-        <div className="flex h-screen text-red-500 justify-center items-center">
-          Error getting books, please refresh the page!
-        </div>
-      )}
-
       <div className="flex items-center gap-3 my-4 flex-wrap">
         {TABS.map((tab) => (
           <Button
@@ -164,6 +148,21 @@ const Library = () => {
           </Button>
         ))}
       </div>
+      {isLoading && (
+        <div className="flex flex-col items-center mt-10">
+          <img src={loadingSpinner} width={50} alt="loading" />
+        </div>
+      )}
+
+      {showUploadModal && (
+        <AddBookModal onClose={() => setShowUploadModal(false)} />
+      )}
+
+      {isError && (
+        <div className="flex h-screen text-red-500 justify-center items-center">
+          Error getting books, please refresh the page!
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {!isLoading && !isError && displayedBooks.length > 0

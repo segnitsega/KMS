@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "@/utility/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/auth-store";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Reply {
   author: string;
@@ -41,6 +42,8 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
   likes,
   discussionId,
 }) => {
+
+  const queryClient = useQueryClient()
   const [message, setMessage] = useState("")
   const [makeReply, setMakeReply] = useState(false);
   const userData = useAuthStore((state) => state);
@@ -57,6 +60,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
     onSuccess: () => {
       toast("✅ Reply made successfully!");
       setMakeReply(false);
+      queryClient.invalidateQueries({queryKey: ["discussions"]})
     },
     onError: (error) => {
       console.error(error);
