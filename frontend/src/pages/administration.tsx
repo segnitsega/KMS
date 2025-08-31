@@ -7,6 +7,8 @@ import api from "@/utility/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+
 
 const getStatus = async () => {
   const statsCount = await api.get(`/status-count`);
@@ -52,6 +54,7 @@ const Administration = () => {
     mutationFn: () => handleUserRegistration(userData),
     onSuccess: () => {
       toast("✅ User added successfully!");
+      queryClient.invalidateQueries({queryKey: ["adminUsersData"]})
       setFirstName("")
       setLastName("")
       setPassword("")
@@ -67,6 +70,7 @@ const Administration = () => {
     queryKey: ["statusData"],
   });
 
+  const queryClient = useQueryClient();
   return (
     <div>
       <Header

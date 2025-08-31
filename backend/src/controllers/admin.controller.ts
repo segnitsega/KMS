@@ -191,20 +191,29 @@ export const changeUserRole = catchAsync(
 export const updateUser = catchAsync(async (req: Request, res: Response) => {
   const userID = req.params.id;
   const { firstName, lastName, email, role, password } = req.body;
+  let hashedPassword = ""
+  let data = {}
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-
+  if (password) {
+    hashedPassword = await bcrypt.hash(password, 10);
+  }
+  let updateData = {
+    firstName,
+    lastName,
+    email,
+    role,
+  }
+  if(password){
+    data = {...updateData, password: hashedPassword}
+  } else{
+    data = updateData;
+  }
+  console.log("Changing user data: ", data)
   const updatedUser = await prisma.user.update({
     where: {
       id: userID,
     },
-    data: {
-      firstName,
-      lastName,
-      email,
-      role,
-      password: hashedPassword,
-    },
+    data: data
   });
 
   res.status(200).json({

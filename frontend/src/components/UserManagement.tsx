@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { FiTrash2 } from "react-icons/fi";
 import spinner from "../assets/tiny-spinner.svg";
+import { useQueryClient } from "@tanstack/react-query";
 
 const getUsers = async () => {
   const users = await api.get("/user");
@@ -42,6 +43,7 @@ const UserManagement = () => {
     queryFn: getUsers,
     queryKey: ["adminUsersData"],
   });
+  const queryClient = useQueryClient();
 
   const { mutate: saveUserData, isPending } = useMutation({
     mutationFn: async (data: {
@@ -60,6 +62,7 @@ const UserManagement = () => {
     },
     onSuccess: () => {
       toast("✅ Update success");
+      queryClient.invalidateQueries({ queryKey: ["adminUsersData"] });
     },
     onError: () => {
       toast("❌ Error updating");
@@ -72,6 +75,7 @@ const UserManagement = () => {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminUsersData"] });
       setDeletingUserId(null);
       toast("✅ User removed from the system");
     },
@@ -124,8 +128,13 @@ const UserManagement = () => {
                 <h2 className="text-xl font-semibold">User Details</h2>
 
                 <div className="flex gap-20 text-gray-900 font-serif">
-                  <h2>First Name: <span className="text-green-900">{user.firstName}</span></h2>
-                  <h2>Last Name: <span className="">{user.lastName}</span></h2>
+                  <h2>
+                    First Name:{" "}
+                    <span className="text-green-900">{user.firstName}</span>
+                  </h2>
+                  <h2>
+                    Last Name: <span className="">{user.lastName}</span>
+                  </h2>
                 </div>
 
                 <div className="flex gap-10 text-gray-900 font-serif">

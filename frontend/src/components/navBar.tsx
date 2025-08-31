@@ -386,7 +386,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
       </div>
 
       {/* User Section */}
-      <div className="flex gap-3 items-center w-[400px] relative">
+      <div className="flex gap-3 items-center relative">
         <IoIosNotificationsOutline className="hidden text-gray-500 text-xl" />
         <div className="hidden md:block">
           <h1>{userName}</h1>
@@ -398,7 +398,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
         <div className="relative">
           <div ref={dropdownRef} className="inline-block relative">
             <BsPerson
-              className="text-2xl ml- md:ml-0 md:text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
+              className="text-2xl md:text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
               onClick={() => setShowDropdown((open) => !open)}
             />
             {showDropdown && (
