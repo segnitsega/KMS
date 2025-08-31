@@ -170,7 +170,7 @@ const Administration = () => {
               <div className="flex gap-4 mt-4">
                 <button
                   type="button"
-                  className={`bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition cursor-pointer transition`}
+                  className={`bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 cursor-pointer transition`}
                 onClick={addUser}
                 >
                   {isPending ? "Adding...": "Add"}

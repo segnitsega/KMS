@@ -6,14 +6,6 @@ import api from "@/utility/api";
 import { useQuery } from "@tanstack/react-query";
 import loadingSpinner from "../assets/loading-spinner.svg";
 
-// const categories = [
-//   "Financial and Accounting",
-//   "Technical and Project Docs",
-//   "Reports and Analytics ",
-//   "Policies and Procedures",
-//   "HR",
-// ];
-
 const getDiscussionData = async () => {
   const response = await api.get(`/discussions`);
   return response.data.discussions;
