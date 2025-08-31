@@ -15,7 +15,7 @@ const CreateDocumentCard = ({
   iconStyle,
 }: createDocumentCardProp) => {
   return (
-    <div className="flex gap-4 items-center border p-6 rounded-lg bg-white">
+    <div className="flex w-[300px] md:w-[] gap-4 items-center border p-6 rounded-lg bg-white">
       <Icon className={`p-2 text-4xl rounded-lg ${iconStyle} `} />
       <div>
         <h1>{title}</h1>

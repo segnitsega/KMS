@@ -24,6 +24,7 @@ const loginUser = async (email: string, password: string) => {
     email: email,
     password: password,
   });
+  console.log("loggin in:", email, password)
   return response.data;
 };
 

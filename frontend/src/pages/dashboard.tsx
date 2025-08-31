@@ -99,7 +99,7 @@ const Dashboard = () => {
             Ready to share knowledge and collaborate with your team?
           </span>
         </div>
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <StatusCard
             title="Total Documents"
             value={data.statsCount.documents}
@@ -129,7 +129,7 @@ const Dashboard = () => {
             bgColor="bg-red-200"
           />
         </div>
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <DocumentCard
             heading="Recent Documents"
             titles={data.documents.map((document) => document.title)}
@@ -146,7 +146,7 @@ const Dashboard = () => {
             dates={dates}
           />
         </div>
-        <div className="flex justify-between ">
+        <div className="flex flex-col gap-4 md:flex-row justify-between ">
           <div
             onClick={() => setShowUploadModal(true)}
             style={{ cursor: "pointer" }}
