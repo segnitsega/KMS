@@ -18,8 +18,7 @@ const getData = async () => {
   const statsCount = await api.get(`/status-count`);
   const documents = await api.get(`/docs?page=1&limit=3`);
   const articles = await api.get(`/articles?page=1&limit=3`);
-  console.log("arts: ", articles.data.articles);
-  console.log("docs: ", documents.data.documents);
+  // const dates = documents.map((document) => document.uploadDate);
   return {
     statsCount: statsCount.data,
     documents: documents.data.documents,
@@ -38,32 +37,6 @@ const Dashboard = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showCreateArticleModal, setShowCreateArticleModal] = useState(false);
   const [showDiscussionModal, setShowDiscussionModal] = useState(false);
-
-  const documentsFromBackend = [
-    {
-      title: "Employee Onboarding Guide",
-      owner: "Tadesse Gemechu",
-      uploadDate: "2024-21-30",
-      downloads: "10",
-      articleViews: 156,
-    },
-    {
-      title: "Knowledge Gaining Methods",
-      owner: "Mubarak Ahmed",
-      uploadDate: "2024-01-15",
-      downloads: "2",
-      articleViews: 214,
-    },
-    {
-      title: "Talent Acquisition",
-      owner: "Yosef Asefa",
-      uploadDate: "2023-02-14",
-      downloads: "24",
-      articleViews: 340,
-    },
-  ];
-
-  const dates = documentsFromBackend.map((document) => document.uploadDate);
 
   if (isLoading)
     return (
@@ -135,7 +108,13 @@ const Dashboard = () => {
             titles={data.documents.map((document) => document.title)}
             owners={data.documents.map((document) => document.author)}
             downloads={data.documents.map((document) => document.downloads)}
-            dates={dates}
+            dates={data.documents.map((document) =>
+              new Date(document.uploadedAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+              })
+            )}
             icon={IoDocumentTextOutline}
           />
           <DocumentCard
@@ -143,7 +122,13 @@ const Dashboard = () => {
             titles={data.articles.map((article) => article.title)}
             owners={data.articles.map((article) => article.author)}
             articleViews={data.articles.map((article) => article.views)}
-            dates={dates}
+            dates={data.articles.map((article) =>
+              new Date(article.uploadedAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+              })
+            )}
           />
         </div>
         <div className="flex flex-col gap-4 md:flex-row justify-between ">
