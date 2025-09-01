@@ -3,6 +3,9 @@ import { ApiError } from "../utils/api-error-class";
 import { catchAsync } from "../utils/catchAsync";
 import prisma from "../lib/prisma";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware";
+import path from "path";
+import * as fs from "fs";
+import { uploadToCloudinary } from "../middlewares/cloudinary";
 
 export const getTasks = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
@@ -21,9 +24,9 @@ export const getTasks = catchAsync(
             select: {
               firstName: true,
               lastName: true,
-            }
-          }
-        }
+            },
+          },
+        },
       }),
       prisma.task.count(),
     ]);
@@ -87,6 +90,63 @@ export const getTaskById = catchAsync(
       data: {
         task,
       },
+    });
+  }
+);
+
+export const handleSubmitTask = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user.id;
+    const taskId = req.params.id;
+    const { description } = req.body;
+
+    const file = req.file;
+    if (!file) throw new ApiError(400, "No file uploaded");
+
+    var taskDocumentUrl = "";
+    const isDevelopment = process.env.STORAGE === "development";
+
+    if (isDevelopment) {
+      const publicId = `document_${Date.now()}_${Math.round(
+        Math.random() * 1e6
+      )}`;
+
+      const uploadResult = await uploadToCloudinary(file.buffer, publicId);
+      taskDocumentUrl = uploadResult.secure_url;
+    } else {
+      const uploadDir = path.join(__dirname, "../../uploads");
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      const filePath = path.join(
+        uploadDir,
+        `${Date.now()}-${file.originalname}`
+      );
+      await fs.promises.writeFile(filePath, file.buffer);
+      taskDocumentUrl = `/uploads/${path.basename(filePath)}`;
+    }
+
+    if (taskDocumentUrl === "")
+      throw new ApiError(500, "Error uploading document");
+
+    const [newTaskDocumentSubmitted, updatedTask] = await prisma.$transaction([
+      prisma.taskSubmission.create({
+        data: {
+          description,
+          documentUrl: taskDocumentUrl,
+          taskId,
+        },
+      }),
+      prisma.task.update({
+        where: { id: taskId },
+        data: { taskStatus: "DONE" },
+      }),
+    ]);
+
+    res.status(201).json({
+      message: "Success",
+      newTaskDocumentSubmitted,
+      updatedTask,
     });
   }
 );
