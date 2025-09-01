@@ -12,7 +12,7 @@ const getUsers = async () => {
   return users.data;
 };
 
-const getTasks = async (page: number, limit: number) => {
+const getTasks = async (page: number | string, limit: number | string) => {
   const tasks = await api.get(`/tasks?page=${page}&limit=${limit}`);
   return tasks.data;
 };
