@@ -7,6 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum TaskStatus {
+  PENDING
+  ONPROGRESS
+  DONE
+}
+
 model User {
   id             String        @id @default(uuid())
   email          String        @unique
@@ -94,14 +105,23 @@ model Training {
 }
 
 model Task {
-  id          String    @id @default(uuid())
-  title       String
+  id             String           @id @default(uuid())
+  title          String
+  description    String
+  userId         String
+  dueDate        String
+  taskStatus     TaskStatus       @default(PENDING)
+  uploadedAt     DateTime         @default(now())
+  user           User             @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
+  taskSubmission TaskSubmission[]
+}
+
+model TaskSubmission {
+  id          String  @id @default(uuid())
   description String
-  userId      String
-  dueDate     String
-  taskStatus  TaskSatus @default(PENDING)
-  uploadedAt  DateTime  @default(now())
-  user        User      @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
+  documentUrl String?
+  taskId      String
+  task        Task    @relation(fields: [taskId], references: [id])
 }
 
 model Book {
@@ -124,15 +144,4 @@ model UserLibrary {
   user       User     @relation("UserToUserLibrary", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, bookId])
-}
-
-enum UserRole {
-  ADMIN
-  USER
-}
-
-enum TaskSatus {
-  PENDING
-  ONPROGRESS
-  DONE
 }
