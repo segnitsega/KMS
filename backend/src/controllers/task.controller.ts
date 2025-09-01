@@ -152,7 +152,7 @@ export const handleSubmitTask = catchAsync(
       }),
     ]);
 
-    if(!newTaskDocumentSubmitted || !updatedTask) {
+    if (!newTaskDocumentSubmitted || !updatedTask) {
       throw new ApiError(500, "Error submitting task");
     }
 
@@ -164,10 +164,27 @@ export const handleSubmitTask = catchAsync(
   }
 );
 
-export const getSubmittedTasks = catchAsync(async(req: Request, res: Response) => {
-  const tasks = await prisma.taskSubmission.findMany()
-  if(!tasks) throw new ApiError(404, "No tasks found in TaskSubmission table");
-
+export const getSubmittedTasks = catchAsync(
+  async (req: Request, res: Response) => {
+    const tasks = await prisma.taskSubmission.findMany({
+      orderBy: {
+        uploadedAt: "desc",
+      },
+      include: {
+        task: {
+          include: {
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    if (!tasks)
+      throw new ApiError(404, "No tasks found in TaskSubmission table");
   res.status(200).json({
     tasks
   })
@@ -225,8 +242,6 @@ export const updateTask = catchAsync(
     if (!taskId) {
       throw new ApiError(400, "Task ID is required");
     }
-
-    // Only allow admins to update tasks
     if (userRole !== "ADMIN") {
       throw new ApiError(403, "Only admins can update tasks");
     }
