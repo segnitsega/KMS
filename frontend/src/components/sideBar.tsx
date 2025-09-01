@@ -91,7 +91,7 @@ const SideBar = () => {
             to="tasks"
             className={cn(
               "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-              location.pathname === "/kms/my-tasks" &&
+              location.pathname === "/kms/tasks" &&
                 "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
             )}
           >
