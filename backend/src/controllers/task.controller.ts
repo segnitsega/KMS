@@ -112,28 +112,37 @@ export const handleSubmitTask = catchAsync(
     const file = req.file;
     if (!file) throw new ApiError(400, "No file uploaded");
 
-    var taskDocumentUrl = "";
-    const isDevelopment = process.env.STORAGE === "development";
+    // var taskDocumentUrl = "";
+    // const isDevelopment = process.env.STORAGE === "development";
 
-    if (isDevelopment) {
-      const publicId = `document_${Date.now()}_${Math.round(
-        Math.random() * 1e6
-      )}`;
+    // if (isDevelopment) {
+    //   const publicId = `document_${Date.now()}_${Math.round(
+    //     Math.random() * 1e6
+    //   )}`;
 
-      const uploadResult = await uploadToCloudinary(file.buffer, publicId);
-      taskDocumentUrl = uploadResult.secure_url;
-    } else {
-      const uploadDir = path.join(__dirname, "../../uploads");
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
-      }
-      const filePath = path.join(
-        uploadDir,
-        `${Date.now()}-${file.originalname}`
-      );
-      await fs.promises.writeFile(filePath, file.buffer);
-      taskDocumentUrl = `/uploads/${path.basename(filePath)}`;
+    //   const uploadResult = await uploadToCloudinary(file.buffer, publicId);
+    //   taskDocumentUrl = uploadResult.secure_url;
+    // } else {
+    //   const uploadDir = path.join(__dirname, "../../uploads");
+    //   if (!fs.existsSync(uploadDir)) {
+    //     fs.mkdirSync(uploadDir, { recursive: true });
+    //   }
+    //   const filePath = path.join(
+    //     uploadDir,
+    //     `${Date.now()}-${file.originalname}`
+    //   );
+    //   await fs.promises.writeFile(filePath, file.buffer);
+    //   taskDocumentUrl = `/uploads/${path.basename(filePath)}`;
+    // }
+
+    const uploadedTask = path.join(__dirname, "../../uploaded-tasks");
+    if (!fs.existsSync(uploadedTask)) {
+      fs.mkdirSync(uploadedTask, { recursive: true });
     }
+    const fileName = `${Date.now()}-${file.originalname}`;
+    const filePath = path.join(uploadedTask, fileName);
+    await fs.promises.writeFile(filePath, file.buffer);
+    const taskDocumentUrl = `/uploaded-tasks/${fileName}`;
 
     if (taskDocumentUrl === "")
       throw new ApiError(500, "Error uploading document");
@@ -185,10 +194,11 @@ export const getSubmittedTasks = catchAsync(
     });
     if (!tasks)
       throw new ApiError(404, "No tasks found in TaskSubmission table");
-  res.status(200).json({
-    tasks
-  })
-})
+    res.status(200).json({
+      tasks,
+    });
+  }
+);
 
 export const getTaskSubmission = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
@@ -220,7 +230,10 @@ export const getTaskSubmission = catchAsync(
       });
 
       if (!task) {
-        throw new ApiError(403, "You don't have permission to access this submission");
+        throw new ApiError(
+          403,
+          "You don't have permission to access this submission"
+        );
       }
     }
 
@@ -273,5 +286,68 @@ export const updateTask = catchAsync(
         task: updatedTask,
       },
     });
+  }
+);
+
+
+export const handleTaskDocumentDownload = catchAsync(
+  async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
+
+    const contentTypes: {[key: string]: string } = {
+      ".pdf": "application/pdf",
+      ".doc": "application/msword",
+      ".docx":
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ".txt": "text/plain",
+      ".xls": "application/vnd.ms-excel",
+      ".xlsx":
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ".ppt": "application/vnd.ms-powerpoint",
+      ".pptx":
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".png": "image/png",
+      ".gif": "image/gif",
+      ".zip": "application/zip",
+      ".rar": "application/x-rar-compressed",
+    };
+
+    const task = await prisma.taskSubmission.findUnique({
+      where: { id },
+      include: {
+        task: true
+      },
+    });
+    if (!task) {
+      throw new ApiError(404, "task not found");
+    }
+
+    const fileExtension = path.extname(task.documentUrl as string).toLowerCase();
+
+    const contentType = contentTypes[fileExtension] || "application/octet-stream";
+
+    const fileName = path.basename(task.documentUrl as string);
+    const filePath = path.join(__dirname, "../../uploaded-tasks", fileName);
+
+    // Check if file exists
+    if (!fs.existsSync(filePath)) {
+      throw new ApiError(404, "File not found on server");
+    }
+
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${task.task.title}${fileExtension}"`
+    );
+    res.setHeader("Content-Type", contentType);
+
+    // Set appropriate headers for file download
+    // res.setHeader("Content-Disposition", `attachment; filename="${document.title}.pdf"`)
+    // res.setHeader("Content-Type", "application/pdf") 
+
+    // Stream the file
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
   }
 );
