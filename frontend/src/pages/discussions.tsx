@@ -5,6 +5,7 @@ import NewDiscussionModal from "@/components/NewDiscussionModal";
 import api from "@/utility/api";
 import { useQuery } from "@tanstack/react-query";
 import loadingSpinner from "../assets/loading-spinner.svg";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 const getDiscussionData = async () => {
   const response = await api.get(`/discussions`);
@@ -56,7 +57,7 @@ const Discussions = () => {
               categories={discussion.category}
               replies={discussion.replies}
               likes={discussion.likes}
-              timestamp={discussion.uploadedAt}
+              timestamp={formatDateDDMMYY(discussion.uploadedAt)}
             />
           </div>
         ))}

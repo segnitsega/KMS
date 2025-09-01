@@ -4,6 +4,7 @@ import spinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 
 const categories = [
@@ -142,7 +143,7 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
                       {article.category}
                     </span>
                     <span className="text-xs text-gray-400">
-                      {article.uploadedAt}
+                      {formatDateDDMMYY(article.uploadedAt)}
                     </span>
                   </div>
                 </div>

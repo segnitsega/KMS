@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import loadingSpinner from "@/assets/loading-spinner.svg";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 const getArticlesData = async () => {
   const response = await api.get(`/articles?page=1&limit=10`);
@@ -83,7 +84,7 @@ const KnowledgeBase = () => {
                 description={post.description}
                 category={post.category}
                 author={post.author}
-                updatedAt={post.uploadedAt}
+                updatedAt={formatDateDDMMYY(post.uploadedAt)}
                 views={post.views || 0}
                 onView={() => setSelectedPost(post)}
               />
