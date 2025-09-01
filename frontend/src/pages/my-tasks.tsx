@@ -1,292 +1,180 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { TaskCard } from "@/components/TaskCard";
 import type { TaskCardProps } from "@/components/TaskCard";
-import api from "@/utility/api";
+import SubmitTaskModal from "@/components/SubmitTaskModal";
+import TaskDetailModal from "@/components/TaskDetailModal";
+import api from "@/utility/api"; // axios instance with token interceptor
+import { toast } from "sonner";
 import loadingSpinner from "@/assets/loading-spinner.svg";
 
-const mapTaskStatusToDisplay = (status: string) => {
-  switch (status) {
-    case "PENDING":
-      return { label: "Pending", color: "bg-yellow-100 text-yellow-700" };
-    case "ONPROGRESS":
-      return { label: "In Progress", color: "bg-blue-100 text-blue-700" };
-    case "DONE":
-      return { label: "Completed", color: "bg-green-100 text-green-700" };
-    default:
-      return { label: status, color: "bg-gray-100 text-gray-700" };
-  }
-};
-
-const calculatePriority = (dueDateStr: string | undefined) => {
-  if (!dueDateStr) return { label: "No Priority", color: "bg-gray-100 text-gray-700" };
-  const dueDate = new Date(dueDateStr);
-  const now = new Date();
-  const diff = dueDate.getTime() - now.getTime();
-  if (diff < 0) {
-    return { label: "Urgent", color: "bg-red-600 text-white" };
-  } else if (diff < 3 * 24 * 60 * 60 * 1000) {
-    return { label: "High Priority", color: "bg-red-100 text-red-700" };
-  } else if (diff < 7 * 24 * 60 * 60 * 1000) {
-    return { label: "Medium Priority", color: "bg-yellow-100 text-yellow-700" };
-  } else {
-    return { label: "Low Priority", color: "bg-green-100 text-green-700" };
-  }
-};
-
-const formatAssignedAgo = (uploadedAtStr: string | undefined) => {
-  if (!uploadedAtStr) return "";
-  const uploadedAt = new Date(uploadedAtStr);
-  const now = new Date();
-  const diffMs = now.getTime() - uploadedAt.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "1 day ago";
-  return `${diffDays} days ago`;
+// API call to fetch user tasks
+const getUserTasks = async () => {
+  const res = await api.get("/tasks/user");
+  return res.data.data.tasks; // matches your controller return
 };
 
 const MyTasks: React.FC = () => {
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
-  const [showSubmissionModal, setShowSubmissionModal] = useState(false);
-  const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
-  const [submissionText, setSubmissionText] = useState<string>("");
-  const [submissionFiles, setSubmissionFiles] = useState<File[]>([]);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showSubmissionViewModal, setShowSubmissionViewModal] = useState(false);
-  const [currentTask, setCurrentTask] = useState<any | null>(null);
+  const [submitModalOpen, setSubmitModalOpen] = useState(false);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
 
-  const fetchTasks = async () => {
-    setLoading(true);
-    setError("");
+  const {
+    data: tasks,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
+    queryKey: ["userTasks"],
+    queryFn: getUserTasks,
+  });
+
+  const handleSubmitTask = (taskId: string, taskData: any) => {
+    setSelectedTask(taskData);
+    setSubmitModalOpen(true);
+  };
+
+  const handleViewDetails = async (taskId: string, taskData: any) => {
     try {
-      const response = await api.get("/tasks/user");
-      if (response.data.status === "success") {
-        const backendTasks = response.data.data.tasks;
-        setTasks(backendTasks);
-      } else {
-        setError("Failed to load tasks");
+      // Fetch task details
+      const taskResponse = await api.get(`/tasks/${taskId}`);
+      const taskDetails = taskResponse.data.data.task;
+
+      // If task is done, try to fetch submission details
+      let submission = null;
+      if (taskDetails.taskStatus === 'DONE') {
+        try {
+          const submissionResponse = await api.get(`/tasks/submit/${taskId}`);
+          submission = submissionResponse.data.data.submission;
+        } catch (error) {
+          console.log('No submission found for this task');
+        }
       }
-    } catch (err) {
-      setError("Error fetching tasks");
-    } finally {
-      setLoading(false);
+
+      setSelectedTask(taskDetails);
+      setSelectedSubmission(submission);
+      setDetailModalOpen(true);
+    } catch (error: any) {
+      toast.error('Failed to load task details');
+      console.error('Error fetching task details:', error);
     }
   };
 
-
-  const updateTaskStatus = async (taskId: string, newStatus: string) => {
-    try {
-      await api.put(`/tasks/${taskId}/status`, { taskStatus: newStatus });
-      fetchTasks();
-    } catch (err) {
-      setError("Failed to update task status");
-    }
+  const handleSubmitSuccess = () => {
+    refetch(); // Refresh the tasks list
   };
 
-  const submitTask = async () => {
-    if (!currentTaskId) return;
-    try {
-      await api.post(`/tasks/${currentTaskId}/submit`, {
-        submissionText,
-        submissionFiles: [], // file upload not implemented yet
-      });
-      setShowSubmissionModal(false);
-      setSubmissionText("");
-      setSubmissionFiles([]);
-      fetchTasks();
-    } catch (err) {
-      setError("Failed to submit task");
-    }
-  };
-
-  const getActionsForStatus = (status: string, task: any, refresh: () => void) => {
-    switch (status) {
-      case "PENDING":
-        return [
-          {
-            label: "Start Task",
-            variant: "solid" as const,
-            color: "bg-blue-600 text-white",
-            onClick: () => updateTaskStatus(task.id, "ONPROGRESS"),
-          },
-          {
-            label: "View Details",
-            variant: "outline" as const,
-            color: "border border-[#e3eafc] text-[#1976ed] bg-white",
-            onClick: () => {
-              setCurrentTask(task);
-              setShowDetailsModal(true);
-            },
-          },
-        ];
-      case "ONPROGRESS":
-        return [
-          {
-            label: "Submit Solution",
-            variant: "solid" as const,
-            color: "bg-blue-600 text-white",
-            onClick: () => {
-              setCurrentTaskId(task.id);
-              setShowSubmissionModal(true);
-            },
-          },
-          {
-            label: "View Details",
-            variant: "outline" as const,
-            color: "border border-[#e3eafc] text-[#1976ed] bg-white",
-            onClick: () => {
-              setCurrentTask(task);
-              setShowDetailsModal(true);
-            },
-          },
-        ];
-      case "DONE":
-        return [
-          {
-            label: "View Submission",
-            variant: "solid" as const,
-            color: "bg-green-600 text-white",
-            onClick: () => {
-              setCurrentTask(task);
-              setShowSubmissionViewModal(true);
-            },
-          },
-          {
-            label: "View Details",
-            variant: "outline" as const,
-            color: "border border-[#e3eafc] text-[#1976ed] bg-white",
-            onClick: () => {
-              setCurrentTask(task);
-              setShowDetailsModal(true);
-            },
-          },
-        ];
-      default:
-        return [];
-    }
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[200px]">
-        <img src={loadingSpinner} alt="Loading tasks" className="w-16 h-16" />
-        <p className="mt-4 text-gray-500">Loading tasks...</p>
+      <div className="flex justify-center items-center h-64">
+        <img src={loadingSpinner} alt="Loading..." className="w-8 h-8" />
       </div>
     );
   }
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
-  if (tasks.length === 0) {
-    return <div>No tasks assigned.</div>;
+  if (isError) {
+    return (
+      <p className="text-center text-red-500 font-medium">
+        Failed to load tasks. Please try again.
+      </p>
+    );
   }
 
   return (
-    <>
-      <div className="flex flex-col gap-3">
-        <h1 className="text-2xl font-bold  gap-3">My Tasks</h1>
-        <p className="text-gray-500 ">
-          View and manage your assigned tasks, priorities, and deadlines.
-        </p>
-        <div className="flex flex-col gap-6">
-          {tasks.map((task, idx) => (
-            <TaskCard
-              key={idx}
-              title={task.title}
-              status={mapTaskStatusToDisplay(task.taskStatus).label}
-              statusColor={mapTaskStatusToDisplay(task.taskStatus).color}
-              priority={calculatePriority(task.dueDate).label}
-              priorityColor={calculatePriority(task.dueDate).color}
-              desc={task.description}
-              due={task.dueDate ? new Date(task.dueDate).toLocaleDateString() : undefined}
-              assignedAgo={formatAssignedAgo(task.uploadedAt)}
-              assignedBy="Admin"
-              actions={getActionsForStatus(task.taskStatus, task, fetchTasks)}
-            />
-          ))}
-        </div>
+    <div className="flex flex-col gap-3">
+      <h1 className="text-2xl font-bold">My Tasks</h1>
+      <p className="text-gray-500">
+        View and manage your assigned tasks, priorities, and deadlines.
+      </p>
+
+      <div className="flex flex-col gap-6">
+        {tasks && tasks.length > 0 ? (
+          tasks.map((task: any) => {
+            // Map backend task into TaskCardProps shape
+            const taskProps: TaskCardProps = {
+              title: task.title,
+              status: task.taskStatus || "Pending",
+              priority: task.priority || "Normal",
+              priorityColor:
+                task.priority === "High"
+                  ? "bg-red-100 text-red-700"
+                  : task.priority === "Medium"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-green-100 text-green-700",
+              statusColor:
+                task.taskStatus === "DONE"
+                  ? "bg-green-100 text-green-700"
+                  : task.taskStatus === "IN_PROGRESS"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-blue-100 text-blue-700",
+              desc: task.description || "",
+              due: task.dueDate
+                ? new Date(task.dueDate).toLocaleDateString()
+                : undefined,
+              completed: task.completedAt
+                ? new Date(task.completedAt).toLocaleDateString()
+                : undefined,
+              assignedAgo: task.uploadedAt
+                ? new Date(task.uploadedAt).toLocaleDateString()
+                : undefined,
+              submitted: task.submissionStatus,
+              assignedBy:
+                `${task.user?.firstName || ""} ${
+                  task.user?.lastName || ""
+                }`.trim() || "System",
+              taskId: task.id,
+              taskData: task,
+              actions: [
+                {
+                  label:
+                    task.taskStatus === "DONE" ? "View Submission" : "Submit",
+                  variant: "solid",
+                  color:
+                    task.taskStatus === "DONE"
+                      ? "bg-green-600 text-white"
+                      : "bg-blue-600 text-white",
+                  onClick: task.taskStatus === "DONE"
+                    ? (taskId, taskData) => handleViewDetails(taskId, taskData)
+                    : (taskId, taskData) => handleSubmitTask(taskId, taskData),
+                },
+                {
+                  label: "View Details",
+                  variant: "outline",
+                  color: "border border-[#e3eafc] text-[#1976ed] bg-white",
+                  onClick: (taskId, taskData) => handleViewDetails(taskId, taskData),
+                },
+              ],
+              completedText:
+                task.taskStatus === "DONE" ? "Task Completed" : undefined,
+              completedTextColor:
+                task.taskStatus === "DONE" ? "text-green-600" : undefined,
+            };
+
+            return <TaskCard key={task.id} {...taskProps} />;
+          })
+        ) : (
+          <p className="text-gray-500 text-center">No tasks assigned yet.</p>
+        )}
       </div>
 
-      {showSubmissionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md relative">
-            <button
-              className="absolute top-4 right-4 text-gray-500 text-3xl font-bold hover:text-red-500 cursor-pointer"
-              onClick={() => setShowSubmissionModal(false)}
-              aria-label="Close"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-6 text-blue-700">Submit Task</h2>
-            <textarea
-              className="w-full mb-4 p-3 border rounded-lg"
-              placeholder="Enter your solution or submission details here..."
-              value={submissionText}
-              onChange={(e) => setSubmissionText(e.target.value)}
-            />
-            {/* File upload can be added here */}
-            <div className="flex justify-end gap-4">
-              <button
-                className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700"
-                onClick={submitTask}
-              >
-                Submit
-              </button>
-              <button
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md font-semibold hover:bg-gray-300"
-                onClick={() => setShowSubmissionModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Submit Task Modal */}
+      <SubmitTaskModal
+        isOpen={submitModalOpen}
+        onClose={() => setSubmitModalOpen(false)}
+        taskId={selectedTask?.id || ''}
+        taskTitle={selectedTask?.title || ''}
+        onSubmitSuccess={handleSubmitSuccess}
+      />
 
-      {showDetailsModal && currentTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg relative max-h-[80vh] overflow-y-auto">
-            <button
-              className="absolute top-4 right-4 text-gray-500 text-3xl font-bold hover:text-red-500 cursor-pointer"
-              onClick={() => setShowDetailsModal(false)}
-              aria-label="Close"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-6 text-blue-700">Task Details</h2>
-            <p><strong>Title:</strong> {currentTask.title}</p>
-            <p><strong>Description:</strong> {currentTask.description}</p>
-            <p><strong>Status:</strong> {mapTaskStatusToDisplay(currentTask.taskStatus).label}</p>
-            <p><strong>Due Date:</strong> {currentTask.dueDate ? new Date(currentTask.dueDate).toLocaleDateString() : "N/A"}</p>
-            <p><strong>Uploaded At:</strong> {currentTask.uploadedAt ? new Date(currentTask.uploadedAt).toLocaleString() : "N/A"}</p>
-          </div>
-        </div>
-      )}
-
-      {showSubmissionViewModal && currentTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md relative max-h-[80vh] overflow-y-auto">
-            <button
-              className="absolute top-4 right-4 text-gray-500 text-3xl font-bold hover:text-red-500 cursor-pointer"
-              onClick={() => setShowSubmissionViewModal(false)}
-              aria-label="Close"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-6 text-green-700">View Submission</h2>
-            <p>Submission details UI placeholder.</p>
-            <p>(Submission data is not yet implemented in backend.)</p>
-          </div>
-        </div>
-      )}
-    </>
+      {/* Task Detail Modal */}
+      <TaskDetailModal
+        isOpen={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        task={selectedTask}
+        submission={selectedSubmission}
+      />
+    </div>
   );
 };
 

@@ -163,3 +163,91 @@ export const getSubmittedTasks = catchAsync(async(req: Request, res: Response) =
     tasks
   })
 })
+
+export const getTaskSubmission = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user.id;
+    const userRole = req.user.role;
+    const taskId = req.params.id;
+
+    if (!taskId) {
+      throw new ApiError(400, "Task ID is required");
+    }
+
+    const submission = await prisma.taskSubmission.findFirst({
+      where: {
+        taskId: taskId,
+      },
+    });
+
+    if (!submission) {
+      throw new ApiError(404, "Submission not found for this task");
+    }
+
+    // Allow admin users to access all submissions, otherwise verify ownership
+    if (userRole !== "ADMIN") {
+      const task = await prisma.task.findFirst({
+        where: {
+          id: taskId,
+          userId: userId,
+        },
+      });
+
+      if (!task) {
+        throw new ApiError(403, "You don't have permission to access this submission");
+      }
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        submission,
+      },
+    });
+  }
+);
+
+export const updateTask = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const userRole = req.user.role;
+    const taskId = req.params.id;
+    const { title, description, userId, dueDate, taskStatus } = req.body;
+
+    if (!taskId) {
+      throw new ApiError(400, "Task ID is required");
+    }
+
+    // Only allow admins to update tasks
+    if (userRole !== "ADMIN") {
+      throw new ApiError(403, "Only admins can update tasks");
+    }
+
+    const updatedTask = await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        ...(title && { title }),
+        ...(description && { description }),
+        ...(userId && { userId }),
+        ...(dueDate && { dueDate }),
+        ...(taskStatus && { taskStatus }),
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        task: updatedTask,
+      },
+    });
+  }
+);

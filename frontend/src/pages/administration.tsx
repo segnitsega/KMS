@@ -9,7 +9,6 @@ import loadingSpinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
-
 const getStatus = async () => {
   const statsCount = await api.get(`/status-count`);
   console.log(statsCount.data);
@@ -23,8 +22,8 @@ const handleUserRegistration = async (data: {
   email: string;
 }) => {
   const newUser = await api.post("/admin/add-user", data);
-console.log("User data: ", newUser.data)
-  return newUser.data;  
+  console.log("User data: ", newUser.data);
+  return newUser.data;
 };
 
 const Administration = () => {
@@ -54,11 +53,11 @@ const Administration = () => {
     mutationFn: () => handleUserRegistration(userData),
     onSuccess: () => {
       toast("✅ User added successfully!");
-      queryClient.invalidateQueries({queryKey: ["adminUsersData"]})
-      setFirstName("")
-      setLastName("")
-      setPassword("")
-      setEmail("")
+      queryClient.invalidateQueries({ queryKey: ["adminUsersData"] });
+      setFirstName("");
+      setLastName("");
+      setPassword("");
+      setEmail("");
     },
     onError: () => {
       toast("❌ Failed to add discussion");
@@ -155,14 +154,13 @@ const Administration = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
 
-            
               <div className="flex gap-4">
                 <input
                   className="border rounded-md p-2"
                   type="text"
                   placeholder="password"
                   value={password}
-                  onChange = {(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <input
                   className="rounded-md p-2 bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
@@ -175,9 +173,9 @@ const Administration = () => {
                 <button
                   type="button"
                   className={`bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 cursor-pointer transition`}
-                onClick={addUser}
+                  onClick={addUser}
                 >
-                  {isPending ? "Adding...": "Add"}
+                  {isPending ? "Adding..." : "Add"}
                 </button>
                 <button
                   type="button"

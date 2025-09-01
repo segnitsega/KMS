@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { FiEye, FiMoreHorizontal, FiZap, FiUpload } from "react-icons/fi";
+import React, { useState, useRef } from "react";
+import { FiEdit2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -7,126 +7,180 @@ import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
 
-const getUsers = async () => {
-  const users = await api.get("/user");
-  return users.data;
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  taskStatus: "Assigned" | "In Progress" | "Done";
+  user: User;
+}
+
+const getUsers = async (): Promise<User[]> => {
+  const res = await api.get("/user");
+  return res.data.users;
 };
 
-const getTasks = async (page: number | string, limit: number | string) => {
-  const tasks = await api.get(`/tasks?page=${page}&limit=${limit}`);
-  return tasks.data;
+const getTasks = async (
+  page: number,
+  limit: number
+): Promise<{ tasks: Task[] }> => {
+  const res = await api.get(`/tasks?page=${page}&limit=${limit}`);
+  return res.data;
 };
 
 const AssignTaskManagement = () => {
-  const[taskRefetched, SetTaskRefetched] = useState(false);
-  const [page, setPage] = useState<string | number>(1);
-  const [limit, setLimit] = useState<string | number>(3);
+  const topRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(3);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [userId, setUserId] = useState("");
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
-  const taskQuery = useQuery({
+  const { data: users, isLoading: usersLoading, isError: usersError } =
+    useQuery<User[]>({
+      queryKey: ["users"],
+      queryFn: getUsers,
+    });
+
+  const taskQuery = useQuery<{ tasks: Task[] }>({
+    queryKey: ["tasks", page, limit],
     queryFn: () => getTasks(page, limit),
-    queryKey: ["tasks"],
   });
 
-  const { mutate: assignTask, isPending } = useMutation({
+  const { mutate: assignTask, isPending: assigning } = useMutation({
     mutationFn: async (data: {
       title: string;
       description: string;
       userId: string;
-      date: Date | string | undefined;
+      date: Date;
     }) => {
-      let formattedDate = "";
-      if (date) formattedDate = date.toLocaleDateString("en-GB");
-      const taskData = {
-        id: userId,
-        title: title,
-        description: description,
-        dueDate: formattedDate,
+      // Send full ISO string for safer backend parsing
+      const payload = {
+        userId: data.userId,
+        title: data.title,
+        description: data.description,
+        dueDate: data.date.toISOString(),
       };
-      const res = await api.post(`/admin/task-assign`, taskData);
-      return res.data;
+
+      if (editingTaskId) {
+        const res = await api.put(`/admin/task/${editingTaskId}`, payload);
+        return res.data;
+      } else {
+        const res = await api.post(`/admin/task-assign`, payload);
+        return res.data;
+      }
     },
     onSuccess: () => {
-      toast("✅ Task assigned successfully!");
+      toast.success(
+        `Task ${editingTaskId ? "updated" : "assigned"} successfully!`
+      );
+      resetForm();
+      taskQuery.refetch();
     },
-    onError: () => {
-      toast("❌ Failed to assign task");
+    onError: (error: any) => {
+      // Detailed backend error logging
+      console.error("Task assign error:", error.response?.data || error.message);
+      toast.error(`Failed to ${editingTaskId ? "update" : "assign"} task`);
     },
   });
 
-  const handleTaskAssign = async () => {
+  const handleTaskAssign = () => {
+    if (!title || !description || !userId || !date) {
+      toast.warning("Please fill all fields!");
+      return;
+    }
     assignTask({ title, description, userId, date });
   };
 
-  const handleTaskRefetch = async () => {
-   await taskQuery.refetch();
-    SetTaskRefetched(true);
+  const handleEditClick = (task: Task) => {
+    setEditingTaskId(task.id);
+    setTitle(task.title);
+    setDescription(task.description);
+    setUserId(task.user.id);
+    setDate(new Date(task.dueDate));
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const { data, isLoading, isError } = useQuery({
-    queryFn: getUsers,
-    queryKey: ["users"],
-  });
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setUserId("");
+    setDate(new Date());
+    setEditingTaskId(null);
+  };
 
-  if (isLoading)
+  if (usersLoading)
     return (
-      <div className="flex h-screen bg-white justify-center items-center">
+      <div className="flex h-screen justify-center items-center">
         <img src={loadingSpinner} width={50} alt="loading" />
       </div>
     );
-  if (isError)
+
+  if (usersError)
     return (
-      <div className="flex h-screen bg-white text-red-500 justify-center items-center">
-        Error loading the page, please refresh the page !
+      <div className="flex h-screen text-red-500 justify-center items-center">
+        Error loading users. Please refresh!
       </div>
     );
 
   return (
-    <div className="flex flex-col">
-      <div className=" bg-white rounded-lg shadow p-8">
+    <div className="flex flex-col gap-6" ref={topRef}>
+      {/* FORM */}
+      <div className="bg-white rounded-lg shadow p-8">
         <h2 className="font-semibold text-xl mb-1">
-          Create New Task Assignment
+          {editingTaskId
+            ? "Edit Task Assignment"
+            : "Create New Task Assignment"}
         </h2>
         <p className="text-gray-500 mb-6">
-          Assign tasks and responsibilities to team members
+          {editingTaskId
+            ? "Update task details and due date"
+            : "Assign tasks and responsibilities to team members"}
         </p>
 
-        <div className="flex gap-10 ">
+        <div className="flex gap-10">
           <div className="flex flex-col w-full">
             <label className="font-semibold text-xl mb-1">Task title</label>
             <input
-              className=" mb-4 p-3 border rounded-lg"
+              className="mb-4 p-3 border rounded-lg"
               placeholder="Enter task title..."
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
+
             <label className="font-semibold text-xl mb-1">Description</label>
             <textarea
               className="w-full mb-4 p-3 border rounded-lg"
-              placeholder="Describe the task details, requirements, and expected outcomes..."
+              placeholder="Describe the task..."
+              value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-            <div className="flex-1 flex flex-col">
-              <label className="font-semibold text-xl mb-1">Assign To</label>
-              <select
-                className="p-3 border rounded-lg"
-                defaultValue=""
-                onChange={(e) => {
-                  setUserId(e.target.value);
-                  console.log(e.target.value);
-                }}
-              >
-                {data.users.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.firstName} {user.lastName}
-                  </option>
-                ))}
-              </select>
-            </div>
+
+            <label className="font-semibold text-xl mb-1">Assign To</label>
+            <select
+              className="p-3 border rounded-lg"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+            >
+              <option value="">Select user</option>
+              {users?.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.firstName} {user.lastName}
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="">
+
+          <div>
             <label className="font-semibold text-xl mb-1">Due Date</label>
             <Calendar
               mode="single"
@@ -137,34 +191,49 @@ const AssignTaskManagement = () => {
           </div>
         </div>
 
-        <div className="flex justify-left mt-6">
+        <div className="flex justify-start mt-6 gap-2">
           <Button
             variant="outline"
             className="bg-gradient-to-r from-[#1976ed] to-[#1976ed] text-white px-6 py-2 font-medium rounded-lg"
             onClick={handleTaskAssign}
+            disabled={assigning}
           >
-            {isPending ? "Assigning task..." : "Assign Task"}
+            {assigning
+              ? editingTaskId
+                ? "Updating..."
+                : "Assigning..."
+              : editingTaskId
+              ? "Update Task"
+              : "Assign Task"}
           </Button>
+          {editingTaskId && (
+            <Button
+              variant="destructive"
+              className="px-6 py-2 font-medium rounded-lg"
+              onClick={resetForm}
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Active Task Assignments Section */}
-
-      <div className="bg-white rounded-2xl shadow p-8 mt-4">
+      {/* TASK LIST */}
+      <div className="bg-white rounded-2xl shadow p-8">
         <h2 className="font-semibold text-xl mb-1">Active Task Assignments</h2>
         <p className="text-gray-500 mb-6">
           Monitor assigned tasks and their progress
         </p>
 
         {taskQuery.isLoading && (
-          <div className="flex h-screen bg-white justify-center items-center">
+          <div className="flex justify-center items-center">
             <img src={loadingSpinner} width={50} alt="loading" />
           </div>
         )}
 
         {taskQuery.isError && (
-          <div className="flex h-screen bg-white text-red-500 justify-center items-center">
-            Error loading the page, please refresh the page !
+          <div className="flex text-red-500 justify-center items-center">
+            Error loading tasks. Please refresh!
           </div>
         )}
 
@@ -173,17 +242,17 @@ const AssignTaskManagement = () => {
             {taskQuery.data.tasks.map((task) => (
               <div
                 key={task.id}
-                className="bg-white rounded-xl p-4 flex flex-col gap-2 border border-[#e3eafc] "
+                className="bg-white rounded-xl p-4 flex flex-col gap-2 border border-[#e3eafc]"
               >
                 <div className="flex items-center gap-3 mb-1">
                   <div className="font-semibold text-base">{task.title}</div>
                   <span
                     className={`px-3 py-1 rounded-lg text-xs font-medium ${
-                      task.status === "In Progress"
+                      task.taskStatus === "In Progress"
                         ? "bg-yellow-100 text-yellow-700"
-                        : task.status === "Assigned"
+                        : task.taskStatus === "Assigned"
                         ? "bg-blue-100 text-blue-700"
-                        : "bg-red-100 text-red-700"
+                        : "bg-green-100 text-green-700"
                     }`}
                   >
                     {task.taskStatus}
@@ -202,32 +271,29 @@ const AssignTaskManagement = () => {
                   <Button
                     variant="outline"
                     className="px-4 py-1 font-medium flex items-center gap-1"
+                    onClick={() => handleEditClick(task)}
                   >
-                    <FiEye className="text-lg" />
-                    View
-                  </Button>
-                  <Button variant="outline" className="px-2 py-1 font-medium">
-                    <FiMoreHorizontal className="text-lg" />
+                    <FiEdit2 className="text-lg" /> Edit
                   </Button>
                 </div>
               </div>
             ))}
           </div>
         )}
-        {!taskRefetched && <div className="flex justify-center mt-6">
-            <Button
-              variant="outline"
-              className="bg-gradient-to-r from-[#1976ed] to-[#1976ed] text-white px-6 py-2 font-medium rounded-lg"
-              onClick={() => {
-                setPage("");
-                setLimit("");
-                handleTaskRefetch();
-              }}
-            >
-             {taskQuery.isFetching ? "Loading..." : "View All Tasks"}
-            </Button>
-          </div>
-        }
+
+        <div className="flex justify-center mt-6">
+          <Button
+            variant="outline"
+            className="bg-gradient-to-r from-[#1976ed] to-[#1976ed] text-white px-6 py-2 font-medium rounded-lg"
+            onClick={() => {
+              setPage(1);
+              setLimit(100);
+              taskQuery.refetch();
+            }}
+          >
+            {taskQuery.isFetching ? "Loading..." : "View All Tasks"}
+          </Button>
+        </div>
       </div>
     </div>
   );
