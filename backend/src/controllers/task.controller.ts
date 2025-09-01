@@ -150,3 +150,12 @@ export const handleSubmitTask = catchAsync(
     });
   }
 );
+
+export const getSubmittedTasks = catchAsync(async(req: Request, res: Response) => {
+  const tasks = await prisma.taskSubmission.findMany()
+  if(!tasks) throw new ApiError(404, "No tasks found in TaskSubmission table");
+
+  res.status(200).json({
+    tasks
+  })
+})
