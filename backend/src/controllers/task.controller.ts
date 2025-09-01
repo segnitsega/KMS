@@ -143,6 +143,10 @@ export const handleSubmitTask = catchAsync(
       }),
     ]);
 
+    if(!newTaskDocumentSubmitted || !updatedTask) {
+      throw new ApiError(500, "Error submitting task");
+    }
+
     res.status(201).json({
       message: "Success",
       newTaskDocumentSubmitted,
