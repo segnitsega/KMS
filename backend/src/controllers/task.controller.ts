@@ -51,6 +51,15 @@ export const getUserTasks = catchAsync(
       orderBy: {
         uploadedAt: "desc",
       },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            department: true,
+          },
+        },
+      },
     });
 
     res.status(200).json({
@@ -233,8 +242,6 @@ export const updateTask = catchAsync(
     if (!taskId) {
       throw new ApiError(400, "Task ID is required");
     }
-
-    // Only allow admins to update tasks
     if (userRole !== "ADMIN") {
       throw new ApiError(403, "Only admins can update tasks");
     }
@@ -265,8 +272,6 @@ export const updateTask = catchAsync(
       data: {
         task: updatedTask,
       },
-    res.status(200).json({
-      tasks,
     });
   }
 );
