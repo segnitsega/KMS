@@ -51,6 +51,15 @@ export const getUserTasks = catchAsync(
       orderBy: {
         uploadedAt: "desc",
       },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            department: true,
+          },
+        },
+      },
     });
 
     res.status(200).json({

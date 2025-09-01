@@ -86,15 +86,22 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 />
                 <InfoField
                   label="Assigned By"
-                  value={`${task.user?.firstName || ""} ${
-                    task.user?.lastName || ""
-                  }`}
+                  value="Department Manager"
                   icon={<FiUser className="w-4 h-4 text-gray-500" />}
                 />
                 {task.dueDate && (
                   <InfoField
                     label="Due Date"
-                    value={new Date(task.dueDate).toLocaleDateString()}
+                    value={(() => {
+                      try {
+                        const date = new Date(task.dueDate);
+                        return isNaN(date.getTime())
+                          ? "Invalid Date"
+                          : date.toLocaleDateString();
+                      } catch {
+                        return "Invalid Date";
+                      }
+                    })()}
                     icon={<FiClock className="w-4 h-4 text-gray-500" />}
                   />
                 )}

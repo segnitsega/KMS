@@ -64,8 +64,8 @@ const SubmitTaskModal: React.FC<SubmitTaskModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-hidden">
-        <div className="p-6 overflow-y-auto max-h-[90vh]">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 max-h-[95vh] overflow-hidden">
+        <div className="p-6 overflow-y-auto max-h-[95vh]">
           {/* Header */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold flex items-center gap-2">

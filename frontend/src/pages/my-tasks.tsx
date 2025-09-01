@@ -62,7 +62,7 @@ const MyTasks: React.FC = () => {
   };
 
   const handleSubmitSuccess = () => {
-    refetch(); // Refresh the tasks list
+    refetch(); 
   };
 
   if (isLoading) {
@@ -110,7 +110,14 @@ const MyTasks: React.FC = () => {
                   : "bg-blue-100 text-blue-700",
               desc: task.description || "",
               due: task.dueDate
-                ? new Date(task.dueDate).toLocaleDateString()
+                ? (() => {
+                    try {
+                      const date = new Date(task.dueDate);
+                      return isNaN(date.getTime()) ? task.dueDate : date.toLocaleDateString();
+                    } catch {
+                      return task.dueDate;
+                    }
+                  })()
                 : undefined,
               completed: task.completedAt
                 ? new Date(task.completedAt).toLocaleDateString()
@@ -119,10 +126,7 @@ const MyTasks: React.FC = () => {
                 ? new Date(task.uploadedAt).toLocaleDateString()
                 : undefined,
               submitted: task.submissionStatus,
-              assignedBy:
-                `${task.user?.firstName || ""} ${
-                  task.user?.lastName || ""
-                }`.trim() || "System",
+              assignedBy: "Department Manager",
               taskId: task.id,
               taskData: task,
               actions: [
