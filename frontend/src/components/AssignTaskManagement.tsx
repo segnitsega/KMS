@@ -45,11 +45,14 @@ const AssignTaskManagement = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
-  const { data: users, isLoading: usersLoading, isError: usersError } =
-    useQuery<User[]>({
-      queryKey: ["users"],
-      queryFn: getUsers,
-    });
+  const {
+    data: users,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
 
   const taskQuery = useQuery<{ tasks: Task[] }>({
     queryKey: ["tasks", page, limit],
@@ -63,9 +66,8 @@ const AssignTaskManagement = () => {
       userId: string;
       date: Date;
     }) => {
-      // Send full ISO string for safer backend parsing
       const payload = {
-        userId: data.userId,
+        id: data.userId,
         title: data.title,
         description: data.description,
         dueDate: data.date.toISOString(),
@@ -81,23 +83,32 @@ const AssignTaskManagement = () => {
     },
     onSuccess: () => {
       toast.success(
-        `Task ${editingTaskId ? "updated" : "assigned"} successfully!`
+        <span className="flex items-center gap-2">
+          <span className="text-green-500 text-xl">✅</span>
+          Task {editingTaskId ? "updated" : "assigned"} successfully!
+        </span>,
+        { icon: null }
       );
       resetForm();
       taskQuery.refetch();
     },
     onError: (error: any) => {
-      // Detailed backend error logging
-      console.error("Task assign error:", error.response?.data || error.message);
-      toast.error(`Failed to ${editingTaskId ? "update" : "assign"} task`);
+      console.error(
+        "Task assign error:",
+        error.response?.data || error.message
+      );
+      toast.error(
+        <span className="flex items-center gap-2">
+          <span className="text-red-500 text-xl">❌</span>
+          Failed to {editingTaskId ? "update" : "assign"} task
+        </span>,
+        { icon: null }
+      );
     },
   });
 
   const handleTaskAssign = () => {
-    if (!title || !description || !userId || !date) {
-      toast.warning("Please fill all fields!");
-      return;
-    }
+    if (!title || !description || !userId || !date) return;
     assignTask({ title, description, userId, date });
   };
 
