@@ -62,7 +62,7 @@ const Documents = () => {
           <img src={loadingSpinner} width={50} alt="loading" />
         </div>
       )}
-
+    
       {isError && (
         <div className="flex h-screen bg-white text-red-500 justify-center items-center">
           Error getting discussions please refresh the page !
@@ -74,6 +74,7 @@ const Documents = () => {
           {data.documents.map((doc: any) => (
             <DocumentPageCard
               key={doc.id}
+              docId={doc.id}
               title={doc.title}
               author={doc.author}
               date={doc.uploadedAt}

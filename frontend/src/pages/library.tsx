@@ -41,6 +41,12 @@ const getUserLibrary = async (userId: string) => {
   return response.data.userBooks;
 };
 
+const handleDownload = (bookId: string) => {
+  const url = import.meta.env.VITE_BACKEND_URL;
+  const downloadEndpoint = `${url}/library/download/${bookId}`;
+  window.location.href = downloadEndpoint;
+};
+
 const Library = () => {
   const [search, setSearch] = useState("");
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -207,7 +213,7 @@ const Library = () => {
                   <div className="flex gap-2">
                     <Button
                       className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md"
-                      onClick={() => window.open(book.bookUrl, "_blank")}
+                      onClick={() => handleDownload(book.id)}
                     >
                       <FiDownload className="inline mr-1" /> Download
                     </Button>

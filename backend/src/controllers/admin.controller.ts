@@ -3,6 +3,8 @@ import { catchAsync } from "../utils/catchAsync";
 import prisma from "../lib/prisma";
 import { ApiError } from "../utils/api-error-class";
 import bcrypt from "bcrypt";
+import * as fs from "fs"
+import path from "path";
 
 export const updateDocument = catchAsync(
   async (req: Request, res: Response) => {
@@ -31,6 +33,38 @@ export const deleteDocument = catchAsync(
   async (req: Request, res: Response) => {
     const docID = req.params.id;
 
+    // First find the document to get the file path
+    const document = await prisma.document.findUnique({
+      where: {
+        id: docID,
+      },
+    });
+
+    if (!document) {
+      throw new ApiError(404, "Document not found");
+    }
+
+    // Delete the file from the filesystem
+    const fileName = path.basename(document.documentUrl);
+    const filePath = path.join(__dirname, "../../uploads", fileName);
+
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log("File deleted successfully:", filePath);
+      } else {
+        console.warn(
+          "File not found on server, but proceeding with database deletion:",
+          filePath
+        );
+      }
+    } catch (fileError) {
+      console.error("Error deleting file:", fileError);
+      // You might choose to throw an error here or continue with DB deletion
+      // For now, we'll continue with DB deletion but log the error
+    }
+
+    // Delete the document record from database
     const deletedDoc = await prisma.document.delete({
       where: {
         id: docID,
@@ -191,8 +225,8 @@ export const changeUserRole = catchAsync(
 export const updateUser = catchAsync(async (req: Request, res: Response) => {
   const userID = req.params.id;
   const { firstName, lastName, email, role, password } = req.body;
-  let hashedPassword = ""
-  let data = {}
+  let hashedPassword = "";
+  let data = {};
 
   if (password) {
     hashedPassword = await bcrypt.hash(password, 10);
@@ -202,18 +236,18 @@ export const updateUser = catchAsync(async (req: Request, res: Response) => {
     lastName,
     email,
     role,
-  }
-  if(password){
-    data = {...updateData, password: hashedPassword}
-  } else{
+  };
+  if (password) {
+    data = { ...updateData, password: hashedPassword };
+  } else {
     data = updateData;
   }
-  console.log("Changing user data: ", data)
+  console.log("Changing user data: ", data);
   const updatedUser = await prisma.user.update({
     where: {
       id: userID,
     },
-    data: data
+    data: data,
   });
 
   res.status(200).json({

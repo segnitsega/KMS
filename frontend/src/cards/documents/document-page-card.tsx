@@ -5,6 +5,7 @@ import { FiDownload } from "react-icons/fi";
 import { IoEyeOutline } from "react-icons/io5";
 
 interface createDocumentCardProp {
+  docId: string;
   title: string;
   author: string;
   date: string;
@@ -16,6 +17,7 @@ interface createDocumentCardProp {
 }
 
 const DocumentPageCard = ({
+  docId,
   title,
   author,
   date,
@@ -25,6 +27,14 @@ const DocumentPageCard = ({
   onView,
   downloadUrl,
 }: createDocumentCardProp) => {
+
+  const handleDownload = () => {
+    const url= import.meta.env.VITE_BACKEND_URL
+    const downloadEndpoint = `${url}/docs/download/${docId}`
+    window.location.href = downloadEndpoint;
+    // window.open(downloadEndpoint)
+  }
+
   return (
     <div className="bg-white border rounded-md shadow w-full">
       <div className="flex p-4 ">
@@ -57,13 +67,20 @@ const DocumentPageCard = ({
         >
           <IoEyeOutline /> View
         </button>
-        <a
+        {/* <a
           href={downloadUrl || '#'}
           className="flex gap-1 items-center text-gray-500 hover:underline"
           download
         >
           <FiDownload /> Download
-        </a>
+        </a> */}
+         <button
+          onClick={handleDownload}
+          className="flex gap-1 items-center text-gray-500 hover:underline focus:outline-none"
+          type="button"
+        >
+          <FiDownload /> Download
+        </button>
       </div>
     </div>
   );

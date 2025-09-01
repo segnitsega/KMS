@@ -2,6 +2,7 @@ import express, { NextFunction } from "express";
 import {
   getDocumentById,
   getDocuments,
+  handleDocumentDownload,
   handleDocumentSearch,
   handleDocumentUpload,
 } from "../controllers/documents.controller";
@@ -14,6 +15,7 @@ import {
 
 export const documentRouter = express.Router();
 
+documentRouter.get("/download/:id", handleDocumentDownload)
 documentRouter.use(verifyToken);
 documentRouter.get("/", getDocuments);
 documentRouter.post(
