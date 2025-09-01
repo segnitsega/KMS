@@ -14,7 +14,14 @@ export type TaskCardProps = {
   assignedAgo?: string;
   submitted?: string;
   assignedBy: string;
-  actions: Array<{ label: string; variant?: 'outline' | 'solid'; color?: string; onClick?: () => void }>;
+  taskId: string;
+  taskData?: any;
+  actions: Array<{
+    label: string;
+    variant?: 'outline' | 'solid';
+    color?: string;
+    onClick?: (taskId: string, taskData?: any) => void
+  }>;
   completedText?: string;
   completedTextColor?: string;
 };
@@ -31,12 +38,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
   assignedAgo,
   submitted,
   assignedBy,
+  taskId,
+  taskData,
   actions,
   completedText,
   completedTextColor,
 }) => {
   return (
-    <div className={`rounded-2xl shadow-lg p-6 bg-white ${status === 'Overdue' ? 'border border-red-200' : ''}`}>
+    <div className={`rounded-2xl shadow-md p-6 bg-white ${status === 'Overdue' ? 'border border-red-200' : ''}`}>
       <div className="flex items-center gap-3 mb-2">
         <span className="font-semibold text-lg">{title}</span>
         {status && (
@@ -56,7 +65,14 @@ export const TaskCard: React.FC<TaskCardProps> = ({
       </div>
       <div className="flex gap-2 mt-2">
         {actions.map((action, i) => (
-          <Button key={i} variant={action.variant === 'outline' ? 'outline' : undefined} className={`px-4 py-2 font-medium rounded-lg ${action.color}`} onClick={action.onClick}>{action.label}</Button>
+          <Button
+            key={i}
+            variant={action.variant === 'outline' ? 'outline' : undefined}
+            className={`px-4 py-2 font-medium rounded-lg ${action.color}`}
+            onClick={() => action.onClick && action.onClick(taskId, taskData)}
+          >
+            {action.label}
+          </Button>
         ))}
       </div>
       {completedText && (

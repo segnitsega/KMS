@@ -1,43 +1,78 @@
-import React, { useState } from "react";
-import { FiEye, FiFileText } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FiFileText } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/reusable-header";
 import loadingSpinner from "@/assets/loading-spinner.svg";
-
-// Mock data (replace with API later)
-const submittedTasks = [
-  {
-    id: 1,
-    title: "Website UI Design",
-    user: "John Doe",
-    submittedAt: "2025-08-30",
-    description: "Redesigned the dashboard UI using Tailwind and Shadcn.",
-    fileUrl: "/mock-files/design-solution.pdf",
-    status: "Pending",
-    dueDate: "2025-09-05",
-    taskStatus: "DONE",
-  },
-  {
-    id: 2,
-    title: "Database Schema",
-    user: "Jane Smith",
-    submittedAt: "2025-08-28",
-    description: "Normalized schema for project DB with ER diagram.",
-    fileUrl: "/mock-files/schema.pdf",
-    status: "Reviewed",
-    dueDate: "2025-09-02",
-    taskStatus: "DONE",
-  },
-];
+import api from "@/utility/api";
 
 const AdminTasksDashboard: React.FC = () => {
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [submittedTasks, setSubmittedTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
-  const [currentTask, setCurrentTask] = useState<
-    (typeof submittedTasks)[0] | null
-  >(null);
-  const [loading, setLoading] = useState(false);
+  const [currentTask, setCurrentTask] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [submissionDetails, setSubmissionDetails] = useState<any | null>(null);
+  const [submissionLoading, setSubmissionLoading] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [submissionsRes, tasksRes] = await Promise.all([
+        api.get("/tasks/submit"),
+        api.get("/tasks"),
+      ]);
+      const submissions = submissionsRes.data.tasks || submissionsRes.data;
+      const allTasks = tasksRes.data.tasks || tasksRes.data.tasks;
+      setTasks(allTasks);
+      // Match submissions with tasks
+      const matchedTasks = submissions.map((sub: any) => {
+        const task = allTasks.find((t: any) => t.id === sub.taskId);
+        return {
+          id: sub.id,
+          title: task ? task.title : "Unknown Task",
+          user: task ? `${task.user.firstName} ${task.user.lastName}` : "Unknown User",
+          submittedAt: new Date(sub.createdAt).toLocaleDateString(),
+          description: sub.description,
+          fileUrl: sub.documentUrl,
+          status: "Submitted",
+          dueDate: task ? new Date(task.dueDate).toLocaleDateString() : "N/A",
+          taskStatus: task ? task.taskStatus : "UNKNOWN",
+          taskId: sub.taskId,
+        };
+      });
+      setSubmittedTasks(matchedTasks);
+    } catch (err: any) {
+      setError("Failed to load submitted tasks");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchSubmissionDetails = async (taskId: string) => {
+    setSubmissionLoading(true);
+    setSubmissionError(null);
+    try {
+      const res = await api.get(`/tasks/submit/${taskId}`);
+      setSubmissionDetails(res.data.data.submission);
+    } catch (err: any) {
+      setSubmissionError("Failed to load submission details");
+    } finally {
+      setSubmissionLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const openSubmissionModal = (task: any) => {
+    setCurrentTask(task);
+    fetchSubmissionDetails(task.taskId);
+    setShowSubmissionModal(true);
+  };
 
   if (loading) {
     return (
@@ -99,21 +134,7 @@ const AdminTasksDashboard: React.FC = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        setCurrentTask(task);
-                        setShowDetailsModal(true);
-                      }}
-                      className="flex items-center gap-2"
-                    >
-                      <FiEye /> View
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setCurrentTask(task);
-                        setShowSubmissionModal(true);
-                      }}
+                      onClick={() => openSubmissionModal(task)}
                       className="flex items-center gap-2"
                     >
                       <FiFileText /> View Submission
@@ -124,49 +145,6 @@ const AdminTasksDashboard: React.FC = () => {
             </tbody>
           </table>
         </div>
-
-        {/* View Details Modal */}
-        {showDetailsModal && currentTask && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-            <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg relative max-h-[80vh] overflow-y-auto">
-              <button
-                className="absolute top-4 right-4 text-gray-500 text-3xl font-bold hover:text-red-500 cursor-pointer"
-                onClick={() => setShowDetailsModal(false)}
-                aria-label="Close"
-              >
-                &times;
-              </button>
-              <h2 className="text-xl font-bold mb-6 text-blue-700">
-                {currentTask.title}
-              </h2>
-              <p>
-                <strong>Submitted by:</strong> {currentTask.user}
-              </p>
-              <p>
-                <strong>Submitted At:</strong> {currentTask.submittedAt}
-              </p>
-              <p>
-                <strong>Status:</strong> {currentTask.status}
-              </p>
-              <p>
-                <strong>Due Date:</strong> {currentTask.dueDate}
-              </p>
-              <p>
-                <strong>Description:</strong> {currentTask.description}
-              </p>
-              <div className="mt-4">
-                <a
-                  href={currentTask.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline font-medium"
-                >
-                  View Submitted File
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* View Submission Modal */}
         {showSubmissionModal && currentTask && (
@@ -185,8 +163,29 @@ const AdminTasksDashboard: React.FC = () => {
               <p>
                 <strong>Task:</strong> {currentTask.title}
               </p>
-              <p>Submission details UI placeholder.</p>
-              <p>(Submission data is not yet implemented in backend.)</p>
+              {submissionLoading && (
+                <p className="text-gray-500">Loading submission details...</p>
+              )}
+              {submissionError && (
+                <p className="text-red-500">{submissionError}</p>
+              )}
+              {submissionDetails && (
+                <>
+                  <p>
+                    <strong>Description:</strong> {submissionDetails.description}
+                  </p>
+                  <div className="mt-4">
+                    <a
+                      href={submissionDetails.documentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline font-medium"
+                    >
+                      View Submitted File
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
