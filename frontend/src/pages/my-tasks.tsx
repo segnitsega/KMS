@@ -7,6 +7,7 @@ import TaskDetailModal from "@/components/TaskDetailModal";
 import api from "@/utility/api"; // axios instance with token interceptor
 import { toast } from "sonner";
 import loadingSpinner from "@/assets/loading-spinner.svg";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 // API call to fetch user tasks
 const getUserTasks = async () => {
@@ -113,17 +114,17 @@ const MyTasks: React.FC = () => {
                 ? (() => {
                     try {
                       const date = new Date(task.dueDate);
-                      return isNaN(date.getTime()) ? task.dueDate : date.toLocaleDateString();
+                      return isNaN(date.getTime()) ? task.dueDate : formatDateDDMMYY(date);
                     } catch {
                       return task.dueDate;
                     }
                   })()
                 : undefined,
               completed: task.completedAt
-                ? new Date(task.completedAt).toLocaleDateString()
+                ? formatDateDDMMYY(task.completedAt)
                 : undefined,
               assignedAgo: task.uploadedAt
-                ? new Date(task.uploadedAt).toLocaleDateString()
+                ? formatDateDDMMYY(task.uploadedAt)
                 : undefined,
               submitted: task.submissionStatus,
               assignedBy: "Department Manager",

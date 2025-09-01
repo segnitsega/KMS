@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 interface User {
   id: string;
@@ -276,7 +277,7 @@ const AssignTaskManagement = () => {
                   <span>
                     Assigned to: {task.user.firstName} {task.user.lastName}
                   </span>
-                  <span>Due: {task.dueDate}</span>
+                  <span>Due: {formatDateDDMMYY(task.dueDate)}</span>
                 </div>
                 <div className="flex gap-2 mt-2 justify-end">
                   <Button

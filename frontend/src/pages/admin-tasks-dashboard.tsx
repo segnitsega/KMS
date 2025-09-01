@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/reusable-header";
 import loadingSpinner from "@/assets/loading-spinner.svg";
 import api from "@/utility/api";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 const AdminTasksDashboard: React.FC = () => {
   const [submittedTasks, setSubmittedTasks] = useState<any[]>([]);
@@ -27,18 +28,17 @@ const AdminTasksDashboard: React.FC = () => {
       const submissions = submissionsRes.data.tasks || submissionsRes.data;
       const allTasks = tasksRes.data.tasks || tasksRes.data.tasks;
       setTasks(allTasks);
-      // Match submissions with tasks
       const matchedTasks = submissions.map((sub: any) => {
         const task = allTasks.find((t: any) => t.id === sub.taskId);
         return {
           id: sub.id,
           title: task ? task.title : "Unknown Task",
           user: task ? `${task.user.firstName} ${task.user.lastName}` : "Unknown User",
-          submittedAt: new Date(sub.createdAt).toLocaleDateString(),
+          submittedAt: formatDateDDMMYY(sub.uploadedAt),
           description: sub.description,
           fileUrl: sub.documentUrl,
           status: "Submitted",
-          dueDate: task ? new Date(task.dueDate).toLocaleDateString() : "N/A",
+          dueDate: task ? formatDateDDMMYY(task.dueDate) : "N/A",
           taskStatus: task ? task.taskStatus : "UNKNOWN",
           taskId: sub.taskId,
         };

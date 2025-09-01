@@ -5,6 +5,7 @@ import ExpertDirectoryCard from "@/cards/expert-directory/expert-directory-card"
 import ProfileModal from "@/components/ProfileModal";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 // API call for paginated/search users
 const getExperts = async (page: number, limit: number, search?: string) => {
@@ -64,7 +65,7 @@ const ExpertDirectory = () => {
               name={`${expert.firstName} ${expert.lastName}`}
               role={expert.role}
               department={expert.department}
-              date={new Date(expert.joinedAt).toLocaleDateString()}
+              date={formatDateDDMMYY(expert.joinedAt)}
               skills={expert.skills}
               image={expert.profilePicture}
               onViewProfile={() => {
@@ -87,7 +88,7 @@ const ExpertDirectory = () => {
           email={selectedProfile.email || "Not Provided"}
           phone={selectedProfile.phone || "Not Provided"}
           location={selectedProfile.location || "Not Provided"}
-          joined={new Date(selectedProfile.joinedAt).toLocaleDateString()}
+          joined={formatDateDDMMYY(selectedProfile.joinedAt)}
           skills={selectedProfile.skills || []}
           links={{
             linkedin: selectedProfile.linkedin,

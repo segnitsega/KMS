@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { useLocation } from "react-router-dom";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 const getDocs = async (page: number, limit: number) => {
   const docs = await api.get(`/docs?page=${page}&limit=${limit}`);
@@ -77,7 +78,7 @@ const Documents = () => {
               docId={doc.id}
               title={doc.title}
               author={doc.author}
-              date={doc.uploadedAt}
+              date={formatDateDDMMYY(doc.uploadedAt)}
               numberOfDownloads={doc.downloads}
               categories={doc.category}
               description={doc.description}
