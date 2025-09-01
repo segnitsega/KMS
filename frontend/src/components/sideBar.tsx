@@ -14,6 +14,8 @@ import { useAuthStore } from "@/stores/auth-store";
 const SideBar = () => {
   const userData = useAuthStore((state) => state.userData);
   const location = useLocation();
+  let placeHolder = "My Tasks";
+  if (userData.role === "ADMIN") placeHolder = "Submitted Tasks";
   return (
     <div className="border border-t-0 mb-8 shadow-md bg-white h-[110vh] ">
       <div className="flex p-6 flex-col gap-4 ">
@@ -83,17 +85,33 @@ const SideBar = () => {
           <SlGraduation size={20} />
           Library
         </Link>
-        <Link
-          to="my-tasks"
-          className={cn(
-            "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
-            location.pathname === "/kms/my-tasks" &&
-              "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
-          )}
-        >
-          <FaTasks size={17} />
-          My Tasks
-        </Link>
+
+        {userData.role === "ADMIN" ? (
+          <Link
+            to="tasks"
+            className={cn(
+              "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+              location.pathname === "/kms/my-tasks" &&
+                "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
+            )}
+          >
+            <FaTasks size={17} />
+            Tasks
+          </Link>
+        ) : (
+          <Link
+            to="my-tasks"
+            className={cn(
+              "flex gap-2 items-center text-lg p-2  rounded-md cursor-pointer",
+              location.pathname === "/kms/my-tasks" &&
+                "bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md"
+            )}
+          >
+            <FaTasks size={17} />
+            My Tasks
+          </Link>
+        )}
+
         <Link
           to="analytics"
           className={cn(
@@ -105,6 +123,7 @@ const SideBar = () => {
           <FaRegChartBar size={17} />
           Analytics
         </Link>
+
         {userData.role === "ADMIN" && (
           <Link
             to="administration"

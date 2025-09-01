@@ -15,6 +15,7 @@ import LandingPage from "./pages/landing-page";
 import LoginPage from "./pages/LoginPage";
 import { Toaster } from "sonner";
 import AdminRoute from "./utility/admin-route";
+import { AdminTasksDashboard } from "./pages/admin-tasks-dashboard";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="expert-directory" element={<ExpertDirectory />} />
           <Route path="library" element={<Library />} />
           <Route path="my-tasks" element={<MyTasks />} />
+          <Route path="tasks" element={<AdminTasksDashboard />} />
           <Route path="analytics" element={<Analytics />} />
 
           <Route
