@@ -32,7 +32,6 @@ const DocumentPageCard = ({
     const url= import.meta.env.VITE_BACKEND_URL
     const downloadEndpoint = `${url}/docs/download/${docId}`
     window.location.href = downloadEndpoint;
-    // window.open(downloadEndpoint)
   }
 
   return (

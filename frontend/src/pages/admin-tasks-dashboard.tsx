@@ -91,6 +91,13 @@ const AdminTasksDashboard: React.FC = () => {
     );
   }
 
+  const handleDownload = (taskId: string) => {
+    const url= import.meta.env.VITE_BACKEND_URL
+    console.log(taskId)
+    const downloadEndpoint = `${url}/tasks/download/${taskId}`
+    window.location.href = downloadEndpoint;
+  }
+
   return (
     <div className="p-6">
       <Header
@@ -175,14 +182,12 @@ const AdminTasksDashboard: React.FC = () => {
                     <strong>Description:</strong> {submissionDetails.description}
                   </p>
                   <div className="mt-4">
-                    <a
-                      href={submissionDetails.documentUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      onClick={() =>  handleDownload(currentTask.id)}
                       className="text-blue-600 underline font-medium"
                     >
                       View Submitted File
-                    </a>
+                    </button>
                   </div>
                 </>
               )}

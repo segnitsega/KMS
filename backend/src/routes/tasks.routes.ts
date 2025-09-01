@@ -5,7 +5,7 @@ import { memoryUpload } from "../middlewares/upload.middleware"
 
 export const taskRouter = express.Router()
 
-taskRouter.get("download/:id", handleTaskDocumentDownload)
+taskRouter.get("/download/:id", handleTaskDocumentDownload)
 taskRouter.use(verifyToken)
 taskRouter.get("/", getTasks)
 taskRouter.get("/user", getUserTasks)
