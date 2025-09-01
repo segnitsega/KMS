@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TaskCard } from "@/components/TaskCard";
 import type { TaskCardProps } from "@/components/TaskCard";
 import api from "@/utility/api";
+import loadingSpinner from "@/assets/loading-spinner.svg";
 
 const mapTaskStatusToDisplay = (status: string) => {
   switch (status) {
@@ -86,7 +87,6 @@ const MyTasks: React.FC = () => {
   const submitTask = async () => {
     if (!currentTaskId) return;
     try {
-      // For simplicity, only sending submissionText; file upload handling can be added later
       await api.post(`/tasks/${currentTaskId}/submit`, {
         submissionText,
         submissionFiles: [], // file upload not implemented yet
@@ -172,7 +172,12 @@ const MyTasks: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading tasks...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[200px]">
+        <img src={loadingSpinner} alt="Loading tasks" className="w-16 h-16" />
+        <p className="mt-4 text-gray-500">Loading tasks...</p>
+      </div>
+    );
   }
 
   if (error) {
