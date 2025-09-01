@@ -15,7 +15,7 @@ import LandingPage from "./pages/landing-page";
 import LoginPage from "./pages/LoginPage";
 import { Toaster } from "sonner";
 import AdminRoute from "./utility/admin-route";
-import { AdminTasksDashboard } from "./pages/admin-tasks-dashboard";
+import AdminTasksDashboard from "./pages/admin-tasks-dashboard";
 
 const App = () => {
   return (
