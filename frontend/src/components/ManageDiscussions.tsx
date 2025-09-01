@@ -4,6 +4,7 @@ import spinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 const categories = [
   "Financial and Accounting",
@@ -140,7 +141,7 @@ const ManageDiscussions: React.FC<ManageDiscussionsProps> = ({ onClose }) => {
                       {discussion.category}
                     </span>
                     <span className="text-xs text-gray-400">
-                      {discussion.uploadedAt}
+                      {formatDateDDMMYY(discussion.uploadedAt)}
                     </span>
                   </div>
                 </div>

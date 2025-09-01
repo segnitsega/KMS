@@ -32,21 +32,37 @@ const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose }) => {
       return res.data;
     },
     onSuccess: () => {
-      toast.success("✅ Article created successfully!");
+      toast.success(
+        <span className="flex items-center gap-2">
+          <span className="text-green-500 text-xl">✅</span>
+          Article created successfully!
+        </span>,
+        { icon: null }
+      );
       queryClient.invalidateQueries({ queryKey: ["articles"] });
       onClose();
     },
     onError: (error: any) => {
       console.error(error.response?.data || error.message);
       toast.error(
-        error.response?.data?.message || "❌ Failed to create article"
+        <span className="flex items-center gap-2">
+          <span className="text-red-500 text-xl">❌</span>
+          {error.response?.data?.message || "Failed to create article"}
+        </span>,
+        { icon: null }
       );
     },
   });
 
   const handleCreate = () => {
     if (!title.trim() || !content.trim()) {
-      toast.error("⚠️ Title and Content are required");
+      toast.error(
+        <span className="flex items-center gap-2">
+          <span className="text-yellow-500 text-xl">⚠️</span>
+          Title and Content are required
+        </span>,
+        { icon: null }
+      );
       return;
     }
     createArticle({ title, description: content, category });

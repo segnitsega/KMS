@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { FiEdit2, FiTrash2, FiX, FiCheck, FiXCircle } from "react-icons/fi";
 import spinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 const categories = [
   "Financial and Accounting",
@@ -140,7 +141,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
                       {document.category}
                     </span>
                     <span className="text-xs text-gray-400">
-                      {document.uploadedAt}
+                      {formatDateDDMMYY(document.uploadedAt)}
                     </span>
                   </div>
                 </div>
