@@ -131,7 +131,7 @@ const LoginPage = () => {
               </div>
 
               {/* Remember Me */}
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <input
                   type="checkbox"
                   id="remember"
@@ -145,7 +145,7 @@ const LoginPage = () => {
                 >
                   Remember me
                 </label>
-              </div>
+              </div> */}
 
               <button
                 type="submit"
