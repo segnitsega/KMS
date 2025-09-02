@@ -1,5 +1,5 @@
 import api from "@/utility/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { FiEdit2, FiTrash2, FiX, FiCheck, FiXCircle } from "react-icons/fi";
 import spinner from "../assets/loading-spinner.svg";
@@ -29,6 +29,7 @@ interface ManageDocumentsProps {
 }
 
 const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
+  const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<{
     title: string;
@@ -63,6 +64,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["docs"] });
       toast("✅ Document updated successfully");
     },
     onError: () => {
@@ -76,6 +78,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["docs"] });
       toast("✅ Document deleted successfully");
     },
     onError: () => {

@@ -1,12 +1,11 @@
 import api from "@/utility/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { useState } from "react";
 import { toast } from "sonner";
 import { FiTrash2 } from "react-icons/fi";
 import spinner from "../assets/tiny-spinner.svg";
-import { useQueryClient } from "@tanstack/react-query";
 
 const getUsers = async () => {
   const users = await api.get("/user");

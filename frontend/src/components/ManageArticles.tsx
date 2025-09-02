@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { FiEdit2, FiTrash2, FiX, FiCheck, FiXCircle } from "react-icons/fi";
 import spinner from "../assets/loading-spinner.svg";
 import { toast } from "sonner";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/utility/api";
 import { formatDateDDMMYY } from "@/lib/utils";
-
 
 const categories = [
   "Financial and Accounting",
@@ -31,6 +30,7 @@ interface ManageArticlesProps {
 }
 
 const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
+  const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<{
     title: string;
@@ -65,6 +65,7 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
       toast("✅ Article updated successfully");
     },
     onError: () => {
@@ -78,6 +79,7 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
       toast("✅ Document deleted successfully");
     },
     onError: () => {
@@ -135,9 +137,7 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
                   <h3 className="text-lg font-medium text-gray-900">
                     {article.title}
                   </h3>
-                  <p className="text-sm text-gray-600">
-                    {article.description}
-                  </p>
+                  <p className="text-sm text-gray-600">{article.description}</p>
                   <div className="flex items-center gap-3 mt-1">
                     <span className="text-xs bg-gray-200 border p-1 rounded-lg">
                       {article.category}
