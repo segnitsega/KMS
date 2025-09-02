@@ -10,6 +10,7 @@ import {
   FiUser,
 } from "react-icons/fi";
 import { toast } from "sonner";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 interface TaskDetailModalProps {
   isOpen: boolean;
@@ -92,23 +93,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 {task.dueDate && (
                   <InfoField
                     label="Due Date"
-                    value={(() => {
-                      try {
-                        const date = new Date(task.dueDate);
-                        return isNaN(date.getTime())
-                          ? "Invalid Date"
-                          : date.toLocaleDateString();
-                      } catch {
-                        return "Invalid Date";
-                      }
-                    })()}
+                    value={formatDateDDMMYY(task.dueDate)}
                     icon={<FiClock className="w-4 h-4 text-gray-500" />}
                   />
                 )}
                 {task.uploadedAt && (
                   <InfoField
                     label="Assigned Date"
-                    value={new Date(task.uploadedAt).toLocaleDateString()}
+                    value={formatDateDDMMYY(task.uploadedAt)}
                     icon={<FiClock className="w-4 h-4 text-gray-500" />}
                   />
                 )}
@@ -139,9 +131,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   />
                   <InfoField
                     label="Submitted At"
-                    value={`${new Date(
-                      submission.createdAt
-                    ).toLocaleDateString()} at ${new Date(
+                    value={`${formatDateDDMMYY(submission.createdAt)} at ${new Date(
                       submission.createdAt
                     ).toLocaleTimeString()}`}
                   />

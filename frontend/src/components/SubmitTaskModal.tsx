@@ -33,8 +33,23 @@ const SubmitTaskModal: React.FC<SubmitTaskModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return toast.error("Please select a file to upload");
-    if (!description.trim()) return toast.error("Please provide a description");
+    if (!file)
+      return toast.error(
+        <span className="flex items-center gap-2">
+          <span className="text-red-500 text-xl">❌</span>
+          Please select a file to upload
+        </span>,
+        { icon: null }
+      );
+
+    if (!description.trim())
+      return toast.error(
+        <span className="flex items-center gap-2">
+          <span className="text-red-500 text-xl">❌</span>
+          Please provide a description
+        </span>,
+        { icon: null }
+      );
 
     setIsSubmitting(true);
 
@@ -47,14 +62,27 @@ const SubmitTaskModal: React.FC<SubmitTaskModalProps> = ({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      toast.success("Task submitted successfully!");
+      toast.success(
+        <span className="flex items-center gap-2">
+          <span className="text-green-500 text-xl">✅</span>
+          Task submitted successfully!
+        </span>,
+        { icon: null }
+      );
+
       onSubmitSuccess();
       onClose();
       setDescription("");
       setFile(null);
     } catch (error: any) {
       console.error("Submit error:", error);
-      toast.error(error.response?.data?.message || "Failed to submit task");
+      toast.error(
+        <span className="flex items-center gap-2">
+          <span className="text-red-500 text-xl">❌</span>
+          {error.response?.data?.message || "Failed to submit task"}
+        </span>,
+        { icon: null }
+      );
     } finally {
       setIsSubmitting(false);
     }
