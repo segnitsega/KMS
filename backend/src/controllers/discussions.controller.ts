@@ -138,3 +138,23 @@ export const handleDiscussionReply = catchAsync(
     });
   }
 );
+
+export const handleDiscussionLike = catchAsync(
+  async (req: AuthenticatedRequest, res: Response) => {
+    const discussionId = req.params.id;
+    const discussion = await prisma.discussion.findUnique({
+      where: { id: discussionId },
+    });
+    if (!discussion) {
+      throw new ApiError(404, "Discussion not found");
+    }
+    const updatedDiscussion = await prisma.discussion.update({
+      where: { id: discussionId },
+      data: { likes: { increment: 1 } },
+    });
+    res.status(200).json({
+      success: true,
+      likes: updatedDiscussion.likes,
+    });
+  }
+);

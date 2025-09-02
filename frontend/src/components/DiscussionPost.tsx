@@ -68,7 +68,21 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
     },
   });
 
-  const handleMessageChange = (e) => {
+  const { mutate: likeMutation } = useMutation({
+    mutationFn: async (discussionId: string) => {
+      const res = await api.post(`/discussions/${discussionId}/like`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["discussions"]})
+    },
+    onError: (error) => {
+      console.error(error);
+      toast("❌ Failed to like discussion");
+    },
+  });
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value)
   }
 
@@ -103,7 +117,10 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-6 mt-3 text-sm text-gray-500">
-            <button className="flex items-center gap-1 hover:text-gray-700 cursor-pointer">
+            <button
+              className="flex items-center gap-1 hover:text-gray-700 cursor-pointer"
+              onClick={() => likeMutation(discussionId)}
+            >
               <FiThumbsUp className="w-4 h-4" />
               Like({likes})
             </button>
@@ -141,7 +158,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
           >
             <div>
               <p className="font-semibold text-gray-900">
-                {reply.user.firstName} {reply.user.lastName}
+                {reply.author}
               </p>
               <p className="text-gray-700">{reply.message}</p>
             </div>
