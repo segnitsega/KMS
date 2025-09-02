@@ -24,6 +24,7 @@ import { Edit, Save, X } from "lucide-react";
 import api from "@/utility/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 function decodeToken(token: string) {
   try {
@@ -208,7 +209,7 @@ export default function ProfilePage({ setProfileEdit }) {
               <div className="text-center">
                 <p className="text-sm text-gray-600">Member since</p>
                 <p className="font-medium">
-                  {date.toLocaleDateString("en-GB")}
+                  {formatDateDDMMYY(date)}
                 </p>
               </div>
               <div className="text-center">
