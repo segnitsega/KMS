@@ -58,9 +58,10 @@ const Administration = () => {
       setLastName("");
       setPassword("");
       setEmail("");
+      setShowAddUserModal(false);
     },
     onError: () => {
-      toast("❌ Failed to add discussion");
+      toast("❌ Failed to add user");
     },
   });
 
@@ -157,7 +158,7 @@ const Administration = () => {
               <div className="flex gap-4">
                 <input
                   className="border rounded-md p-2"
-                  type="text"
+                  type="password"
                   placeholder="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -173,7 +174,13 @@ const Administration = () => {
                 <button
                   type="button"
                   className={`bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 cursor-pointer transition`}
-                  onClick={() => addUser}
+                  onClick={() => {
+                    if (!firstName.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
+                      toast("Please fill all fields");
+                      return;
+                    }
+                    addUser();
+                  }}
                 >
                   {isPending ? "Adding..." : "Add"}
                 </button>
