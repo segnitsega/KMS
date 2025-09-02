@@ -16,6 +16,9 @@ export const getDocuments = catchAsync(
       prisma.document.findMany({
         skip,
         take: limit,
+        orderBy: {
+          uploadedAt: "desc"
+        }
       }),
       prisma.document.count(),
     ]);

@@ -13,6 +13,9 @@ export const getArticles = catchAsync(
       prisma.article.findMany({
         skip,
         take: limit,
+        orderBy: {
+          uploadedAt: "desc",
+        },
       }),
       prisma.article.count(),
     ]);
@@ -44,15 +47,16 @@ export const handleArticlePost = catchAsync(
     const { firstName, lastName } = req.user;
     const { title, description, category } = req.body;
     const newArticle = await prisma.article.create({
-        data: {
-            title,
-            description,
-            author: `${firstName} ${lastName}`,
-            category
-        }
-    })
+      data: {
+        title,
+        description,
+        author: `${firstName} ${lastName}`,
+        category,
+      },
+    });
 
-    if(!newArticle) throw new ApiError(400, "Error while creating new article")
+    if (!newArticle)
+      throw new ApiError(400, "Error while creating new article");
 
     res.status(201).json({
       success: true,

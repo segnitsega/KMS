@@ -99,7 +99,7 @@ const AdminTasksDashboard: React.FC = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="">
       <Header
         title="Submitted Solutions"
         subtitle="View and manage submitted tasks from users."
