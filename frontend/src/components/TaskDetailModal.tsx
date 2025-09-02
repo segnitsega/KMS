@@ -18,11 +18,7 @@ interface TaskDetailModalProps {
   task: any;
   submission?: any;
 }
-const handleDownload = (taskId: string) => {
-  const url = import.meta.env.VITE_BACKEND_URL;
-  const downloadEndpoint = `${url}/tasks/download/${taskId}`;
-  window.location.href = downloadEndpoint;
-};
+
 const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   isOpen,
   onClose,
@@ -30,6 +26,14 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   submission,
 }) => {
   if (!isOpen || !task) return null;
+
+  const handleDownload = () => {
+    if (submission?.documentUrl) {
+      window.open(submission.documentUrl, "_blank");
+    } else {
+      toast.error("❌ No submission file available");
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
@@ -127,7 +131,9 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   />
                   <InfoField
                     label="Submitted At"
-                    value={`${formatDateDDMMYY(submission.createdAt)} at ${new Date(
+                    value={`${formatDateDDMMYY(
+                      submission.createdAt
+                    )} at ${new Date(
                       submission.createdAt
                     ).toLocaleTimeString()}`}
                   />
@@ -137,7 +143,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         Document
                       </label>
                       <Button
-                        onClick={handleDownload(task.id)}
+                        onClick={handleDownload}
                         variant="outline"
                         size="sm"
                         className="flex items-center gap-2"

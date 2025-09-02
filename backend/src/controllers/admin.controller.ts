@@ -177,8 +177,8 @@ export const addUser = catchAsync(async (req: Request, res: Response) => {
   if (!newUser) throw new ApiError(400, "Error registering new user.");
 
   return res.status(200).json({
-    message: " New user registered successfully",
-    userId: newUser,
+    message: "New user registered successfully",
+    user: newUser,
   });
 });
 
