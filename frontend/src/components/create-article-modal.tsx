@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 interface CreateArticleModalProps {
   onClose: () => void;
+  article?: any;
 }
 
 const categories = [
@@ -15,14 +16,14 @@ const categories = [
   "HR",
 ];
 
-const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState(categories[0]);
+const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose, article }) => {
+  const [title, setTitle] = useState(article?.title || "");
+  const [content, setContent] = useState(article?.description || "");
+  const [category, setCategory] = useState(article?.category || categories[0]);
 
   const queryClient = useQueryClient();
 
-  const { mutate: createArticle, isPending } = useMutation({
+  const { mutate: createArticle, isPending: isCreating } = useMutation({
     mutationFn: async (data: {
       title: string;
       description: string;
@@ -54,7 +55,40 @@ const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose }) => {
     },
   });
 
-  const handleCreate = () => {
+  const { mutate: updateArticle, isPending: isUpdating } = useMutation({
+    mutationFn: async (data: {
+      title: string;
+      description: string;
+      category: string;
+      id: string;
+    }) => {
+      const res = await api.put(`/articles/${data.id}`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success(
+        <span className="flex items-center gap-2">
+          <span className="text-green-500 text-xl">✅</span>
+          Article updated successfully!
+        </span>,
+        { icon: null }
+      );
+      queryClient.invalidateQueries({ queryKey: ["articles"] });
+      onClose();
+    },
+    onError: (error: any) => {
+      console.error(error.response?.data || error.message);
+      toast.error(
+        <span className="flex items-center gap-2">
+          <span className="text-red-500 text-xl">❌</span>
+          {error.response?.data?.message || "Failed to update article"}
+        </span>,
+        { icon: null }
+      );
+    },
+  });
+
+  const handleCreateOrUpdate = () => {
     if (!title.trim() || !content.trim()) {
       toast.error(
         <span className="flex items-center gap-2">
@@ -65,13 +99,19 @@ const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose }) => {
       );
       return;
     }
-    createArticle({ title, description: content, category });
+    if (article && article.id) {
+      updateArticle({ id: article.id, title, description: content, category });
+    } else {
+      createArticle({ title, description: content, category });
+    }
   };
+
+  const isPending = isCreating || isUpdating;
 
   return (
     <div className="fixed inset-0 bg-gray-700/85 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-white rounded-md px-6 py-8 w-full max-w-2xl shadow-md">
-        <h2 className="text-xl font-bold mb-4">Create New Article</h2>
+        <h2 className="text-xl font-bold mb-4">{article ? "Edit Article" : "Create New Article"}</h2>
 
         <div className="flex gap-6 mb-4">
           {/* Title */}
@@ -125,13 +165,13 @@ const CreateArticleModal: React.FC<CreateArticleModalProps> = ({ onClose }) => {
           </button>
 
           <button
-            onClick={handleCreate}
+            onClick={handleCreateOrUpdate}
             className={`px-4 py-2 rounded-md text-white ${
               isPending ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
             }`}
             disabled={isPending}
           >
-            {isPending ? "Creating Article..." : "Create Article"}
+            {isPending ? (article ? "Updating Article..." : "Creating Article...") : (article ? "Update Article" : "Create Article")}
           </button>
         </div>
       </div>

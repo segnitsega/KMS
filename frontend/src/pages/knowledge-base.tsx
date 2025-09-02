@@ -10,6 +10,8 @@ import loadingSpinner from "@/assets/loading-spinner.svg";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { formatDateDDMMYY } from "@/lib/utils";
+import { useAuthStore } from "@/stores/auth-store";
+import { toast } from "sonner";
 
 const getArticlesData = async () => {
   const response = await api.get(`/articles?page=1&limit=10`);
@@ -21,6 +23,8 @@ const KnowledgeBase = () => {
     queryFn: getArticlesData,
     queryKey: ["articles"],
   });
+
+  const { userData } = useAuthStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any | null>(null);
@@ -84,9 +88,23 @@ const KnowledgeBase = () => {
                 description={post.description}
                 category={post.category}
                 author={post.author}
-                updatedAt={formatDateDDMMYY(post.uploadedAt)}
+                updatedAt={formatDateDDMMYY(post.updatedAt)}
                 views={post.views || 0}
                 onView={() => setSelectedPost(post)}
+                onEdit={() => {
+                  if (
+                    post.author ===
+                    userData?.firstName + " " + userData?.lastName
+                  ) {
+                    setSelectedPost(post);
+                    setIsModalOpen(true);
+                  } else {
+                    toast.error(
+                      "❌ You are not authorized to edit this article.",
+                      { icon: () => null }
+                    );
+                  }
+                }}
               />
             ))}
           </div>
@@ -112,16 +130,9 @@ const KnowledgeBase = () => {
         </>
       )}
 
-      {/* Create Modal */}
+      {/* Create/Edit Modal */}
       {isModalOpen && (
-        <CreateArticleModal
-          onClose={closeModal}
-          onCreate={async (article: any) => {
-            console.log("Created article:", article);
-            closeModal();
-            refetch();
-          }}
-        />
+        <CreateArticleModal onClose={closeModal} article={selectedPost} />
       )}
 
       {/* View Article Modal */}
@@ -129,6 +140,10 @@ const KnowledgeBase = () => {
         <KnowledgebaseModal
           post={selectedPost}
           onClose={() => setSelectedPost(null)}
+          onEdit={() => {
+            setIsModalOpen(true);
+            setSelectedPost(selectedPost);
+          }}
         />
       )}
     </div>

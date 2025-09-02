@@ -95,3 +95,70 @@ export const handleArticlesearch = catchAsync(
     });
   }
 );
+
+export const updateArticle = catchAsync(
+  async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    const { id } = req.params;
+    const { title, description, category } = req.body;
+    const { firstName, lastName } = req.user;
+
+    const article = await prisma.article.findUnique({ where: { id } });
+    if (!article) throw new ApiError(404, "Article not found");
+
+    const currentUserName = `${firstName} ${lastName}`;
+    if (article.author !== currentUserName) {
+      throw new ApiError(403, "You can only edit articles you created");
+    }
+
+    const updatedArticle = await prisma.article.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        category,
+        updatedAt: new Date(),
+      },
+    });
+
+    if (!updatedArticle) throw new ApiError(400, "Error updating article");
+
+    res.status(200).json({
+      success: true,
+      article: updatedArticle,
+    });
+  }
+);
+
+export const likeArticle = catchAsync(
+  async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
+
+    const article = await prisma.article.findUnique({ where: { id } });
+    if (!article) throw new ApiError(404, "Article not found");
+
+    const updatedArticle = await prisma.article.update({
+      where: { id },
+      data: { likes: article.likes + 1 },
+    });
+
+    res.status(200).json({
+      success: true,
+      likes: updatedArticle.likes,
+    });
+  }
+);
+
+
+
+
+
+export const getCurrentUser = catchAsync(
+  async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+    const { firstName, lastName } = req.user;
+    res.status(200).json({
+      user: {
+        name: `${firstName} ${lastName}`,
+      },
+    });
+  }
+);

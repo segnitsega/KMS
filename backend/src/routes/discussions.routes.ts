@@ -1,7 +1,7 @@
 import express from "express"
 import { verifyToken } from "../middlewares/auth.middleware"
 import { handleValidationErrors, validateDiscussionData } from "../middlewares/validation.middleware"
-import { getDiscussionById, getDiscussions, handleDiscussionPost, handleDiscussionReply, handleDiscussionSearch } from "../controllers/discussions.controller"
+import { getDiscussionById, getDiscussions, handleDiscussionPost, handleDiscussionReply, handleDiscussionSearch, handleDiscussionLike } from "../controllers/discussions.controller"
 
 export const discussionRouter = express.Router()
 
@@ -11,3 +11,4 @@ discussionRouter.post('/post', validateDiscussionData, handleValidationErrors  ,
 discussionRouter.get('/search', handleDiscussionSearch)
 discussionRouter.post('/reply', handleDiscussionReply)
 discussionRouter.get('/:id', getDiscussionById)
+discussionRouter.post('/:id/like', handleDiscussionLike)
