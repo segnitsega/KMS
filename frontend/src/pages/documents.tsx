@@ -17,15 +17,16 @@ const getDocs = async (page: number, limit: number) => {
 };
 
 const Documents = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [previewDoc, setPreviewDoc] = useState<null | any>(null);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(6);
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, isFetching } = useQuery({
     queryFn: () => getDocs(page, limit),
-    queryKey: ["docs"],
+    queryKey: ["docs", page, limit],
+    placeholderData: (prev) => prev,
   });
 
   const location = useLocation();
@@ -59,19 +60,16 @@ const Documents = () => {
         buttonText="Upload Document"
         onButtonClick={() => setShowUploadModal(true)}
       />
-
       {isLoading && (
         <div className="flex bg-white justify-center mt-10">
           <img src={loadingSpinner} width={50} alt="loading" />
         </div>
       )}
-
       {isError && (
         <div className="flex h-screen bg-white text-red-500 justify-center items-center">
           Error getting discussions please refresh the page !
         </div>
       )}
-
       {data && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.documents.map((doc: any) => (
@@ -100,12 +98,19 @@ const Documents = () => {
           ))}
         </div>
       )}
-      <div className="flex items-center justify-center">
-        <Button className="bg-blue-500 w-[150px]" onClick={()=>{
-          setLimit(limit+10)
-          queryClient.invalidateQueries({queryKey: ["docs"]})
-        }}>Show More</Button>
-      </div>
+      {data && (
+        <div className="flex items-center justify-center">
+          <Button
+            className="bg-blue-500 w-[150px]"
+            onClick={() => {
+              setLimit((prev) => prev + 10);
+              // queryClient.invalidateQueries({ queryKey: ["docs"] });
+            }}
+          >
+            {isFetching ? "Loading.." : "Show More"}
+          </Button>
+        </div>
+      )}
       {previewDoc && (
         <DocumentPreviewModal
           open={!!previewDoc}
