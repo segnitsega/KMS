@@ -1,5 +1,5 @@
 import api from "@/utility/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,6 +15,7 @@ const categories = [
 ];
 
 const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
+  const queryClient = useQueryClient();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState(categories[0]);
@@ -36,6 +37,7 @@ const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({ onClose }) => {
       return res.data;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["discussions"]})
       toast("✅ Discussion created successfully!");
       onClose();
     },

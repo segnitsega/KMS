@@ -3,11 +3,12 @@ import DocumentPageCard from "@/cards/documents/document-page-card";
 import UploadDocumentModal from "@/components/UploadDocumentModal";
 import DocumentPreviewModal from "@/components/document-preview-modal";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { useLocation } from "react-router-dom";
 import { formatDateDDMMYY } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const getDocs = async (page: number, limit: number) => {
   const docs = await api.get(`/docs?page=${page}&limit=${limit}`);
@@ -16,10 +17,11 @@ const getDocs = async (page: number, limit: number) => {
 };
 
 const Documents = () => {
+  const queryClient = useQueryClient()
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [previewDoc, setPreviewDoc] = useState<null | any>(null);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(6);
 
   const { data, isLoading, isError, error } = useQuery({
     queryFn: () => getDocs(page, limit),
@@ -63,7 +65,7 @@ const Documents = () => {
           <img src={loadingSpinner} width={50} alt="loading" />
         </div>
       )}
-    
+
       {isError && (
         <div className="flex h-screen bg-white text-red-500 justify-center items-center">
           Error getting discussions please refresh the page !
@@ -98,6 +100,12 @@ const Documents = () => {
           ))}
         </div>
       )}
+      <div className="flex items-center justify-center">
+        <Button className="bg-blue-500 w-[150px]" onClick={()=>{
+          setLimit(limit+10)
+          queryClient.invalidateQueries({queryKey: ["docs"]})
+        }}>Show More</Button>
+      </div>
       {previewDoc && (
         <DocumentPreviewModal
           open={!!previewDoc}
