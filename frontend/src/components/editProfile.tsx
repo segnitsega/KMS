@@ -296,7 +296,7 @@ export default function ProfilePage({ setProfileEdit }) {
                       id="email"
                       type="email"
                       value={editedProfile.email}
-                      onhChange={(e) =>
+                      onChange={(e) =>
                         setEditedProfile({
                           ...editedProfile,
                           email: e.target.value,
