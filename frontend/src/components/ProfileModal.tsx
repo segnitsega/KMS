@@ -65,7 +65,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
               {role}
             </span>
 
-            <button className="mt-4 w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg py-2 font-medium shadow hover:scale-[1.02] transition">
+            <button
+              className="mt-4 w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg py-2 font-medium shadow hover:scale-[1.02] transition"
+              onClick={() => window.location.href = `mailto:${email}`}
+            >
               Send Message
             </button>
           </div>
