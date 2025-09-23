@@ -96,7 +96,7 @@ const Administration = () => {
       </div>
 
       {isLoading && (
-        <div className="flex h-screen bg-white justify-center items-center">
+        <div className="flex justify-center mt-10 bg-white ">
           <img src={loadingSpinner} width={50} alt="loading" />
         </div>
       )}
@@ -158,7 +158,7 @@ const Administration = () => {
               <div className="flex gap-4">
                 <input
                   className="border rounded-md p-2"
-                  type="password"
+                  type="text"
                   placeholder="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

@@ -16,7 +16,7 @@ interface ProfileModalProps {
   role: string;
   department: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   location: string;
   joined: string;
   skills: string[];
@@ -30,7 +30,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   role,
   department,
   email,
-  phone,
+  phoneNumber,
   location,
   joined,
   skills,
@@ -87,7 +87,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg shadow-sm">
                   <FiPhone className="text-green-500" />
-                  <span>{phone}</span>
+                  <span>{phoneNumber}</span>
                 </div>
                 <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg shadow-sm">
                   <FiMapPin className="text-red-500" />
@@ -120,7 +120,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
             </section>
 
             {/* Links */}
-            <section>
+            {/* <section>
               <h3 className="text-xl font-semibold mb-3">Professional Links</h3>
               <div className="flex flex-wrap gap-3">
                 {links.linkedin && (
@@ -154,7 +154,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
                   </a>
                 )}
               </div>
-            </section>
+            </section> */}
           </div>
         </div>
       </div>

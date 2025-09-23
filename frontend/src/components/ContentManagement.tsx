@@ -95,7 +95,7 @@ const ContentManagement = ({
               onClick={() => setShowDiscussions(true)}
               className="bg-[#1976ed] text-white rounded-lg w-full py-2 text-sm font-medium mb-2"
             >
-              Moderate Forum
+              Manage Discussions
             </Button>
           </div>
         </div>

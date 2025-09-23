@@ -28,7 +28,7 @@ server.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
+userRouter
 server.use(express.json());
 server.use(cookieParser());
 server.use("/user", userRouter);

@@ -104,7 +104,7 @@ const AdminTasksDashboard: React.FC = () => {
         title="Submitted Solutions"
         subtitle="View and manage submitted tasks from users."
       />
-      <div className="mt-6">
+      <div className="">
         {/* Table Format */}
         <div className="overflow-x-auto rounded-lg border shadow">
           <table className="w-full text-sm text-left text-gray-600">

@@ -102,7 +102,7 @@ const UserManagement = () => {
 
   if (isLoading)
     return (
-      <div className="flex h-screen bg-white justify-center items-center">
+      <div className="flex justify-center mt-10 bg-white ">
         <img src={loadingSpinner} width={50} alt="loading" />
       </div>
     );

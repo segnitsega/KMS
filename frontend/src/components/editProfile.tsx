@@ -208,9 +208,7 @@ export default function ProfilePage({ setProfileEdit }) {
             <CardContent className="space-y-4">
               <div className="text-center">
                 <p className="text-sm text-gray-600">Member since</p>
-                <p className="font-medium">
-                  {formatDateDDMMYY(date)}
-                </p>
+                <p className="font-medium">{formatDateDDMMYY(date)}</p>
               </div>
               <div className="text-center">
                 <p className="text-sm text-gray-600">Department</p>
@@ -230,17 +228,30 @@ export default function ProfilePage({ setProfileEdit }) {
               </div>
               <div className="flex gap-2">
                 {!isEditing ? (
-                  <Button onClick={() => setIsEditing(true)} variant="outline">
+                  <Button
+                    onClick={() => setIsEditing(true)}
+                    variant="outline"
+                    className="cursor-pointer"
+                  >
                     <Edit className="w-4 h-4 mr-2" />
                     Edit Profile
                   </Button>
                 ) : (
                   <div className="flex gap-2">
-                    <Button onClick={handleSave} size="sm">
+                    <Button
+                      onClick={handleSave}
+                      size="sm"
+                      className="bg-blue-600 hover:bg-blue-500 cursor-pointer"
+                    >
                       <Save className="w-4 h-4 mr-2" />
                       {updateMutation.isPending ? "Saving.." : "Save"}
                     </Button>
-                    <Button onClick={handleCancel} variant="outline" size="sm">
+                    <Button
+                      onClick={handleCancel}
+                      variant="outline"
+                      size="sm"
+                      className="cursor-pointer"
+                    >
                       <X className="w-4 h-4 mr-2" />
                       Cancel
                     </Button>
@@ -378,7 +389,6 @@ export default function ProfilePage({ setProfileEdit }) {
                   )}
                 </div>
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
                 {isEditing ? (

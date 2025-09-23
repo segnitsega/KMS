@@ -68,13 +68,13 @@ const KnowledgeBase = () => {
 
       {data && (
         <>
-          <div className="flex flex-col gap-4 mt-6">
+          <div className="flex flex-col gap-4">
             {/* Featured Articles */}
             <FeaturedArticles
               articles={data.slice(0, 3).map((article: any) => ({
                 title: article.title,
                 author: article.author,
-                views: article.views || 0,
+                // views: article.views || 0,
               }))}
             />
           </div>

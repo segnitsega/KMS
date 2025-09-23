@@ -126,7 +126,7 @@ const Library = () => {
   const displayedBooks = showAll ? filteredBooks : filteredBooks.slice(0, 6);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       <Header
         title="Library"
         subtitle="Browse and download training resources."
@@ -217,13 +217,13 @@ const Library = () => {
                     >
                       <FiDownload className="inline mr-1" /> Download
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="outline"
                       className="flex-0 rounded-md"
                       onClick={() => console.log("Preview", book.id)}
                     >
                       <FiEye />
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               </div>

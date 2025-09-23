@@ -36,7 +36,7 @@ const ExpertDirectory = () => {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       {/* Page Header */}
       <Header
         title="Expert Directory"
@@ -86,8 +86,8 @@ const ExpertDirectory = () => {
           role={selectedProfile.role}
           department={selectedProfile.department}
           email={selectedProfile.email || "Not Provided"}
-          phone={selectedProfile.phone || "Not Provided"}
-          location={selectedProfile.location || "Not Provided"}
+          phoneNumber={selectedProfile.userDetail?.phoneNumber || "Not Provided"}
+          location={selectedProfile.userDetail?.address || "Not Provided"}
           joined={formatDateDDMMYY(selectedProfile.joinedAt)}
           skills={selectedProfile.skills || []}
           links={{

@@ -56,8 +56,8 @@ documentCardProp) => {
             </span>
           ) : (
             <span className="flex gap-1 items-center text-gray-500">
-              {articleViews![0]}
-              <IoEyeOutline />
+              {/* {articleViews![0]}
+              <IoEyeOutline /> */}
             </span>
           )}
         </div>
@@ -82,8 +82,8 @@ documentCardProp) => {
             </span>
           ) : (
             <span className="flex gap-1 items-center text-gray-500">
-              {articleViews![1]}
-              <IoEyeOutline />
+              {/* {articleViews![1]}
+              <IoEyeOutline /> */}
             </span>
           )}
         </div>
@@ -108,8 +108,8 @@ documentCardProp) => {
             </span>
           ) : (
             <span className="flex gap-1 items-center text-gray-500">
-              {articleViews![2]}
-              <IoEyeOutline />
+              {/* {articleViews![2]}
+              <IoEyeOutline /> */}
             </span>
           )}
         </div>

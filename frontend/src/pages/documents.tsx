@@ -50,7 +50,7 @@ const Documents = () => {
   }, [location.state, data]);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-">
       {showUploadModal && (
         <UploadDocumentModal onClose={() => setShowUploadModal(false)} />
       )}
@@ -101,7 +101,7 @@ const Documents = () => {
       {data && (
         <div className="flex items-center justify-center">
           <Button
-            className="bg-blue-500 w-[150px]"
+            className="bg-blue-500 w-[150px] mt-3"
             onClick={() => {
               setLimit((prev) => prev + 10);
               // queryClient.invalidateQueries({ queryKey: ["docs"] });

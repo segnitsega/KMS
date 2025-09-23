@@ -51,12 +51,12 @@ const LandingPage = () => {
           >
             About
           </a>
-          <a
+          {/* <a
             href="#Contact"
             className="text-white hover:text-cyan-300 transition-colors font-medium"
           >
             Contact
-          </a>
+          </a> */}
           {
             <Link
               to="/login"

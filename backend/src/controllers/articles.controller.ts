@@ -38,6 +38,14 @@ export const getArticleById = catchAsync(
       },
     });
     if (!article) throw new ApiError(400, "Error finding article");
+    await prisma.article.update({
+      where: {
+        id: id,
+      },
+      data: {
+        likes: article.likes + 1,
+      },
+    });
     res.status(200).json({ article: article });
   }
 );
@@ -147,10 +155,6 @@ export const likeArticle = catchAsync(
     });
   }
 );
-
-
-
-
 
 export const getCurrentUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response): Promise<any> => {

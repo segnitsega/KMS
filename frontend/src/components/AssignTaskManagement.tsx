@@ -132,7 +132,7 @@ const AssignTaskManagement = () => {
 
   if (usersLoading)
     return (
-      <div className="flex h-screen justify-center items-center">
+      <div className="flex justify-center mt-10 bg-white ">
         <img src={loadingSpinner} width={50} alt="loading" />
       </div>
     );

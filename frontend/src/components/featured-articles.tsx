@@ -4,7 +4,7 @@ import { HiArrowTrendingUp } from "react-icons/hi2";
 interface Article {
   title: string;
   author: string;
-  views: number;
+  // views: number;
 }
 
 interface FeaturedArticlesProps {
@@ -27,8 +27,8 @@ const FeaturedArticles = ({ articles }: FeaturedArticlesProps) => {
             <h3 className="font-semibold text-base">{article.title}</h3>
             <p className="text-gray-500 text-sm">by {article.author}</p>
             <div className="flex items-center text-gray-500 text-sm mt-auto">
-              <AiOutlineEye className="mr-1" />
-              {article.views} views
+              {/* <AiOutlineEye className="mr-1" /> */}
+              {/* {article.views} views */}
             </div>
           </div>
         ))}

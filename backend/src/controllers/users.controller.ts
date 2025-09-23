@@ -144,6 +144,9 @@ export const getUsers = catchAsync(
       prisma.user.findMany({
         skip,
         take: limit,
+        include: {
+          userDetail: true
+        }
       }),
       prisma.user.count(),
     ]);
@@ -210,7 +213,7 @@ export const handleUserSearch = catchAsync(
 export const handleProfileUpdate = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
     const userId = req.user.id;
-    const { email, firstName, lastName, phoneNumber, address, bio, gender } =
+    const { email, firstName, lastName, phoneNumber, address, bio, gender, skills } =
       req.body;
 
     const updatedUser = await prisma.user.update({
@@ -222,6 +225,7 @@ export const handleProfileUpdate = catchAsync(
         firstName,
         lastName,
         gender,
+        skills,
         userDetail: {
           upsert: {
             create: {
