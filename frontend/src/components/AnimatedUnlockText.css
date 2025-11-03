@@ -1,0 +1,106 @@
+.animated-text-container {
+  position: relative;
+  width: 100%;
+  height: 100%; }
+
+
+.animated-text {
+  font-size: 4rem;
+  font-weight: bold;
+  line-height: 1.2;
+  color: white;
+  margin: 0;
+}
+
+.line {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100px) scale(0.8);
+}
+
+.line.animate {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100px) rotate(-10deg);
+  animation: letterDrop 0.6s ease-out forwards;
+}
+
+@keyframes letterDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(100px) rotate(-10deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.highlight {
+  color: #2563EB;
+  position: relative;
+  font-weight: 700;
+  font-size: 4rem;
+}
+
+.highlight-text .letter {
+  animation: letterDrop 0.6s ease-out forwards, ease-in-out infinite alternate;
+  color: #56e0fc;
+  text-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+}
+
+.animated-text-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgb(37, 99, 235) 0%, transparent 70%);
+  animation: float 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+    opacity: 1;
+  }
+}
+@media (max-width: 768px) {
+  .animated-text {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .animated-text {
+    font-size: 2.5rem;
+  }
+}
+
+@keyframes upDownMove {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.buttons-animate {
+  animation: upDownMove 2s ease forwards;
+}

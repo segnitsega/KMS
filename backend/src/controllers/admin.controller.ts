@@ -1,0 +1,314 @@
+import { Request, Response } from "express";
+import { catchAsync } from "../utils/catchAsync";
+import prisma from "../lib/prisma";
+import { ApiError } from "../utils/api-error-class";
+import bcrypt from "bcrypt";
+import * as fs from "fs"
+import path from "path";
+
+export const updateDocument = catchAsync(
+  async (req: Request, res: Response) => {
+    const docID = req.params.id;
+    const { title, description, category } = req.body;
+
+    const updatedDoc = await prisma.document.update({
+      where: {
+        id: docID,
+      },
+      data: {
+        title,
+        description,
+        category,
+      },
+    });
+
+    res.status(200).json({
+      message: "Document update successful!",
+      updatedDoc,
+    });
+  }
+);
+
+export const deleteDocument = catchAsync(
+  async (req: Request, res: Response) => {
+    const docID = req.params.id;
+
+    // First find the document to get the file path
+    const document = await prisma.document.findUnique({
+      where: {
+        id: docID,
+      },
+    });
+
+    if (!document) {
+      throw new ApiError(404, "Document not found");
+    }
+
+    // Delete the file from the filesystem
+    const fileName = path.basename(document.documentUrl);
+    const filePath = path.join(__dirname, "../../uploads", fileName);
+
+    try {
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+        console.log("File deleted successfully:", filePath);
+      } else {
+        console.warn(
+          "File not found on server, but proceeding with database deletion:",
+          filePath
+        );
+      }
+    } catch (fileError) {
+      console.error("Error deleting file:", fileError);
+      // You might choose to throw an error here or continue with DB deletion
+      // For now, we'll continue with DB deletion but log the error
+    }
+
+    // Delete the document record from database
+    const deletedDoc = await prisma.document.delete({
+      where: {
+        id: docID,
+      },
+    });
+
+    res.status(200).json({
+      message: "Document deleted successfully!",
+      deletedDoc,
+    });
+  }
+);
+
+export const updateArticle = catchAsync(async (req: Request, res: Response) => {
+  const articleID = req.params.id;
+  const { title, description, category } = req.body;
+
+  const articleUpdated = await prisma.article.update({
+    where: {
+      id: articleID,
+    },
+    data: {
+      title,
+      description,
+      category,
+    },
+  });
+
+  res.status(200).json({
+    message: "Article update successful!",
+    articleUpdated,
+  });
+});
+
+export const deleteArticle = catchAsync(async (req: Request, res: Response) => {
+  const articleID = req.params.id;
+
+  const deletedArticle = await prisma.article.delete({
+    where: {
+      id: articleID,
+    },
+  });
+
+  res.status(200).json({
+    message: "Article deleted successfully!",
+    deletedArticle,
+  });
+});
+
+export const updateDiscussion = catchAsync(
+  async (req: Request, res: Response) => {
+    const discussionID = req.params.id;
+    const { title, description, category } = req.body;
+
+    const discussionUpdated = await prisma.discussion.update({
+      where: {
+        id: discussionID,
+      },
+      data: {
+        title,
+        description,
+        category,
+      },
+    });
+
+    res.status(200).json({
+      message: "Article update successful!",
+      discussionUpdated,
+    });
+  }
+);
+
+export const deleteDiscussion = catchAsync(
+  async (req: Request, res: Response) => {
+    const discussionID = req.params.id;
+
+    const deletedDiscussion = await prisma.discussion.delete({
+      where: {
+        id: discussionID,
+      },
+    });
+
+    res.status(200).json({
+      message: "Article deleted successfully!",
+      deletedDiscussion,
+    });
+  }
+);
+
+export const addUser = catchAsync(async (req: Request, res: Response) => {
+  const { firstName, lastName, email, password } = req.body;
+  const userExists = await prisma.user.findUnique({
+    where: {
+      email: email,
+    },
+  });
+  if (userExists)
+    throw new ApiError(400, `User with email ${email} already exists`);
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = await prisma.user.create({
+    data: {
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    },
+  });
+
+  if (!newUser) throw new ApiError(400, "Error registering new user.");
+
+  return res.status(200).json({
+    message: "New user registered successfully",
+    user: newUser,
+  });
+});
+
+export const removeUser = catchAsync(async (req: Request, res: Response) => {
+  const userID = req.params.id;
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userID,
+    },
+  });
+  if (!user) {
+    return res.status(404).json("User not found !");
+  }
+  const removedUser = await prisma.user.delete({
+    where: {
+      id: userID,
+    },
+  });
+  return res.status(200).json({
+    message: "User removed successfully",
+    removedUser,
+  });
+});
+
+export const changeUserRole = catchAsync(
+  async (req: Request, res: Response) => {
+    const userID = req.params.id;
+    const { role } = req.body;
+    const roleUpdatedUser = await prisma.user.update({
+      where: {
+        id: userID,
+      },
+      data: {
+        role,
+      },
+    });
+    res.status(200).json({
+      message: "User role updated successfully",
+      roleUpdatedUser,
+    });
+  }
+);
+
+export const updateUser = catchAsync(async (req: Request, res: Response) => {
+  const userID = req.params.id;
+  const { firstName, lastName, email, role, password } = req.body;
+  let hashedPassword = "";
+  let data = {};
+
+  if (password) {
+    hashedPassword = await bcrypt.hash(password, 10);
+  }
+  let updateData = {
+    firstName,
+    lastName,
+    email,
+    role,
+  };
+  if (password) {
+    data = { ...updateData, password: hashedPassword };
+  } else {
+    data = updateData;
+  }
+  console.log("Changing user data: ", data);
+  const updatedUser = await prisma.user.update({
+    where: {
+      id: userID,
+    },
+    data: data,
+  });
+
+  res.status(200).json({
+    message: "User updated successfully",
+    updatedUser,
+  });
+});
+
+export const assignTask = catchAsync(async (req: Request, res: Response) => {
+  const { title, description, id, dueDate } = req.body;
+
+  // if (!Array.isArray(userIDs)) {
+  //   return res.status(400).json({
+  //     message: "userIDs must be an array",
+  //   });
+  // }
+
+  // const tasksCreated = await Promise.all(
+  //   userIDs.map((id: string) => {
+  //     return prisma.task.create({
+  //       data: {
+  //         title,
+  //         description,
+  //         priorityLevel,
+  //         dueDate,
+  //         userId: id,
+  //       },
+  //     });
+  //   })
+  const tasksCreated = await prisma.task.create({
+    data: {
+      title,
+      description,
+      dueDate,
+      userId: id,
+    },
+  });
+  res.status(201).json({
+    message: "Task assigned successfully!",
+    tasksCreated,
+  });
+});
+
+export const updateTask = catchAsync(async (req: Request, res: Response) => {
+  const taskId = req.params.id;
+  const { title, description, id, dueDate } = req.body;
+
+  const updatedTask = await prisma.task.update({
+    where: {
+      id: taskId,
+    },
+    data: {
+      title,
+      description,
+      dueDate,
+      userId: id,
+    },
+  });
+
+  res.status(200).json({
+    message: "Task updated successfully!",
+    updatedTask,
+  });
+});

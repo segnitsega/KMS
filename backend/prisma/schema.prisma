@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum TaskStatus {
+  PENDING
+  ONPROGRESS
+  DONE
+}
+
+model User {
+  id             String        @id @default(uuid())
+  email          String        @unique
+  firstName      String
+  lastName       String
+  gender         String?
+  department     String        @default("knowledge")
+  role           UserRole      @default(USER)
+  profilePicture String?
+  joinedAt       DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  skills         String[]      @default([])
+  password       String?
+  refreshToken   String?
+  discussions    Discussion[]  @relation("UserToDiscussion")
+  replies        Replies[]     @relation("UserToReplies")
+  tasks          Task[]        @relation("UserToTask")
+  userDetail     UserDetail?   @relation("UserToUserDetail")
+  userLibrary    UserLibrary[] @relation("UserToUserLibrary")
+}
+
+model UserDetail {
+  id          String  @id
+  bio         String?
+  phoneNumber String
+  birthPlace  String?
+  address     String?
+  socialMedia Json?
+  user        User    @relation("UserToUserDetail", fields: [id], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  pages       Int?
+  author      String
+  uploadedAt  DateTime @default(now())
+  documentUrl String
+  downloads   Int      @default(0)
+  views       Int      @default(0)
+  category    String
+}
+
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  author      String
+  views       Int      @default(0)
+  likes       Int      @default(0)
+  uploadedAt  DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  category    String
+}
+
+model Discussion {
+  id          String    @id @default(uuid())
+  title       String
+  authorName  String
+  likes       Int       @default(0)
+  authorId    String
+  category    String
+  description String
+  uploadedAt  DateTime  @default(now())
+  author      User      @relation("UserToDiscussion", fields: [authorId], references: [id], onDelete: Cascade)
+  replies     Replies[] @relation("DiscussionToReplies")
+}
+
+model Replies {
+  id           String     @id @default(uuid())
+  discussionId String
+  userId       String
+  message      String
+  discussion   Discussion @relation("DiscussionToReplies", fields: [discussionId], references: [id], onDelete: Cascade)
+  user         User       @relation("UserToReplies", fields: [userId], references: [id], onDelete: Cascade)
+  uploadedAt   DateTime @default(now())
+
+}
+
+model Training {
+  id         String   @id @default(uuid())
+  title      String
+  moduleUrl  String
+  uploadedAt DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Task {
+  id             String           @id @default(uuid())
+  title          String
+  description    String
+  userId         String
+  dueDate        String
+  taskStatus     TaskStatus       @default(PENDING)
+  uploadedAt     DateTime         @default(now())
+  user           User             @relation("UserToTask", fields: [userId], references: [id], onDelete: Cascade)
+  taskSubmission TaskSubmission[]
+}
+
+model TaskSubmission {
+  id          String  @id @default(uuid())
+  description String
+  documentUrl String?
+  taskId      String
+  task        Task    @relation(fields: [taskId], references: [id])
+  uploadedAt  DateTime @default(now())
+}
+
+model Book {
+  id          String        @id @default(uuid())
+  title       String
+  author      String
+  genre       String
+  description String
+  bookUrl     String
+  uploadedAt  DateTime      @updatedAt
+  userLibrary UserLibrary[] @relation("BookToUserLibrary")
+}
+
+model UserLibrary {
+  id         String   @id @default(uuid())
+  userId     String
+  bookId     String
+  uploadedAt DateTime @updatedAt
+  book       Book     @relation("BookToUserLibrary", fields: [bookId], references: [id], onDelete: Cascade)
+  user       User     @relation("UserToUserLibrary", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, bookId])
+}

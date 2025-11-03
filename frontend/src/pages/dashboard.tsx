@@ -1,0 +1,173 @@
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { PiBookOpen } from "react-icons/pi";
+import { FiUsers } from "react-icons/fi";
+import { FiMessageCircle } from "react-icons/fi";
+import StatusCard from "@/cards/dashboard/status-cards";
+import DocumentCard from "@/cards/dashboard/documents-card";
+import CreateDocumentCard from "@/cards/dashboard/document-discusion-card";
+import { useState } from "react";
+import UploadDocumentModal from "@/components/UploadDocumentModal";
+import CreateArticleModal from "@/components/create-article-modal";
+import NewDiscussionModal from "@/components/NewDiscussionModal";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/utility/api";
+import loadingSpinner from "../assets/loading-spinner.svg";
+import { useAuthStore } from "@/stores/auth-store";
+
+const getData = async () => {
+  const statsCount = await api.get(`/status-count`);
+  const documents = await api.get(`/docs?page=1&limit=3`);
+  const articles = await api.get(`/articles?page=1&limit=3`);
+  // const dates = documents.map((document) => document.uploadDate);
+  return {
+    statsCount: statsCount.data,
+    documents: documents.data.documents,
+    articles: articles.data.articles,
+  };
+};
+
+const Dashboard = () => {
+  const userData = useAuthStore((state: any) => state.userData);
+
+  const { data, isLoading } = useQuery({
+    queryFn: getData,
+    queryKey: ["dashboard"],
+  });
+
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showCreateArticleModal, setShowCreateArticleModal] = useState(false);
+  const [showDiscussionModal, setShowDiscussionModal] = useState(false);
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen bg-white justify-center items-center">
+        <img src={loadingSpinner} width={50} alt="loading" />
+      </div>
+    );
+  if (data)
+    return (
+      <div className="flex flex-col gap-6">
+        {showUploadModal && (
+          <UploadDocumentModal
+            onClose={() => setShowUploadModal(false)}
+            //   onUpload={(file, description) => {
+            //     setShowUploadModal(false);
+            //   }}
+          />
+        )}
+        {showCreateArticleModal && (
+          <CreateArticleModal
+            onClose={() => setShowCreateArticleModal(false)}
+            // onCreate={() => setShowCreateArticleModal(false)}
+          />
+        )}
+        {showDiscussionModal && (
+          <NewDiscussionModal onClose={() => setShowDiscussionModal(false)} />
+        )}
+        <div className="px-4 py-6 flex flex-col gap-4 bg-blue-500 rounded-md text-white">
+          <h1 className="font-bold text-xl">
+            Hello, {userData.firstName} {userData.lastName} !
+          </h1>
+          <span className="text-lg">
+            Ready to share knowledge and collaborate with your team?
+          </span>
+        </div>
+        <div className="flex flex-col md:flex-row gap-6">
+          <StatusCard
+            title="Total Documents"
+            value={data.statsCount.documents}
+            icon={IoDocumentTextOutline}
+            color="text-blue-700"
+            bgColor="bg-blue-200"
+          />
+          <StatusCard
+            title="Total Articles"
+            value={data.statsCount.articles}
+            icon={PiBookOpen}
+            color="text-green-500"
+            bgColor="bg-green-200"
+          />
+          <StatusCard
+            title="Active Users"
+            value={data.statsCount.users}
+            icon={FiUsers}
+            color="text-purple-500"
+            bgColor="bg-purple-200"
+          />
+          <StatusCard
+            title="Discussions"
+            value={data.statsCount.discussions}
+            icon={FiMessageCircle}
+            color="text-red-500"
+            bgColor="bg-red-200"
+          />
+        </div>
+        <div className="flex flex-col md:flex-row gap-6">
+          <DocumentCard
+            heading="Recent Documents"
+            titles={data.documents.map((document: any) => document.title)}
+            owners={data.documents.map((document: any) => document.author)}
+            downloads={data.documents.map((document: any) => document.downloads)}
+            dates={data.documents.map((document: any) =>
+              new Date(document.uploadedAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+              })
+            )}
+            icon={IoDocumentTextOutline}
+          />
+          <DocumentCard
+            heading="Popular Articles"
+            titles={data.articles.map((article: any) => article.title)}
+            owners={data.articles.map((article: any) => article.author)}
+            articleViews={data.articles.map((article: any) => article.views)}
+            dates={data.articles.map((article: any) =>
+              new Date(article.uploadedAt).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "2-digit",
+              })
+            )}
+          />
+        </div>
+        <div className="flex flex-col gap-4 md:flex-row justify-between ">
+          <div
+            onClick={() => setShowUploadModal(true)}
+            style={{ cursor: "pointer" }}
+          >
+            <CreateDocumentCard
+              title="Upload Document"
+              text="Share knowledge with your team"
+              icon={IoDocumentTextOutline}
+              iconStyle="text-blue-700 bg-blue-200"
+            />
+          </div>
+          <div
+            onClick={() => setShowCreateArticleModal(true)}
+            style={{ cursor: "pointer" }}
+          >
+            <CreateDocumentCard
+              title="Create Knowledge Article"
+              text="Write a knowledge base article"
+              icon={PiBookOpen}
+              iconStyle="text-green-700 bg-green-200"
+            />
+          </div>
+          <div
+            onClick={() => setShowDiscussionModal(true)}
+            style={{ cursor: "pointer" }}
+          >
+            <CreateDocumentCard
+              title="Start New Discussion"
+              text="Ask questions and collaborate"
+              icon={FiMessageCircle}
+              iconStyle="text-purple-700 bg-purple-200"
+            />
+          </div>
+        </div>
+      </div>
+    );
+};
+
+export default Dashboard;
