@@ -31,3 +31,10 @@ It also includes an AI assistant bot powered by the Gemini API for intelligent k
 - AI Assistant bot for knowledge-based searching and responses
 - React Query powered caching and data synchronization
 - Fully responsive interface using TailwindCSS
+
+# Live Demo 
+- https://kms33.netlify.app/
+- Use:  
+    - email: admin@gmail.com and password: C0aQuwp*_x4J for admin privilege.
+    - email: segni@gmail.com and password: 9)p9^SQ2uT@a for member users.
+  
