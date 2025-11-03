@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."Replies" ADD COLUMN     "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

@@ -132,7 +132,8 @@ const Library = () => {
         subtitle="Browse and download training resources."
         buttonText="Add Book"
         dropDownText="All Books"
-        dropDownOptions={TABS.map((tab) => tab.label)}
+        dropDownOptions={["All Books"]}
+        // dropDownOptions={TABS.map((tab) => tab.label)}
         searchPlaceholder="Search books..."
         onButtonClick={() => setShowUploadModal(true)}
         onSearch={setSearch} // Added onSearch prop

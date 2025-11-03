@@ -8,6 +8,7 @@ import {
   FiCornerDownLeft,
   FiTag,
 } from "react-icons/fi";
+import { AiFillLike } from "react-icons/ai";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/utility/api";
 import { toast } from "sonner";
@@ -19,6 +20,8 @@ interface Reply {
   text: string;
   timestamp: string;
   message: string;
+  user: any;
+  uploadedAt: any;
 }
 
 interface DiscussionPostProps {
@@ -42,9 +45,9 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
   likes,
   discussionId,
 }) => {
-
-  const queryClient = useQueryClient()
-  const [message, setMessage] = useState("")
+  const [liked, setLiked] = useState(false);
+  const queryClient = useQueryClient();
+  const [message, setMessage] = useState("");
   const [makeReply, setMakeReply] = useState(false);
   const userData = useAuthStore((state) => state);
   const { mutate: makeReplyMutation, isPending } = useMutation({
@@ -60,7 +63,7 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
     onSuccess: () => {
       toast("✅ Reply made successfully!");
       setMakeReply(false);
-      queryClient.invalidateQueries({queryKey: ["discussions"]})
+      queryClient.invalidateQueries({ queryKey: ["discussions"] });
     },
     onError: (error) => {
       console.error(error);
@@ -70,11 +73,14 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
 
   const { mutate: likeMutation } = useMutation({
     mutationFn: async (discussionId: string) => {
+      if (liked) return;
+      console.log("like running");
       const res = await api.post(`/discussions/${discussionId}/like`);
+      setLiked(true);
       return res.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["discussions"]})
+      queryClient.invalidateQueries({ queryKey: ["discussions"] });
     },
     onError: (error) => {
       console.error(error);
@@ -83,8 +89,8 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
   });
 
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value)
-  }
+    setMessage(e.target.value);
+  };
 
   const handleReply = () => {
     makeReplyMutation({
@@ -117,13 +123,24 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-6 mt-3 text-sm text-gray-500">
-            <button
-              className="flex items-center gap-1 hover:text-gray-700 cursor-pointer"
-              onClick={() => likeMutation(discussionId)}
-            >
-              <FiThumbsUp className="w-4 h-4" />
-              Like({likes})
-            </button>
+            {
+              <button
+                className="flex items-center gap-1 hover:text-gray-700 cursor-pointer"
+                onClick={() => {
+                  likeMutation(discussionId);
+                  // setLiked(true);
+                }}
+              >
+                {liked ? (
+                  <AiFillLike className="w-4 h-4" />
+                ) : (
+                  <FiThumbsUp className="w-4 h-4" />
+                )}
+                Like({likes})
+                {/* { (liked) ? <AiFillLike/> : <FiThumbsUp className="w-4 h-4" />
+              Like({likes}) } */}
+              </button>
+            }
             <button
               className="flex items-center gap-1 hover:text-gray-700 cursor-pointer"
               onClick={() => setMakeReply(!makeReply)}
@@ -135,9 +152,14 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
 
           {makeReply && (
             <div className="mt-4 flex flex-col gap-2">
-              <textarea className="border border-gray-200 rounded-md p-2" onChange={handleMessageChange}/>
+              <textarea
+                className="border border-gray-200 rounded-md p-2"
+                onChange={handleMessageChange}
+              />
               <Button
-                className={` hover:bg-blue-500 cursor-pointer w-[150px] ${isPending ? "bg-blue-400" : "bg-blue-500"}`}
+                className={` hover:bg-blue-500 cursor-pointer w-[150px] ${
+                  isPending ? "bg-blue-400" : "bg-blue-500"
+                }`}
                 onClick={handleReply}
               >
                 {isPending ? "Sendin Reply..." : "Send Reply"}
@@ -158,12 +180,12 @@ const DiscussionPost: React.FC<DiscussionPostProps> = ({
           >
             <div>
               <p className="font-semibold text-gray-900">
-                {reply.author}
+                {`${reply.user.firstName} ${reply.user.lastName}`}
               </p>
               <p className="text-gray-700">{reply.message}</p>
             </div>
             <div className="text-gray-400 text-xs whitespace-nowrap">
-              {reply.timestamp}
+              {reply.uploadedAt}
             </div>
           </div>
         ))}

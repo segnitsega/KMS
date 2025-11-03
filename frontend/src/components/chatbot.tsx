@@ -93,6 +93,7 @@ export const Chatbot = () => {
       };
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
+      console.log("Errorrr", err)
       const errorMsg: Message = {
         id: `e-${Date.now()}`,
         role: "assistant",

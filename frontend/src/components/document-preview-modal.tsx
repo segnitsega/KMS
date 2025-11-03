@@ -1,6 +1,7 @@
 import React from "react";
 import { IoDocumentTextOutline, IoClose } from "react-icons/io5";
 import { FiDownload, FiShare2, FiStar } from "react-icons/fi";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 interface DocumentPreviewModalProps {
   open: boolean;
@@ -122,7 +123,7 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
               </div>
               <div>
                 <div className="text-gray-500 text-sm">Upload Date</div>
-                <div className="font-bold">{doc.date}</div>
+                <div className="font-bold">{formatDateDDMMYY(doc.date)}</div>
               </div>
               <div>
                 <div className="text-gray-500 text-sm">Category</div>
@@ -143,12 +144,12 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
                 <FiDownload className="text-2xl" /> Download Document
               </button>
 
-              <button
+              {/* <button
                 onClick={handleShare}
                 className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl text-lg transition-colors"
               >
                 <FiShare2 className="text-2xl" /> Share Document
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

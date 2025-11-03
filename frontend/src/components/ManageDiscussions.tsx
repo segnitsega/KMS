@@ -79,10 +79,10 @@ const ManageDiscussions: React.FC<ManageDiscussionsProps> = ({ onClose }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["discussionsAtAdmin"] });
-      toast("✅ Document deleted successfully");
+      toast("✅ Discussion deleted successfully");
     },
     onError: () => {
-      toast("❌ Error deleting document");
+      toast("❌ Error deleting Discussion");
     },
   });
 

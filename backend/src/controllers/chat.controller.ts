@@ -9,13 +9,14 @@ if (!apiKey) {
 }
 
 const genAI = new GoogleGenerativeAI(apiKey || "");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 const take = <T>(arr: T[] = [], n: number) => arr.slice(0, n);
 
 export const handleChat = catchAsync(async (req: Request, res: Response) => {
   const { message, userId } = req.body as { message?: string; userId?: string };
-
+  console.log("CHat received", message);
   if (!message || typeof message !== "string") {
     return res.status(400).json({ error: "Message is required" });
   }
@@ -112,25 +113,28 @@ ${
 }
 `.trim();
 
-  const result = await model.generateContent([
-    { text: context },
-    { text: `User message: ${message}` },
-    {
-      text: "Make the reply short and specific. If a search is needed, suggest terms the user can try in the app's search boxes.",
-    },
-  ]);
-
-  const reply =
-    result.response.text() || "Sorry, I can only help with this platform.";
-
-  return res.json({
-    reply,
-    meta: {
-      suggestedSearches: [
-        "Search documents by title",
-        "View my tasks",
-        "Latest discussions",
-      ],
-    },
-  });
+  try {
+    const result = await model.generateContent([
+      { text: context },
+      { text: `User message: ${message}` },
+      {
+        text: "Make the reply short and specific. If a search is needed, suggest terms the user can try in the app's search boxes.",
+      },
+    ]);
+    const reply =
+      result.response.text() || "Sorry, I can only help with this platform.";
+    return res.json({
+      reply,
+      meta: {
+        suggestedSearches: [
+          "Search documents by title",
+          "View my tasks",
+          "Latest discussions",
+        ],
+      },
+    });
+  } catch (e) {
+    console.error("Gemini API failed:", e);
+    return res.status(500).json({ error: "Chat service unavailable" });
+  }
 });

@@ -13,6 +13,7 @@ import { formatDateDDMMYY } from "@/lib/utils";
 import { useAuthStore } from "@/stores/auth-store";
 import { toast } from "sonner";
 
+
 const getArticlesData = async () => {
   const response = await api.get(`/articles?page=1&limit=10`);
   return response.data.articles;

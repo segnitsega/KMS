@@ -11,6 +11,7 @@ import {
 import api from "@/utility/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/auth-store";
+import { formatDateDDMMYY } from "@/lib/utils";
 
 type Post = {
   id?: string;
@@ -59,7 +60,7 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
               <HiUser className="text-lg" /> By {post.author}
             </span>
             <span className="flex items-center gap-1">
-              <HiCalendar className="text-lg" /> Updated {post.updatedAt}
+              <HiCalendar className="text-lg" /> Updated {formatDateDDMMYY(post.updatedAt)}
             </span>
             <span className="flex items-center gap-1">
               <HiEye className="text-lg" /> {post.views} views

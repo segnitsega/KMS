@@ -82,7 +82,7 @@ const Header = ({
 
         {dropDownOptions && (
           <div className="flex items-center gap-2">
-            <CiFilter className="text-2xl text-gray-500" />
+            {/* <CiFilter className="text-2xl text-gray-500" /> */}
             <select
               id="dropdown"
               value={selected}

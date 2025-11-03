@@ -94,6 +94,8 @@ model Replies {
   message      String
   discussion   Discussion @relation("DiscussionToReplies", fields: [discussionId], references: [id], onDelete: Cascade)
   user         User       @relation("UserToReplies", fields: [userId], references: [id], onDelete: Cascade)
+  uploadedAt   DateTime @default(now())
+
 }
 
 model Training {

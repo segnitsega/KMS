@@ -50,8 +50,8 @@ const PostCard: React.FC<PostCardProps> = ({
               <span>Updated {updatedAt}</span>
             </div>
             <div className="views flex items-center gap-1">
-              <FiEye className="h-4 w-4" />
-              <span>{views} views</span>
+              {/* <FiEye className="h-4 w-4" /> */}
+              {/* <span>{views} views</span> */}
             </div>
           </div>
         </div>

@@ -19,6 +19,7 @@ export const verifyToken = (req: AuthenticatedRequest, res: Response, next: Next
   try {
     const decoded = jwt.verify(token, secretKey);
     req.user = decoded; 
+    console.log("Authorized request")
     next();
   } catch (error) {
     console.log("error verifi=ying")
