@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/reusable-header";
 import ExpertDirectoryCard from "@/cards/expert-directory/expert-directory-card";

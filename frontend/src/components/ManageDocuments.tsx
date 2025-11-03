@@ -14,15 +14,15 @@ const categories = [
   "HR",
 ];
 
-interface Document {
-  id: string;
-  title: string;
-  description: string;
-  fileName: string;
-  author: string;
-  category: string;
-  updatedAt: string;
-}
+// interface Document {
+//   id: string;
+//   title: string;
+//   description: string;
+//   fileName: string;
+//   author: string;
+//   category: string;
+//   updatedAt: string;
+// }
 
 interface ManageDocumentsProps {
   onClose?: () => void;
@@ -126,7 +126,7 @@ const ManageDocuments: React.FC<ManageDocumentsProps> = ({ onClose }) => {
 
       {data && (
         <div className="max-h-100 overflow-y-auto">
-          {data.documents.map((document) => (
+          {data.documents.map((document: any) => (
             <div
               key={document.id}
               className="border mr-2 mb-4 rounded-lg p-3 shadow"

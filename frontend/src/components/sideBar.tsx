@@ -15,6 +15,8 @@ const SideBar = () => {
   const userData = useAuthStore((state) => state.userData);
   const location = useLocation();
   let placeHolder = "My Tasks";
+  console.log(placeHolder)
+
   if (userData.role === "ADMIN") placeHolder = "Submitted Tasks";
   return (
     <div className="border border-t-0 mb-8 shadow-md bg-white h-[110vh] ">

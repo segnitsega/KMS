@@ -20,7 +20,6 @@ const PostCard: React.FC<PostCardProps> = ({
   category,
   author,
   updatedAt,
-  views,
   onView,
   onEdit,
 }) => {

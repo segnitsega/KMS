@@ -1,5 +1,4 @@
-import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Brain,
   Search,
@@ -9,8 +8,6 @@ import {
   BookOpen,
   TrendingUp,
   UserCheck,
-  Play,
-  ArrowRight,
   Lock,
 } from "lucide-react";
 const LockIcon = Lock;

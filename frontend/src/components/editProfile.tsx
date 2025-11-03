@@ -54,7 +54,7 @@ async function updateUserProfile(profileData: any) {
   return response.data;
 }
 
-export default function ProfilePage({ setProfileEdit }) {
+export default function ProfilePage({ setProfileEdit }: any) {
   const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
 

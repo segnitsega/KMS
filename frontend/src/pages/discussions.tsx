@@ -47,7 +47,7 @@ const Discussions = () => {
         </div>
       )}
       {data &&
-        data.map((discussion) => (
+        data.map((discussion: any) => (
           <div key={discussion.id} className="mb-3">
             <DiscussionPost
               discussionId={discussion.id}

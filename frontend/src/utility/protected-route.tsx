@@ -18,8 +18,8 @@ const getUser = async (token: string) => {
 
 const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
-  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
-  const setUserData = useAuthStore((state) => state.setUserData);
+  const setIsAuthenticated = useAuthStore((state: any) => state.setIsAuthenticated);
+  const setUserData = useAuthStore((state: any) => state.setUserData);
 
   const accessToken = localStorage.getItem("accessToken");
   if(!accessToken){

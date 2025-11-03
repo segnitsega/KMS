@@ -4,9 +4,6 @@ import {
   FiPhone,
   FiMapPin,
   FiCalendar,
-  FiLinkedin,
-  FiGithub,
-  FiExternalLink,
 } from "react-icons/fi";
 
 interface ProfileModalProps {
@@ -34,7 +31,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   location,
   joined,
   skills,
-  links,
+  // links,
 }) => {
   if (!isOpen) return null;
 

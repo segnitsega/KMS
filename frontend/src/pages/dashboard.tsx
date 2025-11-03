@@ -27,7 +27,7 @@ const getData = async () => {
 };
 
 const Dashboard = () => {
-  const userData = useAuthStore((state) => state.userData);
+  const userData = useAuthStore((state: any) => state.userData);
 
   const { data, isLoading } = useQuery({
     queryFn: getData,
@@ -105,10 +105,10 @@ const Dashboard = () => {
         <div className="flex flex-col md:flex-row gap-6">
           <DocumentCard
             heading="Recent Documents"
-            titles={data.documents.map((document) => document.title)}
-            owners={data.documents.map((document) => document.author)}
-            downloads={data.documents.map((document) => document.downloads)}
-            dates={data.documents.map((document) =>
+            titles={data.documents.map((document: any) => document.title)}
+            owners={data.documents.map((document: any) => document.author)}
+            downloads={data.documents.map((document: any) => document.downloads)}
+            dates={data.documents.map((document: any) =>
               new Date(document.uploadedAt).toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "2-digit",
@@ -119,10 +119,10 @@ const Dashboard = () => {
           />
           <DocumentCard
             heading="Popular Articles"
-            titles={data.articles.map((article) => article.title)}
-            owners={data.articles.map((article) => article.author)}
-            articleViews={data.articles.map((article) => article.views)}
-            dates={data.articles.map((article) =>
+            titles={data.articles.map((article: any) => article.title)}
+            owners={data.articles.map((article: any) => article.author)}
+            articleViews={data.articles.map((article: any) => article.views)}
+            dates={data.articles.map((article: any) =>
               new Date(article.uploadedAt).toLocaleDateString("en-GB", {
                 day: "2-digit",
                 month: "2-digit",

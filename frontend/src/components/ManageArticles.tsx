@@ -127,7 +127,7 @@ const ManageArticles: React.FC<ManageArticlesProps> = ({ onClose }) => {
 
       {data && (
         <div className="max-h-100 overflow-y-auto">
-          {data.articles.map((article) => (
+          {data.articles.map((article: any) => (
             <div
               key={article.id}
               className="border mr-2 mb-4 rounded-lg p-3 shadow"

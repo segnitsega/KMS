@@ -3,10 +3,10 @@ import NavBar from "./components/navBar";
 import SideBar from "./components/sideBar";
 import { Chatbot } from "./components/chatbot";
 import { useAuthStore } from "./stores/auth-store";
-import { RxHamburgerMenu } from "react-icons/rx";
+// import { RxHamburgerMenu } from "react-icons/rx";
 
 const Layout = () => {
-  const userData = useAuthStore((state) => state.userData)
+  const userData = useAuthStore((state: any) => state.userData)
     return (
       <div className="w-[100%]">
         <NavBar

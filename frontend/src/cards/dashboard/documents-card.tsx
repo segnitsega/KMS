@@ -1,5 +1,4 @@
 import type { IconType } from "react-icons";
-import { IoEyeOutline } from "react-icons/io5";
 import { PiBookOpen } from "react-icons/pi";
 import { Link } from "react-router-dom";
 

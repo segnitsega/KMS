@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CiSearch, CiFilter } from "react-icons/ci";
+import { CiSearch } from "react-icons/ci";
 import { Button } from "./ui/button";
 
 interface HeaderProps {

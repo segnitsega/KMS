@@ -23,9 +23,7 @@ const DocumentPageCard = ({
   date,
   numberOfDownloads,
   categories,
-  description,
   onView,
-  downloadUrl,
 }: createDocumentCardProp) => {
 
   const handleDownload = () => {
@@ -66,13 +64,6 @@ const DocumentPageCard = ({
         >
           <IoEyeOutline /> View
         </button>
-        {/* <a
-          href={downloadUrl || '#'}
-          className="flex gap-1 items-center text-gray-500 hover:underline"
-          download
-        >
-          <FiDownload /> Download
-        </a> */}
          <button
           onClick={handleDownload}
           className="flex gap-1 items-center text-gray-500 hover:underline focus:outline-none"

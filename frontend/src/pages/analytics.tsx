@@ -5,8 +5,6 @@ import {
   Users,
   FileText,
   BookOpen,
-  Download,
-  Eye,
 } from "lucide-react";
 import {
   ResponsiveContainer,

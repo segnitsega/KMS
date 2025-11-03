@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { cn } from "../lib/utils";
 import Header from "../components/reusable-header";
 import AddBookModal from "../components/AddBookModal";
-import { FiDownload, FiEye, FiBookOpen, FiHeart } from "react-icons/fi";
+import { FiDownload, FiBookOpen, FiHeart } from "react-icons/fi";
 import api from "../utility/api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import loadingSpinner from "@/assets/loading-spinner.svg";

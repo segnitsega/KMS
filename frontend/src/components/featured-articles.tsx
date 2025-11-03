@@ -1,4 +1,3 @@
-import { AiOutlineEye } from "react-icons/ai";
 import { HiArrowTrendingUp } from "react-icons/hi2";
 
 interface Article {

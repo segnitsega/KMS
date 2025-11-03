@@ -32,11 +32,13 @@ const MyTasks: React.FC = () => {
   });
 
   const handleSubmitTask = (taskId: string, taskData: any) => {
+    console.log(taskId)
     setSelectedTask(taskData);
     setSubmitModalOpen(true);
   };
 
   const handleViewDetails = async (taskId: string, taskData: any) => {
+    console.log(taskData)
     try {
       // Fetch task details
       const taskResponse = await api.get(`/tasks/${taskId}`);
@@ -48,8 +50,8 @@ const MyTasks: React.FC = () => {
         try {
           const submissionResponse = await api.get(`/tasks/submit/${taskId}`);
           submission = submissionResponse.data.data.submission;
-        } catch (error) {
-          console.log('No submission found for this task');
+        } catch (error: any) {
+          console.log('No submission found for this task', error);
         }
       }
 

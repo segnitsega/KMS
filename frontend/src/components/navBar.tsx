@@ -9,8 +9,6 @@ import api from "../utility/api";
 import EditProfile from "./editProfile";
 import { useAuthStore } from "@/stores/auth-store";
 import { RxHamburgerMenu } from "react-icons/rx";
-import SideBar from "./sideBar";
-import { cn } from "@/lib/utils";
 import { LuUser } from "react-icons/lu";
 
 interface navBarProps {

@@ -3,7 +3,7 @@ import { useAuthStore } from "@/stores/auth-store";
 import type { PropsWithChildren } from "react";
 
 const AdminRoute = ({ children }: PropsWithChildren) => {
-  const userData = useAuthStore((state) => state.userData);
+  const userData = useAuthStore((state: any) => state.userData);
 
   if (userData.role !== "ADMIN") {
     return <Navigate to="/kms/dashboard" replace />; 

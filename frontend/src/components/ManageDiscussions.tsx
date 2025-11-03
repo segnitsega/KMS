@@ -126,7 +126,7 @@ const ManageDiscussions: React.FC<ManageDiscussionsProps> = ({ onClose }) => {
 
       {data && (
         <div className="max-h-100 overflow-y-auto">
-          {data.discussions.map((discussion) => (
+          {data.discussions.map((discussion: any) => (
             <div
               key={discussion.id}
               className="border mr-2 mb-4 rounded-lg p-3 shadow"

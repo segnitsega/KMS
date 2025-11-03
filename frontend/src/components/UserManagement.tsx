@@ -68,7 +68,7 @@ const UserManagement = () => {
     },
   });
 
-  const { mutate: removeUser, isPending: deletePending } = useMutation({
+  const { mutate: removeUser } = useMutation({
     mutationFn: async (userId: string) => {
       const response = await api.delete(`/admin/remove-user/${userId}`);
       return response.data;
@@ -238,7 +238,7 @@ const UserManagement = () => {
         <h2 className="font-semibold text-xl mb-1">User Management</h2>
         <p className="text-gray-500 mb-6">Manage user roles and permissions</p>
         <div className="space-y-4">
-          {data.users.map((user) => (
+          {data.users.map((user: any) => (
             <div
               key={user.id}
               className="flex items-center bg-[#f6fafd] rounded-xl p-4"

@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, Mail, Phone } from "react-feather";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const projectDescription =

@@ -3,7 +3,7 @@ import DocumentPageCard from "@/cards/documents/document-page-card";
 import UploadDocumentModal from "@/components/UploadDocumentModal";
 import DocumentPreviewModal from "@/components/document-preview-modal";
 import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import api from "@/utility/api";
 import loadingSpinner from "../assets/loading-spinner.svg";
 import { useLocation } from "react-router-dom";
@@ -17,16 +17,17 @@ const getDocs = async (page: number, limit: number) => {
 };
 
 const Documents = () => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [previewDoc, setPreviewDoc] = useState<null | any>(null);
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
+  const page = 1
   const [limit, setLimit] = useState(6);
 
-  const { data, isLoading, isError, error, isFetching } = useQuery({
+  const { data, isLoading, isError, isFetching } = useQuery({
     queryFn: () => getDocs(page, limit),
     queryKey: ["docs", page, limit],
-    placeholderData: (prev) => prev,
+    placeholderData: (prev: any) => prev,
   });
 
   const location = useLocation();
@@ -103,7 +104,7 @@ const Documents = () => {
           <Button
             className="bg-blue-500 w-[150px] mt-3"
             onClick={() => {
-              setLimit((prev) => prev + 10);
+              setLimit((prev: any) => prev + 10);
               // queryClient.invalidateQueries({ queryKey: ["docs"] });
             }}
           >

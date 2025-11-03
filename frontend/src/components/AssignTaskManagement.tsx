@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { FiEdit2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";

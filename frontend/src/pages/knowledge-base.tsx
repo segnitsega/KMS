@@ -20,7 +20,7 @@ const getArticlesData = async () => {
 };
 
 const KnowledgeBase = () => {
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryFn: getArticlesData,
     queryKey: ["articles"],
   });
@@ -102,7 +102,7 @@ const KnowledgeBase = () => {
                   } else {
                     toast.error(
                       "❌ You are not authorized to edit this article.",
-                      { icon: () => null }
+                      { icon: null }
                     );
                   }
                 }}

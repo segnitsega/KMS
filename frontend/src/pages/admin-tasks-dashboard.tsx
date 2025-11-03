@@ -9,6 +9,7 @@ import { formatDateDDMMYY } from "@/lib/utils";
 const AdminTasksDashboard: React.FC = () => {
   const [submittedTasks, setSubmittedTasks] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
+  console.log(tasks)
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
   const [currentTask, setCurrentTask] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,6 +47,7 @@ const AdminTasksDashboard: React.FC = () => {
       setSubmittedTasks(matchedTasks);
     } catch (err: any) {
       setError("Failed to load submitted tasks");
+      console.log(err)
     } finally {
       setLoading(false);
     }

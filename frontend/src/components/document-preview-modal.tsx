@@ -1,6 +1,6 @@
 import React from "react";
 import { IoDocumentTextOutline, IoClose } from "react-icons/io5";
-import { FiDownload, FiShare2, FiStar } from "react-icons/fi";
+import { FiDownload } from "react-icons/fi";
 import { formatDateDDMMYY } from "@/lib/utils";
 
 interface DocumentPreviewModalProps {
@@ -54,23 +54,23 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
       }
     }
   };
-  const handleShare = async () => {
-    if (!doc.downloadUrl) return;
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: doc.title,
-          text: `Check out this document: ${doc.title}`,
-          url: doc.downloadUrl,
-        });
-      } else {
-        await navigator.clipboard.writeText(doc.downloadUrl);
-        alert("Link copied to clipboard!");
-      }
-    } catch (err) {
-      console.error("Share failed:", err);
-    }
-  };
+  // const handleShare = async () => {
+  //   if (!doc.downloadUrl) return;
+  //   try {
+  //     if (navigator.share) {
+  //       await navigator.share({
+  //         title: doc.title,
+  //         text: `Check out this document: ${doc.title}`,
+  //         url: doc.downloadUrl,
+  //       });
+  //     } else {
+  //       await navigator.clipboard.writeText(doc.downloadUrl);
+  //       alert("Link copied to clipboard!");
+  //     }
+  //   } catch (err) {
+  //     console.error("Share failed:", err);
+  //   }
+  // };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
