@@ -28,6 +28,8 @@ server.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+server.options("*", cors()); 
 server.use(express.json());
 server.use(cookieParser());
 server.use("/user", userRouter);
