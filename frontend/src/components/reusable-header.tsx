@@ -44,16 +44,16 @@ const Header = ({
   return (
     <div>
       {/* Top Section: Title + Subtitle + Button */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="font-bold text-2xl">{title}</h1>
-          <span className="text-gray-500">{subtitle}</span>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-xl font-bold sm:text-2xl">{title}</h1>
+          <span className="text-sm text-gray-500 sm:text-base">{subtitle}</span>
         </div>
 
         {buttonText && (
           <Button
             onClick={onButtonClick}
-            className="bg-blue-500 hover:bg-blue-500 cursor-pointer text-lg"
+            className="w-full shrink-0 cursor-pointer bg-blue-500 text-base hover:bg-blue-500 sm:w-auto sm:text-lg"
           >
             + {buttonText}
           </Button>
@@ -61,11 +61,11 @@ const Header = ({
       </div>
 
       {/* Search + Dropdown */}
-      <div className="flex items-center gap-2 mt-4">
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
         {searchPlaceholder && (
           <div
             ref={inputRef}
-            className={`flex items-center bg-white border rounded-md p-2 w-[90%] ${
+            className={`flex w-full items-center rounded-md border bg-white p-2 sm:w-[90%] ${
               clicked ? "border-blue-500" : "border-gray-300"
             }`}
           >
@@ -81,7 +81,7 @@ const Header = ({
         )}
 
         {dropDownOptions && (
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             {/* <CiFilter className="text-2xl text-gray-500" /> */}
             <select
               id="dropdown"

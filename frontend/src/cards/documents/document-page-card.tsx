@@ -33,30 +33,30 @@ const DocumentPageCard = ({
   }
 
   return (
-    <div className="bg-white border rounded-md shadow w-full">
-      <div className="flex p-4 ">
-        <IoDocumentTextOutline className="text-blue-500 text-3xl mr-4" />
-        <div className="flex flex-col gap-2">
-          <h1>{title}</h1>
-          <p className="flex items-center gap-2 text-gray-500">
-            <BsPerson />
-            {author}
+    <div className="w-full min-w-0 rounded-md border bg-white shadow">
+      <div className="flex gap-3 p-3 sm:gap-4 sm:p-4">
+        <IoDocumentTextOutline className="mt-0.5 shrink-0 text-2xl text-blue-500 sm:text-3xl" />
+        <div className="flex min-w-0 flex-col gap-1.5 sm:gap-2">
+          <h1 className="truncate text-base font-semibold sm:text-lg">{title}</h1>
+          <p className="flex items-center gap-2 truncate text-sm text-gray-500">
+            <BsPerson className="shrink-0" />
+            <span className="truncate">{author}</span>
           </p>
-          <p className="flex items-center gap-2 text-gray-500">
-            <SlCalender /> {date}
+          <p className="flex items-center gap-2 text-sm text-gray-500">
+            <SlCalender className="shrink-0" /> {date}
           </p>
-          <p className="flex items-center gap-2 text-gray-500">
-            <FiDownload />
+          <p className="flex items-center gap-2 text-sm text-gray-500">
+            <FiDownload className="shrink-0" />
             {numberOfDownloads} downloads
           </p>
         </div>
       </div>
 
-      <div className="flex gap-4 mt-4 text-gray-500 text-sm px-4 ">
+      <div className="mt-3 flex flex-wrap gap-2 px-3 text-sm text-gray-500 sm:mt-4 sm:gap-4 sm:px-4">
       {categories}
       </div>
 
-      <div className="flex gap-4 border-t-1 mt-6 px-6 py-4">
+      <div className="mt-4 flex flex-wrap gap-3 border-t px-4 py-3 sm:mt-6 sm:gap-4 sm:px-6 sm:py-4">
         <button
           className="flex gap-1 items-center text-blue-600 hover:underline focus:outline-none"
           onClick={onView}
