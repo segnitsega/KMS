@@ -63,13 +63,15 @@ const Analytics: React.FC = () => {
 
   if (!["admin", "expert"].includes(currentUser?.role)) {
     return (
-      <div className="p-6 text-center">
-        <div className="text-gray-500">
-          <BarChart3 className="w-16 h-16 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+      <div className="flex w-full min-w-0 justify-center px-4 py-10 sm:py-16">
+        <div className="text-center text-gray-500">
+          <BarChart3 className="mx-auto mb-4 h-12 w-12 sm:h-16 sm:w-16" />
+          <h3 className="mb-2 text-base font-medium text-gray-900 sm:text-lg">
             Access Restricted
           </h3>
-          <p>You don't have permission to view analytics.</p>
+          <p className="text-sm sm:text-base">
+            You don't have permission to view analytics.
+          </p>
         </div>
       </div>
     );
@@ -77,28 +79,28 @@ const Analytics: React.FC = () => {
 
   if (isLoading)
     return (
-      <div className="flex h-screen bg-white justify-center items-center">
+      <div className="flex justify-center py-10 sm:py-16">
         <img src={loadingSpinner} width={50} alt="loading" />
       </div>
     );
 
   if (data)
     return (
-      <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+      <div className="w-full min-w-0 space-y-4 sm:space-y-6 lg:space-y-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
               Analytics & Reports
             </h1>
-            <p className="text-gray-600">
+            <p className="text-sm text-gray-600 sm:text-base">
               Monitor platform usage and performance metrics
             </p>
           </div>
-          <div className="flex space-x-4 mt-4 sm:mt-0">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-4">
             <select
               value={overviewFilter}
               onChange={(e) => setOverviewFilter(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 bg-gray-200"
+              className="w-full rounded-md border border-gray-300 bg-gray-200 px-3 py-2 text-sm sm:w-auto sm:text-base"
             >
               <option>Overview</option>
               <option>Content Performance</option>
@@ -108,7 +110,7 @@ const Analytics: React.FC = () => {
             <select
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="border border-gray-300 rounded-md px-3 py-2 bg-gray-200"
+              className="w-full rounded-md border border-gray-300 bg-gray-200 px-3 py-2 text-sm sm:w-auto sm:text-base"
             >
               <option>Last 7 days</option>
               <option>Last 30 days</option>
@@ -117,7 +119,7 @@ const Analytics: React.FC = () => {
             </select>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           {[
             {
               title: "Total Users",
@@ -150,30 +152,33 @@ const Analytics: React.FC = () => {
           ].map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-lg shadow p-4 flex items-center space-x-4"
+              className="flex items-center gap-3 rounded-lg bg-white p-3 shadow sm:gap-4 sm:p-4"
             >
-              <div className={`p-3 rounded-lg ${item.bg}`}>{item.icon}</div>
-              <div>
-                <p className="text-sm text-gray-500">{item.title}</p>
-                <p className="text-2xl font-bold">{item.value ?? 0}</p>
-                <p className="text-green-600 text-sm flex items-center">
-                  <TrendingUp className="w-4 h-4 mr-1" />
-                  {item.change} from last week
+              <div className={`shrink-0 rounded-lg p-2.5 sm:p-3 ${item.bg}`}>
+                {item.icon}
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-gray-500 sm:text-sm">{item.title}</p>
+                <p className="text-xl font-bold sm:text-2xl">{item.value ?? 0}</p>
+                <p className="flex items-center text-xs text-green-600 sm:text-sm">
+                  <TrendingUp className="mr-1 h-3 w-3 shrink-0 sm:h-4 sm:w-4" />
+                  <span className="truncate">{item.change} from last week</span>
                 </p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="mb-4 grid grid-cols-1 gap-4 sm:gap-6 lg:mb-8 lg:grid-cols-2">
+          <div className="min-w-0 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+            <h3 className="mb-3 text-base font-semibold text-gray-900 sm:mb-4 sm:text-lg">
               User Activity Trends
             </h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <div className="h-[220px] w-full sm:h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={analytics?.userActivity || []}
-                margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
+                margin={{ top: 12, right: 8, left: 0, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
@@ -188,17 +193,18 @@ const Analytics: React.FC = () => {
                 />
               </BarChart>
             </ResponsiveContainer>
+            </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 flex justify-between">
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Recent Documents</h2>
-              <ul className="space-y-5">
+          <div className="flex min-w-0 flex-col gap-6 rounded-lg bg-white p-4 shadow sm:p-6 lg:flex-row lg:justify-between lg:gap-8">
+            <div className="min-w-0 flex-1">
+              <h2 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Recent Documents</h2>
+              <ul className="space-y-3 sm:space-y-5">
                 {analytics?.popularContent?.documents?.map((doc) => (
-                  <li key={doc.id} className="flex items-center space-x-6">
-                    <div className="p-2 bg-blue-100 rounded-md">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                  <li key={doc.id} className="flex min-w-0 items-center gap-3 sm:gap-4">
+                    <div className="shrink-0 rounded-md bg-blue-100 p-2">
+                      <FileText className="h-4 w-4 text-blue-600 sm:h-5 sm:w-5" />
                     </div>
-                    <span className="flex-1 font-medium">{doc.title}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium sm:text-base">{doc.title}</span>
                     {/* <div className="flex items-center space-x-4 text-sm text-gray-500">
                     <div className="flex items-center space-x-1">
                       <Eye className="w-4 h-4" />
@@ -214,45 +220,47 @@ const Analytics: React.FC = () => {
               </ul>
             </div>
 
-            <div>
-              <h2 className="text-lg font-semibold mb-4">Recent Articles</h2>
-              <ul className="space-y-5">
+            <div className="min-w-0 flex-1">
+              <h2 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Recent Articles</h2>
+              <ul className="space-y-3 sm:space-y-5">
                 {analytics?.popularContent?.articles?.map((art) => (
-                  <li key={art.id} className="flex items-center space-x-6">
-                    <div className="p-2 bg-blue-100 rounded-md">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                  <li key={art.id} className="flex min-w-0 items-center gap-3 sm:gap-4">
+                    <div className="shrink-0 rounded-md bg-blue-100 p-2">
+                      <FileText className="h-4 w-4 text-blue-600 sm:h-5 sm:w-5" />
                     </div>
-                    <span className="flex-1 font-medium">{art.title}</span>
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium sm:text-base">{art.title}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold mb-4">Popular Search Terms</h2>
-          <div className="flex space-x-4 overflow-x-auto">
+        <div className="rounded-lg bg-white p-4 shadow sm:p-6">
+          <h2 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Popular Search Terms</h2>
+          <div className="-mx-1 flex gap-3 overflow-x-auto pb-1 sm:gap-4">
             {analytics?.searchTerms?.map((term, idx) => (
               <div
                 key={idx}
-                className="flex flex-col items-center bg-gray-100 rounded-md px-10 py-3 min-w-[120px]"
+                className="flex min-w-[100px] shrink-0 flex-col items-center rounded-md bg-gray-100 px-6 py-2.5 sm:min-w-[120px] sm:px-10 sm:py-3"
               >
-                <span className="text-xl font-bold text-blue-600">
+                <span className="text-lg font-bold text-blue-600 sm:text-xl">
                   {term.count}
                 </span>
-                <span className="text-sm text-gray-700">{term.term}</span>
+                <span className="max-w-[8rem] truncate text-center text-xs text-gray-700 sm:max-w-none sm:text-sm">
+                  {term.term}
+                </span>
               </div>
             ))}
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-6 flex space-x-4">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+        <div className="flex flex-col gap-2 rounded-lg bg-white p-4 shadow sm:flex-row sm:flex-wrap sm:gap-3 sm:p-6">
+          <button className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm text-white transition hover:bg-blue-700 sm:w-auto sm:text-base">
             Export PDF Report
           </button>
-          <button className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition">
+          <button className="w-full rounded-md bg-green-600 px-4 py-2 text-sm text-white transition hover:bg-green-700 sm:w-auto sm:text-base">
             Export CSV Data
           </button>
-          <button className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">
+          <button className="w-full rounded-md bg-purple-600 px-4 py-2 text-sm text-white transition hover:bg-purple-700 sm:w-auto sm:text-base">
             Schedule Report
           </button>
         </div>
