@@ -36,122 +36,90 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-8 relative overflow-y-auto max-h-[95vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3 backdrop-blur-sm sm:p-4">
+      <div className="relative max-h-[95vh] w-full max-w-4xl overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:p-6 md:p-8">
         {/* Close button */}
         <button
-          className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-red-500 transition"
+          className="absolute right-3 top-3 text-2xl text-gray-500 transition hover:text-red-500 sm:right-4 sm:top-4"
           onClick={onClose}
+          aria-label="Close profile"
         >
           &times;
         </button>
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row gap-8 border-b pb-6 mb-6">
+        <div className="mb-4 flex flex-col gap-6 border-b pb-4 sm:mb-6 sm:gap-8 sm:pb-6 md:flex-row">
           {/* Avatar */}
-          <div className="flex flex-col items-center md:w-1/3">
-            <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold shadow-md">
+          <div className="flex flex-col items-center md:w-1/3 md:shrink-0">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-3xl font-bold text-white shadow-md sm:h-28 sm:w-28 sm:text-4xl">
               {name
                 .split(" ")
                 .map((n) => n[0])
                 .join("")}
             </div>
-            <h2 className="mt-4 text-2xl font-bold">{name}</h2>
-            <p className="text-gray-500">{department}</p>
-            <span className="mt-2 px-3 py-1 rounded-full bg-gradient-to-r from-red-100 to-red-200 text-red-600 text-xs font-semibold shadow-sm">
+            <h2 className="mt-3 max-w-full truncate px-2 text-center text-xl font-bold sm:mt-4 sm:text-2xl">
+              {name}
+            </h2>
+            <p className="text-center text-sm text-gray-500 sm:text-base">{department}</p>
+            <span className="mt-2 rounded-full bg-gradient-to-r from-red-100 to-red-200 px-3 py-1 text-xs font-semibold text-red-600 shadow-sm">
               {role}
             </span>
 
             <button
-              className="mt-4 w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg py-2 font-medium shadow hover:scale-[1.02] transition"
-              onClick={() => window.location.href = `mailto:${email}`}
+              className="mt-4 w-full max-w-xs rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 py-2 text-sm font-medium text-white shadow transition hover:scale-[1.02] sm:text-base"
+              onClick={() => (window.location.href = `mailto:${email}`)}
             >
               Send Message
             </button>
           </div>
 
           {/* Contact & Skills */}
-          <div className="flex-1 space-y-6">
+          <div className="min-w-0 flex-1 space-y-5 sm:space-y-6">
             {/* Contact Information */}
             <section>
-              <h3 className="text-xl font-semibold mb-3">
+              <h3 className="mb-2 text-lg font-semibold sm:mb-3 sm:text-xl">
                 Contact Information
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg shadow-sm">
-                  <FiMail className="text-blue-500" />
-                  <span>{email}</span>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+                <div className="flex min-w-0 items-center gap-2 rounded-lg bg-gray-50 p-2.5 shadow-sm sm:gap-3 sm:p-3">
+                  <FiMail className="shrink-0 text-blue-500" />
+                  <span className="min-w-0 truncate text-sm sm:text-base">{email}</span>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg shadow-sm">
-                  <FiPhone className="text-green-500" />
-                  <span>{phoneNumber}</span>
+                <div className="flex min-w-0 items-center gap-2 rounded-lg bg-gray-50 p-2.5 shadow-sm sm:gap-3 sm:p-3">
+                  <FiPhone className="shrink-0 text-green-500" />
+                  <span className="min-w-0 truncate text-sm sm:text-base">{phoneNumber}</span>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg shadow-sm">
-                  <FiMapPin className="text-red-500" />
-                  <span>{location}</span>
+                <div className="flex min-w-0 items-center gap-2 rounded-lg bg-gray-50 p-2.5 shadow-sm sm:gap-3 sm:p-3">
+                  <FiMapPin className="shrink-0 text-red-500" />
+                  <span className="min-w-0 truncate text-sm sm:text-base">{location}</span>
                 </div>
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg shadow-sm">
-                  <FiCalendar className="text-purple-500" />
-                  <span>Joined {joined}</span>
+                <div className="flex min-w-0 items-center gap-2 rounded-lg bg-gray-50 p-2.5 shadow-sm sm:gap-3 sm:p-3">
+                  <FiCalendar className="shrink-0 text-purple-500" />
+                  <span className="min-w-0 truncate text-sm sm:text-base">Joined {joined}</span>
                 </div>
               </div>
             </section>
 
             {/* Skills */}
             <section>
-              <h3 className="text-xl font-semibold mb-3">Skills & Expertise</h3>
+              <h3 className="mb-2 text-lg font-semibold sm:mb-3 sm:text-xl">
+                Skills & Expertise
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {skills.length > 0 ? (
                   skills.map((skill, i) => (
                     <span
                       key={i}
-                      className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 px-4 py-1 rounded-full text-sm font-medium shadow-sm hover:shadow-md cursor-default"
+                      className="cursor-default rounded-full bg-gradient-to-r from-purple-100 to-blue-100 px-3 py-1 text-xs font-medium text-purple-700 shadow-sm hover:shadow-md sm:px-4 sm:text-sm"
                     >
                       {skill}
                     </span>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-sm">No skills provided</p>
+                  <p className="text-sm text-gray-500">No skills provided</p>
                 )}
               </div>
             </section>
-
-            {/* Links */}
-            {/* <section>
-              <h3 className="text-xl font-semibold mb-3">Professional Links</h3>
-              <div className="flex flex-wrap gap-3">
-                {links.linkedin && (
-                  <a
-                    href={links.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium shadow hover:bg-blue-700 transition"
-                  >
-                    <FiLinkedin /> LinkedIn
-                  </a>
-                )}
-                {links.github && (
-                  <a
-                    href={links.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-medium shadow hover:bg-gray-800 transition"
-                  >
-                    <FiGithub /> GitHub
-                  </a>
-                )}
-                {links.portfolio && (
-                  <a
-                    href={links.portfolio}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-medium shadow hover:bg-green-600 transition"
-                  >
-                    <FiExternalLink /> Portfolio
-                  </a>
-                )}
-              </div>
-            </section> */}
           </div>
         </div>
       </div>

@@ -144,9 +144,9 @@ export default function ProfilePage({ setProfileEdit }: any) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
-        <div className="flex items-center gap-2">
-          <Loader2 className="w-6 h-6 animate-spin" />
+      <div className="flex min-h-[12rem] w-full max-w-4xl items-center justify-center rounded-md bg-gray-50 p-6">
+        <div className="flex items-center gap-2 text-sm sm:text-base">
+          <Loader2 className="h-5 w-5 animate-spin sm:h-6 sm:w-6" />
           <span>Loading profile...</span>
         </div>
       </div>
@@ -155,10 +155,12 @@ export default function ProfilePage({ setProfileEdit }: any) {
 
   if (error || !userData) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
+      <div className="flex min-h-[12rem] w-full max-w-4xl items-center justify-center rounded-md bg-gray-50 p-6">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Failed to load profile data</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="mb-4 text-sm text-red-600 sm:text-base">Failed to load profile data</p>
+          <Button onClick={() => window.location.reload()} className="w-full sm:w-auto">
+            Retry
+          </Button>
         </div>
       </div>
     );
@@ -168,29 +170,33 @@ export default function ProfilePage({ setProfileEdit }: any) {
   const date = new Date(userData.updatedAt);
 
   return (
-    <div className=" bg-gray-50 p-6 rounded-md w-[800px]">
-      <div className="max-w-4xl ">
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-gray-900">
+    <div className="my-2 w-full max-w-4xl rounded-md bg-gray-50 p-4 sm:my-4 sm:p-6">
+      <div className="w-full min-w-0">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
               Profile Settings
             </h1>
-            <Button onClick={() => setProfileEdit(false)} variant="outline">
+            <Button
+              onClick={() => setProfileEdit(false)}
+              variant="outline"
+              className="w-full shrink-0 sm:w-auto"
+            >
               Close
             </Button>
           </div>
 
-          <p className="text-gray-600 mt-2">
+          <p className="mt-2 text-sm text-gray-600 sm:text-base">
             Manage your personal information and preferences
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-3">
           {/* Profile Overview Card */}
-          <Card className="lg:col-span-1 mb-12">
+          <Card className="lg:col-span-1">
             <CardHeader className="text-center">
               <div className="relative mx-auto">
-                <Avatar className="w-24 h-24 mx-auto">
+                <Avatar className="mx-auto h-20 w-20 sm:h-24 sm:w-24">
                   <AvatarImage src="/professional-headshot.png" />
                   <AvatarFallback className="text-2xl bg-blue-500 text-white">
                     {fullName
@@ -218,44 +224,44 @@ export default function ProfilePage({ setProfileEdit }: any) {
           </Card>
 
           {/* Profile Details Card */}
-          <Card className="lg:col-span-2 mb-12">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Personal Information</CardTitle>
-                <CardDescription>
+          <Card className="lg:col-span-2">
+            <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <CardTitle className="text-lg sm:text-xl">Personal Information</CardTitle>
+                <CardDescription className="text-sm">
                   Update your personal details and contact information
                 </CardDescription>
               </div>
-              <div className="flex gap-2">
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
                 {!isEditing ? (
                   <Button
                     onClick={() => setIsEditing(true)}
                     variant="outline"
-                    className="cursor-pointer"
+                    className="w-full cursor-pointer sm:w-auto"
                   >
-                    <Edit className="w-4 h-4 mr-2" />
+                    <Edit className="mr-2 h-4 w-4" />
                     Edit Profile
                   </Button>
                 ) : (
-                  <div className="flex gap-2">
+                  <>
                     <Button
                       onClick={handleSave}
                       size="sm"
-                      className="bg-blue-600 hover:bg-blue-500 cursor-pointer"
+                      className="w-full cursor-pointer bg-blue-600 hover:bg-blue-500 sm:w-auto"
                     >
-                      <Save className="w-4 h-4 mr-2" />
+                      <Save className="mr-2 h-4 w-4" />
                       {updateMutation.isPending ? "Saving.." : "Save"}
                     </Button>
                     <Button
                       onClick={handleCancel}
                       variant="outline"
                       size="sm"
-                      className="cursor-pointer"
+                      className="w-full cursor-pointer sm:w-auto"
                     >
-                      <X className="w-4 h-4 mr-2" />
+                      <X className="mr-2 h-4 w-4" />
                       Cancel
                     </Button>
-                  </div>
+                  </>
                 )}
               </div>
             </CardHeader>
@@ -275,7 +281,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                       }
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-md">
+                    <p className="break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                       {userData.firstName}
                     </p>
                   )}
@@ -294,7 +300,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                       }
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-md">
+                    <p className="break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                       {userData.lastName}
                     </p>
                   )}
@@ -315,7 +321,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                       }
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-md">
+                    <p className="break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                       {userData.email}
                     </p>
                   )}
@@ -334,7 +340,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                       }
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-md">
+                    <p className="break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                       {userData.userDetail?.phoneNumber}
                     </p>
                   )}
@@ -356,7 +362,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                       }
                     />
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-md">
+                    <p className="break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                       {userData.userDetail?.address}
                     </p>
                   )}
@@ -383,7 +389,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                       </SelectContent>
                     </Select>
                   ) : (
-                    <p className="p-2 bg-gray-50 rounded-md">
+                    <p className="break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                       {userData.gender}
                     </p>
                   )}
@@ -405,7 +411,7 @@ export default function ProfilePage({ setProfileEdit }: any) {
                     placeholder="Tell us about yourself..."
                   />
                 ) : (
-                  <p className="p-2 bg-gray-50 rounded-md min-h-[100px]">
+                  <p className="min-h-[100px] break-words rounded-md bg-gray-50 p-2 text-sm sm:text-base">
                     {userData.userDetail?.bio}
                   </p>
                 )}

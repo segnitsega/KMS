@@ -216,7 +216,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
   return (
     <div className="border py-2 px-3 sm:px-6 md:px-8 lg:px-10 w-full flex items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 shadow text-sm relative z-40">
       {profileEdit && (
-        <div className="fixed inset-0 flex justify-center bg-black/30 backdrop-blur-sm z-10">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/30 p-3 backdrop-blur-sm sm:items-center sm:p-4">
           <EditProfile setProfileEdit={setProfileEdit} />
         </div>
       )}
