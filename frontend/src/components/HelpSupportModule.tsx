@@ -684,25 +684,26 @@ const HelpSupportModule: React.FC = () => {
   }, [selectedArticle]);
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="w-full min-w-0 space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
         {helpTopics.map((topic, index) => (
           <div
             key={index}
-            className="bg-white/70 backdrop-blur-sm border-blue-300 shadow-lg rounded-md"
+            className="min-w-0 rounded-md border border-blue-300 bg-white/70 shadow-lg backdrop-blur-sm"
           >
-            <div className="p-4 border-b border-blue-100">
-              <h4 className="text-slate-800 font-semibold">{topic.category}</h4>
-              {/* Removed description as per user request */}
+            <div className="border-b border-blue-100 p-3 sm:p-4">
+              <h4 className="text-sm font-semibold text-slate-800 sm:text-base">
+                {topic.category}
+              </h4>
             </div>
-            <div className="p-4 space-y-2">
+            <div className="space-y-1.5 p-3 sm:space-y-2 sm:p-4">
               {topic.articles.map((article, articleIndex) => (
                 <Button
                   key={articleIndex}
                   variant="ghost"
-                  className={`w-full justify-start text-left text-slate-600 hover:text-blue-600 hover:bg-blue-50 ${
+                  className={`h-auto min-h-9 w-full justify-start whitespace-normal px-2 py-2 text-left text-sm text-slate-600 hover:bg-blue-50 hover:text-blue-600 sm:px-3 ${
                     selectedArticle?.title === article.title
-                      ? "bg-blue-100 backdrop-blur-sm ring-2 ring-blue-300"
+                      ? "bg-blue-100 ring-2 ring-blue-300 backdrop-blur-sm"
                       : ""
                   }`}
                   size="sm"
@@ -715,24 +716,28 @@ const HelpSupportModule: React.FC = () => {
           </div>
         ))}
       </div>
-      <div className="p-4 bg-white/70 backdrop-blur-sm border-blue-300 shadow-lg rounded-md">
-        <h3 className="text-lg font-semibold text-slate-800 mb-2">
+      <div className="rounded-md border border-blue-300 bg-white/70 p-4 shadow-lg backdrop-blur-sm sm:p-5">
+        <h3 className="mb-2 text-base font-semibold text-slate-800 sm:text-lg">
           About the Project
         </h3>
-        <p className="text-slate-700">{projectDescription}</p>
+        <p className="text-sm leading-relaxed text-slate-700 sm:text-base">
+          {projectDescription}
+        </p>
       </div>
       {selectedArticle && (
         <div
           ref={guidanceRef}
-          className="p-6 bg-white/70 backdrop-blur-sm border-blue-1000 shadow-lg rounded-md"
+          className="rounded-md border border-blue-300 bg-white/70 p-4 shadow-lg backdrop-blur-sm sm:p-6"
         >
-          <h3 className="text-xl font-semibold text-slate-800 mb-4">
+          <h3 className="mb-3 text-lg font-semibold text-slate-800 sm:mb-4 sm:text-xl">
             {selectedArticle.title}
           </h3>
-          <p className="text-slate-700">{selectedArticle.description}</p>
+          <div className="text-sm text-slate-700 sm:text-base">
+            {selectedArticle.description}
+          </div>
           <Button
             variant="outline"
-            className="mt-4"
+            className="mt-4 w-full sm:w-auto"
             onClick={() => setSelectedArticle(null)}
           >
             Close Guidance
