@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useMemo, useState } from "react";
 import {
   BarChart3,
   TrendingUp,
@@ -26,40 +26,54 @@ const useAuth = () => useContext(AuthContext);
 
 const Analytics: React.FC = () => {
   const getData = async () => {
-    const statsCount = await api.get(`/status-count`);
-    const documents = await api.get(`/docs?&limit=100`);
-    const articles = await api.get(`/articles?&limit=100`);
-    const users = await api.get(`/user`);
+    const [statsRes, docsRes, articlesRes, usersRes] = await Promise.allSettled([
+      api.get(`/status-count`),
+      api.get(`/docs?page=1&limit=100`),
+      api.get(`/articles?page=1&limit=100`),
+      api.get(`/user?page=1&limit=100`),
+    ]);
+
     return {
-      statsCount: statsCount.data,
-      documents: documents.data.documents,
-      articles: articles.data.articles,
-      users: users.data.users,
+      statsCount:
+        statsRes.status === "fulfilled" ? statsRes.value.data : null,
+      documents:
+        docsRes.status === "fulfilled"
+          ? docsRes.value.data.documents ?? []
+          : [],
+      articles:
+        articlesRes.status === "fulfilled"
+          ? articlesRes.value.data.articles ?? []
+          : [],
+      users:
+        usersRes.status === "fulfilled" ? usersRes.value.data.users ?? [] : [],
     };
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryFn: getData,
     queryKey: ["dashboard"],
   });
 
-  if (isLoading) console.log("THe data is loading");
-  if (data) console.log("Here is the data", data);
-
   const { currentUser } = useAuth();
   const { analytics } = useAnalytics();
-  analytics.activeUsers = data?.users.length;
-  analytics.totalUsers = data?.users.length;
-  analytics.totalDocuments = data?.documents.length;
-  analytics.totalArticles = data?.articles.length;
-  analytics.popularContent.documents = data?.documents.slice(3);
-  analytics.popularContent.articles = data?.articles.slice(0, 3)
-
-  console.log("articles", data?.articles);
-  console.log("documents", data?.documents);
 
   const [overviewFilter, setOverviewFilter] = useState("Overview");
   const [dateFilter, setDateFilter] = useState("Last 7 days");
+
+  const dashboardStats = useMemo(() => {
+    const users = data?.users ?? [];
+    const documents = data?.documents ?? [];
+    const articles = data?.articles ?? [];
+
+    return {
+      totalUsers: users.length,
+      activeUsers: users.length,
+      totalDocuments: documents.length,
+      totalArticles: articles.length,
+      popularDocuments: documents.slice(3) as { id: string; title: string }[],
+      popularArticles: articles.slice(0, 3) as { id: string; title: string }[],
+    };
+  }, [data]);
 
   if (!["admin", "expert"].includes(currentUser?.role)) {
     return (
@@ -81,6 +95,13 @@ const Analytics: React.FC = () => {
     return (
       <div className="flex justify-center py-10 sm:py-16">
         <img src={loadingSpinner} width={50} alt="loading" />
+      </div>
+    );
+
+  if (isError)
+    return (
+      <div className="flex min-h-[12rem] items-center justify-center rounded-md bg-white px-4 py-8 text-center text-sm text-red-500 sm:text-base">
+        Failed to load analytics. Please refresh the page.
       </div>
     );
 
@@ -124,28 +145,28 @@ const Analytics: React.FC = () => {
             {
               title: "Total Users",
               icon: <Users className="w-6 h-6 text-blue-600" />,
-              value: analytics?.totalUsers,
+              value: dashboardStats.totalUsers,
               bg: "bg-blue-100",
               change: "+12%",
             },
             {
               title: "Active Users",
               icon: <TrendingUp className="w-6 h-6 text-green-600" />,
-              value: analytics?.activeUsers,
+              value: dashboardStats.activeUsers,
               bg: "bg-green-100",
               change: "+8%",
             },
             {
               title: "Total Documents",
               icon: <FileText className="w-6 h-6 text-purple-600" />,
-              value: analytics?.totalDocuments,
+              value: dashboardStats.totalDocuments,
               bg: "bg-purple-100",
               change: "+15%",
             },
             {
               title: "Knowledge Articles",
               icon: <BookOpen className="w-6 h-6 text-orange-600" />,
-              value: analytics?.totalArticles,
+              value: dashboardStats.totalArticles,
               bg: "bg-orange-100",
               change: "+5%",
             },
@@ -199,7 +220,7 @@ const Analytics: React.FC = () => {
             <div className="min-w-0 flex-1">
               <h2 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Recent Documents</h2>
               <ul className="space-y-3 sm:space-y-5">
-                {analytics?.popularContent?.documents?.map((doc) => (
+                {dashboardStats.popularDocuments.map((doc) => (
                   <li key={doc.id} className="flex min-w-0 items-center gap-3 sm:gap-4">
                     <div className="shrink-0 rounded-md bg-blue-100 p-2">
                       <FileText className="h-4 w-4 text-blue-600 sm:h-5 sm:w-5" />
@@ -223,7 +244,7 @@ const Analytics: React.FC = () => {
             <div className="min-w-0 flex-1">
               <h2 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Recent Articles</h2>
               <ul className="space-y-3 sm:space-y-5">
-                {analytics?.popularContent?.articles?.map((art) => (
+                {dashboardStats.popularArticles.map((art) => (
                   <li key={art.id} className="flex min-w-0 items-center gap-3 sm:gap-4">
                     <div className="shrink-0 rounded-md bg-blue-100 p-2">
                       <FileText className="h-4 w-4 text-blue-600 sm:h-5 sm:w-5" />
