@@ -73,50 +73,50 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   // };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-lg w-full max-w-5xl max-h-[95vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-3 backdrop-blur-sm sm:p-4">
+      <div className="flex max-h-[95vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-lg">
         {/* Header */}
-        <div className="bg-blue-50 rounded-t-2xl px-8 py-6 flex items-center justify-between flex-shrink-0">
-          <h2 className="text-2xl font-bold tracking-wide text-gray-900">
+        <div className="flex shrink-0 items-start justify-between gap-3 rounded-t-2xl bg-blue-50 px-4 py-4 sm:items-center sm:px-8 sm:py-6">
+          <h2 className="min-w-0 flex-1 text-lg font-bold tracking-wide text-gray-900 sm:text-2xl">
             {doc.title}
           </h2>
           <button
-            className="text-gray-400 hover:text-gray-700 transition-colors text-2xl font-bold"
+            className="shrink-0 text-2xl font-bold text-gray-400 transition-colors hover:text-gray-700"
             onClick={onClose}
           >
             <IoClose />
           </button>
         </div>
-        <div className="flex flex-1 overflow-y-auto p-6 gap-6">
-          <div className="flex-1 flex flex-col gap-6">
-            <div className="bg-gray-50 rounded-2xl p-8 border border-dashed border-gray-200 flex flex-col items-center">
-              <h3 className="text-xl font-bold mb-4">Document Preview</h3>
-              <IoDocumentTextOutline className="text-blue-500 text-6xl mb-3" />
-              <p className="text-gray-500 mb-5">
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 sm:gap-6 sm:p-6 lg:flex-row">
+          <div className="flex flex-1 flex-col gap-4 sm:gap-6">
+            <div className="flex flex-col items-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4 sm:p-8">
+              <h3 className="mb-3 text-lg font-bold sm:mb-4 sm:text-xl">Document Preview</h3>
+              <IoDocumentTextOutline className="mb-3 text-5xl text-blue-500 sm:text-6xl" />
+              <p className="mb-4 text-center text-sm text-gray-500 sm:mb-5 sm:text-base">
                 Document preview not available
               </p>
               <button
                 onClick={handleDownload}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors"
+                className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-base font-bold text-white transition-colors hover:bg-blue-700 sm:w-auto sm:px-8 sm:py-3 sm:text-lg"
               >
                 Download to View Full Document
               </button>
             </div>
 
             {/* Description */}
-            <div className="bg-gray-180 rounded-2xl p-6 border border-gray-100">
-              <h3 className="font-bold text-xl mb-2">Description</h3>
-              <div className="bg-gray-50 rounded-2xl p-4 text-gray-700 min-h-[70px] whitespace-pre-wrap">
+            <div className="rounded-2xl border border-gray-100 bg-gray-180 p-4 sm:p-6">
+              <h3 className="mb-2 text-lg font-bold sm:text-xl">Description</h3>
+              <div className="min-h-[70px] whitespace-pre-wrap rounded-2xl bg-gray-50 p-4 text-sm text-gray-700 sm:text-base">
                 {doc.description?.trim() || "No description provided."}
               </div>
             </div>
           </div>
 
           {/* Right Side */}
-          <div className="w-full md:w-96 flex-shrink-0 flex flex-col gap-6">
+          <div className="flex w-full shrink-0 flex-col gap-4 sm:gap-6 lg:w-96">
             {/* Document Info */}
-            <div className="bg-white rounded-2xl p-6 border border-gray-100 flex flex-col gap-4">
-              <h3 className="text-xl font-bold mb-4">Document Information</h3>
+            <div className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-4 sm:p-6">
+              <h3 className="mb-2 text-lg font-bold sm:mb-4 sm:text-xl">Document Information</h3>
               <div>
                 <div className="text-gray-500 text-sm">Author</div>
                 <div className="font-bold">{doc.author}</div>
@@ -139,9 +139,9 @@ const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
             <div className="flex flex-col gap-4">
               <button
                 onClick={handleDownload}
-                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-lg transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3 text-base font-semibold text-white transition-colors hover:bg-blue-700 sm:text-lg"
               >
-                <FiDownload className="text-2xl" /> Download Document
+                <FiDownload className="text-xl sm:text-2xl" /> Download Document
               </button>
 
               {/* <button
