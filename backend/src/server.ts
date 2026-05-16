@@ -34,7 +34,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://192.168.45.162:5173",
   "http://localhost:3000",
-  "https://kms33.netlify.app"
+  "https://kmsss.netlify.app"
 ];
 server.use(
   cors({
