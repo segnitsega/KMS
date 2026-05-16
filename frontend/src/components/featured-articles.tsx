@@ -12,19 +12,19 @@ interface FeaturedArticlesProps {
 
 const FeaturedArticles = ({ articles }: FeaturedArticlesProps) => {
   return (
-    <div className=" bg-blue-50 p-6 rounded-md border">
-      <div className="flex items-center mb-4 font-semibold text-lg">
-        <HiArrowTrendingUp className="mr-2 text-blue-500 " size={30} />
+    <div className="rounded-md border bg-blue-50 p-4 sm:p-6">
+      <div className="mb-3 flex items-center text-base font-semibold sm:mb-4 sm:text-lg">
+        <HiArrowTrendingUp className="mr-2 shrink-0 text-blue-500" size={24} />
         Featured Articles
       </div>
-      <div className="flex gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         {articles.map((article, index) => (
           <div
             key={index}
-            className="border bg-white rounded-md p-4 shadow flex-1 flex flex-col gap-2 "
+            className="flex min-w-0 flex-col gap-2 rounded-md border bg-white p-4 shadow"
           >
-            <h3 className="font-semibold text-base">{article.title}</h3>
-            <p className="text-gray-500 text-sm">by {article.author}</p>
+            <h3 className="truncate text-base font-semibold">{article.title}</h3>
+            <p className="truncate text-sm text-gray-500">by {article.author}</p>
             <div className="flex items-center text-gray-500 text-sm mt-auto">
               {/* <AiOutlineEye className="mr-1" /> */}
               {/* {article.views} views */}

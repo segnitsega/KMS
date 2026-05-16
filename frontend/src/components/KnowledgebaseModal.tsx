@@ -40,22 +40,22 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
   const currentUserName = userData ? `${userData.firstName} ${userData.lastName}` : "";
 
   return (
-    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-[900px] max-h-[600px] relative flex flex-col md:flex-row p-0">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-3 backdrop-blur-sm sm:p-4">
+      <div className="relative flex max-h-[95vh] w-full max-w-[900px] flex-col overflow-hidden rounded-lg bg-white shadow-lg md:flex-row">
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl"
+          className="absolute top-3 right-3 z-10 text-2xl text-gray-400 hover:text-gray-700 sm:top-4 sm:right-4"
           onClick={onClose}
         >
           <HiX />
         </button>
 
         {/* Content */}
-        <div className="flex-1 p-8 overflow-y-auto">
-          <h2 className="text-3xl font-bold mb-4 bg-green-50 rounded-t-lg px-2 py-4 -mx-8 -mt-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+          <h2 className="-mx-4 -mt-4 mb-4 rounded-t-lg bg-green-50 px-3 py-3 text-xl font-bold sm:-mx-6 sm:-mt-6 sm:px-4 sm:py-4 sm:text-2xl md:-mx-8 md:-mt-8 md:text-3xl">
             {post.title}
           </h2>
-          <div className="flex flex-wrap items-center gap-4 text-gray-500 text-base mb-4">
+          <div className="mb-4 flex flex-col gap-2 text-sm text-gray-500 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4 sm:text-base">
             <span className="flex items-center gap-1">
               <HiUser className="text-lg" /> By {post.author}
             </span>
@@ -66,25 +66,25 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
               <HiEye className="text-lg" /> {post.views} views
             </span>
           </div>
-          <div className="flex flex-wrap gap-2 mb-6">
-            <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full text-base font-semibold">
+          <div className="mb-4 flex flex-wrap gap-2 sm:mb-6">
+            <span className="rounded-full bg-green-100 px-3 py-1.5 text-sm font-semibold text-green-800 sm:px-4 sm:py-2 sm:text-base">
               {post.category}
             </span>
           </div>
 
           {/* Description */}
-          <div className="bg-gray-50 p-8 rounded-lg text-gray-700 text-lg min-h-[100px]">
+          <div className="min-h-[100px] rounded-lg bg-gray-50 p-4 text-base text-gray-700 sm:p-6 sm:text-lg md:p-8">
             {post.description}
           </div>
         </div>
 
         {/* Sidebar */}
-        <div className="w-full md:w-50 bg-gray-50 rounded-r-lg flex flex-col items-center py-8 px-4 border-l border-gray-200">
-          <h3 className="text-xl font-bold mb-6">Article Actions</h3>
-          <div className="flex flex-col gap-4 w-full">
+        <div className="flex w-full shrink-0 flex-col items-center border-t border-gray-200 bg-gray-50 px-4 py-6 md:w-64 md:border-l md:border-t-0 md:py-8 lg:w-72">
+          <h3 className="mb-4 text-lg font-bold sm:mb-6 sm:text-xl">Article Actions</h3>
+          <div className="flex w-full flex-col gap-3 sm:gap-4">
 
           <button
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-green-500 text-white font-semibold text-lg hover:bg-green-600 transition"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-500 py-2.5 text-base font-semibold text-white transition hover:bg-green-600 sm:py-3 sm:text-lg"
             onClick={async () => {
               try {
                 await api.post(`/articles/${post.id}/like`);
@@ -110,7 +110,7 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
             <HiThumbUp className="text-2xl" /> Like Article ({likes})
           </button>
           <button
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-blue-500 text-white font-semibold text-lg hover:bg-blue-600 transition"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-500 py-2.5 text-base font-semibold text-white transition hover:bg-blue-600 sm:py-3 sm:text-lg"
             onClick={() => {
               try {
                 // Get existing bookmarks from localStorage
@@ -155,7 +155,7 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
             <HiBookmark className="text-2xl" /> Bookmark
           </button>
           <button
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-purple-500 text-white font-semibold text-lg hover:bg-purple-600 transition"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-purple-500 py-2.5 text-base font-semibold text-white transition hover:bg-purple-600 sm:py-3 sm:text-lg"
             onClick={() => {
               if (navigator.share) {
                 navigator.share({
@@ -187,7 +187,7 @@ const KnowledgebaseModal: React.FC<KnowledgebaseModalProps> = ({
           {/* Edit Button - Only show if user is the author */}
           {currentUserName === post.author && onEdit && (
             <button
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-orange-500 text-white font-semibold text-lg hover:bg-orange-600 transition"
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-orange-500 py-2.5 text-base font-semibold text-white transition hover:bg-orange-600 sm:py-3 sm:text-lg"
               onClick={onEdit}
             >
               <HiUser className="text-2xl" /> Edit Article
