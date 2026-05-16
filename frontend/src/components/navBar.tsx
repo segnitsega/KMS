@@ -214,16 +214,21 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
   const userData = useAuthStore((state) => state.userData);
 
   return (
-    <div className="border py-2 px-10 w-full flex items-center gap-20 shadow text-sm relative">
+    <div className="border py-2 px-3 sm:px-6 md:px-8 lg:px-10 w-full flex items-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 shadow text-sm relative z-40">
       {profileEdit && (
         <div className="fixed inset-0 flex justify-center bg-black/30 backdrop-blur-sm z-10">
           <EditProfile setProfileEdit={setProfileEdit} />
         </div>
       )}
-      <div className="md:hidden">
-        {showSideBar ? (
-          <div className="fixed inset-12 -ml-20 w-full bg-blue-500 rounded-md">
-            <div className="text-2xl mt-8 flex flex-col items-center text-white gap-8">
+      {showSideBar && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setShowSideBar(false)}
+            aria-hidden="true"
+          />
+          <div className="fixed inset-y-0 left-0 z-50 w-[min(280px,85vw)] bg-blue-500 shadow-xl overflow-y-auto md:hidden">
+            <div className="text-xl sm:text-2xl pt-6 px-6 pb-8 flex flex-col items-start text-white gap-6">
               <Link to="dashboard" onClick={() => setShowSideBar(false)}>
                 Dashboard
               </Link>
@@ -257,27 +262,31 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
               )}
             </div>
           </div>
-        ) : (
-          <div>
-            <RxHamburgerMenu
-              className="md:hidden w-8 h-8 text-blue-500"
-              onClick={() => setShowSideBar(true)}
-            />
-          </div>
-        )}
+        </>
+      )}
+
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
+        <button
+          type="button"
+          className="md:hidden shrink-0 p-1"
+          onClick={() => setShowSideBar((open) => !open)}
+          aria-label={showSideBar ? "Close menu" : "Open menu"}
+        >
+          <RxHamburgerMenu className="w-7 h-7 sm:w-8 sm:h-8 text-blue-500" />
+        </button>
+
+        <h1 className="flex items-center gap-1 min-w-0">
+          <span className="hidden md:inline-flex whitespace-nowrap bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-1.5 px-2.5 md:py-2 md:px-3 rounded-md text-sm md:text-base">
+            K-Hub
+          </span>
+          <span className="truncate font-bold text-base sm:text-lg max-w-[9rem] sm:max-w-none">
+            Knowledge Hub
+          </span>
+        </h1>
       </div>
 
-      <h1 className="flex items-center gap-1">
-        <span className="hidden md:block whitespace-nowrap bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-2 px-3 rounded-md ">
-          K-Hub
-        </span>
-        <span className="whitespace-nowrap font-bold text-lg">
-          Knowledge Hub
-        </span>
-      </h1>
-
       {/* Search Section */}
-      <div className="hidden md:block relative w-[100%]">
+      <div className="hidden md:flex relative flex-1 min-w-0 mx-2 lg:mx-4 max-w-md lg:max-w-xl xl:max-w-2xl">
         <div
           ref={inputRef}
           className={`flex items-center border rounded-md p-2 ${
@@ -288,7 +297,7 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
           <input
             type="text"
             placeholder="Search knowledge base, documents, people..."
-            className="ml-2 outline-none w-full"
+            className="ml-2 outline-none w-full min-w-0 text-sm lg:text-base"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={handleSearchFocus}
@@ -384,19 +393,25 @@ const NavBar = ({ userName, department, role }: navBarProps) => {
       </div>
 
       {/* User Section */}
-      <div className="flex gap-3 items-center relative">
+      <div className="flex gap-2 sm:gap-3 items-center relative shrink-0 ml-auto">
         <IoIosNotificationsOutline className="hidden text-gray-500 text-xl" />
-        <div className="hidden md:block">
-          <h1>{userName}</h1>
-          <span className="bg-sky-500 text-white mr-1 py-0.2 px-2 rounded-lg">
+        <div className="hidden md:block lg:hidden text-right max-w-[8rem] xl:max-w-[10rem]">
+          <h1 className="truncate text-sm font-medium">{userName}</h1>
+          <span className="bg-sky-500 text-white text-xs py-0.5 px-2 rounded-lg">
             {role}
           </span>
-          <span className="text-gray-500">{department}</span>
+        </div>
+        <div className="hidden lg:block text-right">
+          <h1 className="text-sm xl:text-base">{userName}</h1>
+          <span className="bg-sky-500 text-white mr-1 py-0.5 px-2 rounded-lg text-xs xl:text-sm">
+            {role}
+          </span>
+          <span className="text-gray-500 text-xs xl:text-sm">{department}</span>
         </div>
         <div className="relative">
           <div ref={dropdownRef} className="inline-block relative">
             <BsPerson
-              className="text-2xl md:text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer"
+              className="text-2xl lg:text-xl xl:text-lg shadow-lg rounded-md text-green-700 hover:bg-gray-100 transition duration-200 cursor-pointer shrink-0"
               onClick={() => setShowDropdown((open) => !open)}
             />
             {showDropdown && (

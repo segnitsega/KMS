@@ -51,7 +51,7 @@ const Documents = () => {
   }, [location.state, data]);
 
   return (
-    <div className="flex flex-col gap-">
+    <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-6">
       {showUploadModal && (
         <UploadDocumentModal onClose={() => setShowUploadModal(false)} />
       )}
@@ -62,17 +62,17 @@ const Documents = () => {
         onButtonClick={() => setShowUploadModal(true)}
       />
       {isLoading && (
-        <div className="flex bg-white justify-center mt-10">
+        <div className="flex justify-center py-10 sm:py-16">
           <img src={loadingSpinner} width={50} alt="loading" />
         </div>
       )}
       {isError && (
-        <div className="flex h-screen bg-white text-red-500 justify-center items-center">
-          Error getting discussions please refresh the page !
+        <div className="flex min-h-[12rem] items-center justify-center rounded-md bg-white px-4 py-8 text-center text-sm text-red-500 sm:text-base">
+          Error getting documents. Please refresh the page.
         </div>
       )}
       {data && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {data.documents.map((doc: any) => (
             <DocumentPageCard
               key={doc.id}
@@ -100,9 +100,9 @@ const Documents = () => {
         </div>
       )}
       {data && (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center px-2 sm:px-0">
           <Button
-            className="bg-blue-500 w-[150px] mt-3"
+            className="mt-2 w-full bg-blue-500 sm:mt-3 sm:w-[150px]"
             onClick={() => {
               setLimit((prev: any) => prev + 10);
               // queryClient.invalidateQueries({ queryKey: ["docs"] });

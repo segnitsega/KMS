@@ -67,12 +67,12 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-700/85 backdrop-blur-700 flex justify-center items-center z-50">
-      <div className="bg-white rounded-t-md px-6 py-8 w-full max-w-2xl shadow-md">
-        <h2 className="text-xl font-bold mb-4">Upload New Document</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-700/85 p-3 backdrop-blur-sm sm:p-4">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-md bg-white px-4 py-6 shadow-md sm:px-6 sm:py-8">
+        <h2 className="mb-4 text-lg font-bold sm:text-xl">Upload New Document</h2>
 
-        <div className="flex gap-6 mb-4">
-          <div className="flex-1">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:gap-6">
+          <div className="min-w-0 flex-1">
             <label className="block font-semibold mb-1">Title</label>
             <input
               type="text"
@@ -83,7 +83,7 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
             />
           </div>
 
-          <div className="flex-1">
+          <div className="min-w-0 flex-1">
             <label className="block font-semibold mb-2">Category</label>
             <select
               className="w-full border border-gray-300 rounded-md p-2"
@@ -131,17 +131,17 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
           />
         </div>
 
-        <div className="flex justify-end gap-4">
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100"
+            className="w-full rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-100 sm:w-auto"
           >
             Cancel
           </button>
           <button
             onClick={handleUpload}
             disabled={isPending}
-            className={`px-4 py-2 rounded-md text-white ${
+            className={`w-full rounded-md px-4 py-2 text-white sm:w-auto ${
               isPending ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
             }`}
           >
