@@ -3,7 +3,6 @@ import NavBar from "./components/navBar";
 import SideBar from "./components/sideBar";
 import { Chatbot } from "./components/chatbot";
 import { useAuthStore } from "./stores/auth-store";
-// import { RxHamburgerMenu } from "react-icons/rx";
 
 const Layout = () => {
   const userData = useAuthStore((state: any) => state.userData)
@@ -19,7 +18,6 @@ const Layout = () => {
             <SideBar />
           </div>
           <div>
-        {/* <RxHamburgerMenu /> */}
 
           </div>
           <main className="p-6 flex-1">
