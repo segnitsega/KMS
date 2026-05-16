@@ -5,6 +5,9 @@ import { ApiError } from "../utils/api-error-class";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AuthenticatedRequest } from "../middlewares/auth.middleware";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const secretKey = process.env.secret_key as string;
 const refreshKey = process.env.refresh_key as string;
