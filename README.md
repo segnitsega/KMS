@@ -2,7 +2,7 @@
 
 A full-stack knowledge management platform for departments to organize documents, articles, discussions, tasks, and expert directories—with an AI assistant powered by Google Gemini.
 
-**Live demo:** [https://kms33.netlify.app/](https://kms33.netlify.app/)
+**Live demo:** [https://kmsss.netlify.app/](https://kmsss.netlify.app/)
 
 ---
 
